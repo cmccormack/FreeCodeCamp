@@ -1,0 +1,172 @@
+html {
+  overflow-y: scroll; 
+  position: relative;
+  min-height: 100%;
+}
+
+body { 
+  background-color: #234;
+  background: url("images/wikipedia-down.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  min-width: 320px;
+  width: 100%;
+  margin-bottom: 40px; /* Margin bottom by footer height */
+}
+
+/* Hide article template and search form until JS displays */
+article,
+.search-form {
+  display: none;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  min-width: 320px;
+  height: 40px; /* Set the fixed height of the footer here */
+  background-color: #f5f5f5;
+  padding-top: 5px;
+}
+
+.footer p {
+  margin: 5px;
+}
+
+a:focus,
+a:hover {
+  text-decoration: none;
+}
+
+.social-media {
+  color: #777;
+  font-size: 1.8em;
+  padding: 2px 4px 2px 4px;
+}
+
+@media only screen and (max-width: 768px){
+  body {
+    margin-bottom: 60px;
+  }
+  .footer {
+    height: 60px;
+    padding: 0;
+  }
+  p {
+    font-size: 0.8em;
+  }
+}
+
+
+
+
+
+/* Navbar CSS */
+.navbar {
+  min-width: 320px;
+}
+
+.text-shadow-nav:hover {
+  color: rgba(24, 24, 24, .8);
+  background-color: transparent;
+  text-shadow: 0 0 4px rgba(0,0,0,.2);
+}
+
+.container.main {
+  max-width: 1024px;
+  padding: 15px;
+}
+
+.search-bar {
+  margin-top: 20px;
+  width: 95%;
+}
+
+/*Form Group Elements*/
+.text-input, .btn-default,
+.btn-default:active,
+.btn-default:focus,
+.btn-default:active:focus {
+  background-color: #222;
+  color: #EEE;
+  opacity: 0.8;
+}
+.btn-default:active:hover, .btn-default:active:hover {
+  background-color: #141414;
+  color: #EEE;
+}
+.btn-default:hover, .btn-default:hover {
+  color: #FFF;
+  background-color: #111;
+  opacity: 1;
+}
+.form-control:focus {
+  border-color: #ea9f42;
+}
+
+.shadow {
+  padding: 0;
+  box-shadow: 0 0 32px rgba(240, 240, 240, .6);
+}
+
+.content {
+  color: #EEE;
+  background-color: rgba(20,20,20,.5);
+  margin-top: 20px;
+  padding: 10px 10px 10px 10px;
+  width: 100%;
+}
+.content-row {
+  background-color: black;
+  background-color: rgba(19,21,21,0.9);
+  text-align: left;
+  font-size: 1.5em;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 50;
+  padding: 10px 20px 10px 30px;
+  margin: 10px 0 0px 0;
+  word-wrap: break-word;
+}
+.content>i {
+  font-size: 10em;
+  margin: 100px 0 120px 0;
+}
+.content-row hr {
+  opacity: 0.7;
+  margin-top: 5px;
+}
+
+.content h3 {
+  color: #ea9f42;
+  margin-top: 10px;
+  font-size: 1.75em;
+  font-family: 'Merriweather', serif;
+  font-weight: lighter;
+}
+
+.ellipse-wrapper {
+  display: inline-block;
+}
+.fa-ellipsis-h {
+  vertical-align: bottom;
+}
+
+
+
+article a:link {
+  color: #ea9f42;
+}
+article a:visited,
+article a:active {
+  color: #ea9f42;
+  text-decoration: none;
+}
+article a:hover,
+article a:focus {
+  color: #e8870d;
+  text-decoration: none;
+}
+
