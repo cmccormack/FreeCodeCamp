@@ -1,0 +1,47 @@
+<head>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" async src="https://platform.twitter.com/widgets.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="quote.css">
+  <script src="quote.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <div class="jumbo-border">
+          <div class="jumbotron">
+            <h1 class="title" id="title">Random Quote Generator</h1>
+            <h2 class="title" id="subtitle"><i class="fa fa-code"></i> Computer Science</h2>
+            <p class="lead">Quotes can be motivational, provide humor, and make you think.  I hope you use this quote generator to find something inspirational before your next coding session.</p>
+            <hr class="my-4">
+            <p class="lead attribution">This generator uses an API provided by <a href="http://quotes.stormconsultancy.co.uk/">stormconsultancy.co.uk</a>.</p>
+            
+            <div class="row">
+              <div class="col-md-4 button-box">
+                <a href="#" class="btn btn-default btn-block" id="btn-new-quote">New Quote</a><br/>
+                <a href="#" class="btn btn-default btn-block" id="btn-tweet"><i class="fa fa-twitter-square"></i> Tweet Quote</a><br/>
+              </div>
+              <div class="col-md-8">
+                <div class="well">
+                  <blockquote class="quote-block " >
+                    <p id="quote_msg"></p>
+                    <footer id="author_name"></footer>
+                  </blockquote>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="text-center text-muted">Written and coded by <a href="http://www.mackville.net/" target="_blank">Christopher McCormack.</a></p>
+    </div>
+  </footer>
+</body>
