@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Twitch.TV API - Chris McCormack</title>
+  <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P|Share+Tech+Mono" rel="stylesheet">
+  <!-- JavaScript - jQuery must be loaded prior to Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <!-- Addtional JavaScript -->
+  <script src="custom.js"></script>
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <!-- Additional CSS for icons, etc... -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="custom.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Templates -->
+  <script id="profile-template" type="text/profile-template">
+    <div class="col-lg-4 col-md-6 col-sm-12 profile offline">
+      <div class="channel-container">
+        <div class="thumb-container" id="{{ID}}">
+          <div class="transparent-bg logo-bg" style="background-image: url('{{LOGOBG}}')"></div>
+          <img class="thumbnail img-fluid logo" title="{{STATUS_MSG}}" src="{{LOGO}}" />
+        </div>
+        <footer class="thumb-footer">
+
+          <div class="row footer-row footer-top">
+            <div class="col-4 user-status text-left">
+              <div class="text-left led {{led}}"></div><span class="status">{{STATUS}}</span>
+            </div>
+            <div class="col-8 user-name text-right"><a href="{{USERURL}}" target="_blank"
+              id="user-url">{{USERNAME}}</a>
+            </div>
+          </div>
+
+          <div class="row footer-row footer-middle">
+            <div class="col ellipsis">
+              <span class="activity">{{ACTIVE}} Activity:&nbsp;</span>
+              <span class="game">{{GAME}}</span>
+            </div>
+          </div>
+
+          <div class="row footer-row footer-bottom">
+            <div class="col text-muted ellipsis">
+              <span class="status-msg">{{STATUS_MSG}}</span>
+            </div>
+          </div>
+
+        </footer>
+      </div>
+    </div>
+  </script>
+</head>
+
+<body>
+  <div class="nav-container">
+    <nav class="navbar fixed-top navbar-toggleable-sm">
+      <!-- Create toggle button on right when viewport is small -->
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar-toggle">
+        <span class="fa fa-bars"></span>
+      </button>
+      <!-- Navbar brand on far left of navbar -->
+      <a class="navbar-brand text-shadow-white" href="http://mackville.net">
+        <i class="fa fa-twitch"></i>&nbsp;&nbsp;Chris McCormack</a>
+      <div class="collapse navbar-collapse justify-content-end" id="navbar-toggle">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link text-shadow-white" id="btn-all" href="#">All</a>
+          <a class="nav-item nav-link text-shadow-white" id="btn-online" href="#">Online</a>
+          <a class="nav-item nav-link text-shadow-white" id="btn-offline" href="#">Offline</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+  <div class="container main">
+    <div class="row" id="thumbs-online"></div>
+    <div class="row" id="thumbs-offline"></div>
+    <div class="row" id="thumbs-unknown"></div>
+  </div>
+  <div class="nav-container footer">
+    <div class="row">
+      <div class="col-sm-4 text-center">
+        <a class="social-media text-shadow-nav" href="https://www.facebook.com/christopher.j.mccormack" target="_blank"><i class="fa fa-facebook text-shadow-white"></i></a>
+        <a class="social-media" href="https://twitter.com/chrisjmccormack" target="_blank"><i class="fa fa-twitter text-shadow-white"></i></a>
+        <a class="social-media" href="https://github.com/cmccormack" target="_blank"><i class="fa fa-github text-shadow-white"></i></a>
+        <a class="social-media" href="https://www.linkedin.com/in/christopherjmccormack" target="_blank"><i class="fa fa-linkedin text-shadow-white"></i></a>
+      </div>
+      <div class="col-sm-8 text-center">
+        <p>Written and coded by
+          <wbr><a href="http://www.mackville.net/" target="_blank">Christopher&nbsp;McCormack.</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
