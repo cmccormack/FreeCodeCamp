@@ -1,6 +1,15 @@
 # FreeCodeCamp
 FreeCodeCamp Projects
 
+## Build a Random Quote Machine
+
+**Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/ONjoLe/).
+
+Fulfill the below user stories:
+* User Story: I can click a button to show me a new random quote.
+* User Story: I can press a button to tweet out a quote.
+
+
 ## Build a JavaScript Calculator
 
 **Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/rLJZrA/). 
@@ -15,7 +24,7 @@ Fulfill the below user stories:
 
 **Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/aNyxXR/).
 
-Fulfill the below user stories.
+Fulfill the below user stories:
 * User Story: I can start a 25 minute pomodoro, and the timer will go off once 25 minutes has elapsed.
 * User Story: I can reset the clock for my next pomodoro.
 * User Story: I can customize the length of each pomodoro.
