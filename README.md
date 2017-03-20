@@ -20,6 +20,18 @@ Fulfill the below user stories:
 * User Story: I can press a button to tweet out a quote.
 
 
+## Show the Local Weather
+
+**Objective:** Build a CodePen.io app that is functionally similar to [this](http://codepen.io/FreeCodeCamp/full/bELRjV).
+
+Fulfill the below user stories.
+* User Story: I can see the weather in my current location.
+* User Story: I can see a different icon or background image (e.g. snowy mountain, hot desert) depending on the weather.
+* User Story: I can push a button to toggle between Fahrenheit and Celsius.
+
+It is recommended to use the [Open Weather API](https://openweathermap.org/current#geo). This will require creating a free API key. Normally you want to avoid exposing API keys on CodePen, but it is difficult to find keyless API for weather.
+
+
 ## Build a Wikipedia Viewer 
 
 **Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/wGqEga/).
