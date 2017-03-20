@@ -3,7 +3,7 @@ FreeCodeCamp Projects
 
 ## Build a JavaScript Calculator
 
-#### Objective: Build a CodePen.io app that is functionally similar to this: https://codepen.io/FreeCodeCamp/full/rLJZrA/.
+**Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/rLJZrA/). 
 
 Fulfill the below user stories:
 * User Story: I can add, subtract, multiply and divide two numbers.
@@ -13,7 +13,7 @@ Fulfill the below user stories:
 
 ## Build a Pomodoro Clock
 
-#### Objective: Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/aNyxXR/).
+**Objective:** Build a CodePen.io app that is functionally similar to [this](https://codepen.io/FreeCodeCamp/full/aNyxXR/).
 
 Fulfill the below user stories. Use whichever libraries or APIs you need. Give it your own personal style.
 * User Story: I can start a 25 minute pomodoro, and the timer will go off once 25 minutes has elapsed.
