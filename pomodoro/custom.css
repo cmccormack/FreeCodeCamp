@@ -97,8 +97,9 @@ label {
   align-items:center;
 }
 
+
 #buttons {
-  margin-top: 30px;
+  margin-top: 40px;
   width: 100%;
   display:flex;
   justify-content:center;.
@@ -109,10 +110,9 @@ label {
   width: 120px;
   border-width: 2px;
   border-radius: 10px;
-  /*background: linear-gradient(to top left,  #000 20%, #444 100%);*/
 }
 
-.btn-sep {
+#reset {
   background-color: transparent;
   border: 0;
 /*  border-style: solid;
@@ -121,6 +121,6 @@ label {
   background: #222 -webkit-radial-gradient(50% 50%, 50% 50%, rgba(255,255,255,.12), rgba(0,0,0,.2));
 }
 
-.btn-sep i {
+#reset i {
   margin: 0;
 }
