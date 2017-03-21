@@ -46,7 +46,7 @@ input {
 
 #clock {
   width: 320px;
-  height: 400px;
+  height: 450px;
   border-radius: 20px;
   padding: 10px;
   background: #222 -webkit-radial-gradient(20% 80%, 60% 60%, rgba(255,255,255,.12), rgba(0,0,0,.2));
@@ -86,23 +86,41 @@ label {
 .range-group-label {
   font-weight: 300;
   font-size: 1rem;
-  margin-left: 7px;
+  margin-left: 40px;
   margin-bottom: 4px;
 }
 
 .slider {
   width: 100%;
-  /*background-color: green;*/
   display:flex;
   justify-content:center;.
   align-items:center;
 }
 
-.slider label {
-  /*background-color: red;*/
-}
-
-.slider input {
+#buttons {
+  margin-top: 30px;
   width: 100%;
+  display:flex;
+  justify-content:center;.
+  align-items:center;
 }
 
+.btn {
+  width: 120px;
+  border-width: 2px;
+  border-radius: 10px;
+  /*background: linear-gradient(to top left,  #000 20%, #444 100%);*/
+}
+
+.btn-sep {
+  background-color: transparent;
+  border: 0;
+/*  border-style: solid;
+  border-color: black;*/
+  background: #222;
+  background: #222 -webkit-radial-gradient(50% 50%, 50% 50%, rgba(255,255,255,.12), rgba(0,0,0,.2));
+}
+
+.btn-sep i {
+  margin: 0;
+}

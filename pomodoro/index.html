@@ -16,8 +16,8 @@
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
   <!-- Additional CSS for icons, etc... -->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="custom.css">
   <link rel="stylesheet" type="text/css" href="slider.css">
+  <link rel="stylesheet" type="text/css" href="custom.css">
 
   <!-- Addtional JavaScript -->
   <script src="custom.js"></script>
@@ -67,24 +67,29 @@
         <div class="range-group">
           <label class="range-group-label" for="session-length-slider">Session Time</label>
           <div class="slider input-group text-center">
-            <label for="session-length-slider"><i class="fa fa-minus-square-o fa-fw"></i></label>
-              <input id="session-length-slider" class="slider" type="range" min="1" max="60" step="1" value="25">
-            <label for="session-length-slider"><i class="fa fa-plus-square-o fa-fw"></i></label>
+            <label for="session-length-slider"><i class="fa fa-minus-square fa-fw fa-lg"></i></label>
+              <input id="session-length-slider" type="range" min="1" max="60" step="1" value="25">
+            <label for="session-length-slider"><i class="fa fa-plus-square fa-fw fa-lg"></i></label>
           </div>
         </div>
 
         <div class="range-group">
           <label class="range-group-label" for="break-length-slider">Break Time</label>
           <div class="slider input-group text-center">
-            <label for="break-length-slider"><i class="fa fa-minus-square-o fa-fw"></i></label>
-              <input id="break-length-slider" class="slider" type="range" min="1" max="60" step="1" value="5">
-            <label for="break-length-slider"><i class="fa fa-plus-square-o fa-fw"></i></label>
+            <label for="break-length-slider"><i class="fa fa-minus-square fa-fw fa-lg"></i></label>
+              <input id="break-length-slider" type="range" min="1" max="60" step="1" value="5">
+            <label for="break-length-slider"><i class="fa fa-plus-square fa-fw fa-lg"></i></label>
           </div>
         </div>
 
         <div id="buttons" class="input-group">
-          <a class="btn btn-success">Start</a>
-          <a class="btn btn-danger">Stop</a>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-outline-success">Start</button>
+          </span>
+          <span class="input-group-addon btn-sep"><i class="fa fa-refresh"></i></span>
+          <span class="input-group-btn">
+            <button type="button" class="btn btn-outline-danger">Stop</button>
+          </span>
         </div>
 
       </div>
