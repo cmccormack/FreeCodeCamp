@@ -61,11 +61,13 @@
 
         <div id="display" class="text-center">
             <div id="clock-phase" class="display-5" >Phase</div>
-            <div id="time" class="display-2" >20:24</div>
+            <div id="display-time" class="display-2" >20:24</div>
         </div>
 
         <div class="range-group">
-          <label class="range-group-label" for="session-length-slider">Session Time</label>
+          <label class="range-group-label" for="session-length-slider">Session Time:&nbsp;
+            <span class="slider-label-time">25 Min</span>
+          </label>
           <div class="slider input-group text-center">
             <label for="session-length-slider"><i class="fa fa-minus-square fa-fw fa-lg"></i></label>
               <input id="session-length-slider" type="range" min="1" max="60" step="1" value="25">
@@ -74,7 +76,9 @@
         </div>
 
         <div class="range-group">
-          <label class="range-group-label" for="break-length-slider">Break Time</label>
+          <label class="range-group-label" for="break-length-slider">Break Time:&nbsp;
+            <span class="slider-label-time">5 Min</span>
+          </label>
           <div class="slider input-group text-center">
             <label for="break-length-slider"><i class="fa fa-minus-square fa-fw fa-lg"></i></label>
               <input id="break-length-slider" type="range" min="1" max="60" step="1" value="5">
@@ -86,7 +90,7 @@
           <span class="input-group-btn">
             <button type="button" class="btn btn-outline-success">Start</button>
           </span>
-          <span id="reset" class="input-group-addon"><i class="fa fa-refresh"></i></span>
+          <button type="button" id="reset" class="input-group-addon"><i class="fa fa-refresh"></i></button>
           <span class="input-group-btn">
             <button type="button" class="btn btn-outline-danger">Stop</button>
           </span>

@@ -23,7 +23,6 @@ main {
 i.fa {
   margin-right: 10px;
   margin-left: 10px;
-  color: #DDD;
 }
 
 a:hover {
@@ -115,10 +114,16 @@ label {
 #reset {
   background-color: transparent;
   border: 0;
-/*  border-style: solid;
-  border-color: black;*/
+  color: #CCC;
   background: #222;
-  background: #222 -webkit-radial-gradient(50% 50%, 50% 50%, rgba(255,255,255,.12), rgba(0,0,0,.2));
+  /*background: #222 -webkit-radial-gradient(50% 50%, 50% 50%, rgba(255,255,255,.12), rgba(0,0,0,.2));*/
+  box-shadow: inset 0px 0px 4px 2px #888;
+}
+
+#reset:hover {
+  color: #EEE;
+  /*box-shadow: inset 0px 0px 16px 1px #CCC;*/
+  background: #333;
 }
 
 #reset i {
