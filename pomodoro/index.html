@@ -66,43 +66,45 @@
 
         <div class="range-group">
           <label class="range-group-label" for="session-length-slider">Session Time:&nbsp;
-            <span class="slider-label-time">25 Min</span>
+            <span class="slider-label-time">25</span>&nbsp;Min
           </label>
           <div class="slider input-group text-center">
-            <label for="session-length-slider">
-              <i class="fa fa-minus-square fa-fw fa-lg sub" data-op="sub" data-target="#session-length-slider"></i>
-            </label>
+
+            <button type="button" class="stepper" data-increment="-1" data-target="#session-length-slider">
+              <i class="fa fa-minus-square fa-fw fa-lg"></i>
+            </button>
             <input id="session-length-slider" type="range" min="1" max="60" step="1" value="25">
-            <label for="session-length-slider">
-              <i class="fa fa-plus-square fa-fw fa-lg add" data-op="add" data-target="#session-length-slider"></i>
-            </label>
+            <button type="button" class="stepper" data-increment="1" data-target="#session-length-slider">
+              <i class="fa fa-plus-square fa-fw fa-lg"></i>
+            </button>
+
           </div>
         </div>
 
         <div class="range-group">
           <label class="range-group-label" for="break-length-slider">Break Time:&nbsp;
-            <span class="slider-label-time">5 Min</span>
+            <span class="slider-label-time">5</span>&nbsp;Min
           </label>
           <div class="slider input-group text-center">
-            <label for="break-length-slider">
-              <i class="fa fa-minus-square fa-fw fa-lg sub" data-op="sub" data-target="#break-length-slider"></i>
-            </label>
+            <button type="button" class="stepper" data-increment="-1" data-target="#break-length-slider">
+              <i class="fa fa-minus-square fa-fw fa-lg"></i>
+            </button>
             <input id="break-length-slider" type="range" min="1" max="60" step="1" value="5">
-            <label for="break-length-slider">
-              <i class="fa fa-plus-square fa-fw fa-lg add" data-op="add" data-target="#break-length-slider"></i>
-            </label>
+            <button type="button" class="stepper" data-increment="1" data-target="#break-length-slider">
+              <i class="fa fa-plus-square fa-fw fa-lg"></i>
+            </button>
           </div>
         </div>
 
         <div id="buttons" class="input-group">
           <span class="input-group-btn">
-            <button type="button" id="start-btn" class="btn btn-outline-success">Start</button>
+            <button type="button" id="start-btn" class="btn btn-outline-success control">Start</button>
           </span>
           <span class="input-group-btn">
             <button type="button" id="pause" class="btn btn-outline-warning"><i class="fa fa-pause"></i></button>
           </span>
           <span class="input-group-btn">
-            <button type="button" id="stop-btn" class="btn btn-outline-danger">Stop</button>
+            <button type="button" id="stop-btn" class="btn btn-outline-danger control">Stop</button>
           </span>
         </div>
 

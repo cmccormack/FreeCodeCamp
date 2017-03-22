@@ -98,6 +98,20 @@ label {
   align-items:center;
 }
 
+.stepper {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  color: #DDD;
+  width: auto;
+}
+
+/* Transform provides pushed button effect to increment/decrement buttons */
+.stepper:focus {
+  outline: none;
+  transform: translateY(1px);
+}
 
 #buttons {
   margin-top: 40px;
@@ -107,18 +121,21 @@ label {
   align-items:center;
 }
 
-.btn {
+/* Start and Stop button styles */
+.control {
   width: 120px;
   border-width: 2px;
   border-radius: 10px;
 }
 
-.btn:hover {
+.control:hover {
   z-index: 10 !important;
 }
 
+ /* Pause button styles */
 #pause {
   width: 50px;
   padding: 0;
   z-index: 5;
+  border-width: 2px;
 }
