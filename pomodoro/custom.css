@@ -18,6 +18,7 @@ footer {
 main {
   margin-top: 56px;
   min-height: 100%;
+  margin-bottom: 60px;
 }
 
 i.fa {
@@ -36,6 +37,7 @@ footer {
   right: 0;
   left: 0;
   padding: .5rem 1.5rem;
+  z-index: 50;
 }
 
 input {
@@ -111,21 +113,12 @@ label {
   border-radius: 10px;
 }
 
-#reset {
-  background-color: transparent;
-  border: 0;
-  color: #CCC;
-  background: #222;
-  /*background: #222 -webkit-radial-gradient(50% 50%, 50% 50%, rgba(255,255,255,.12), rgba(0,0,0,.2));*/
-  box-shadow: inset 0px 0px 4px 2px #888;
+.btn:hover {
+  z-index: 10 !important;
 }
 
-#reset:hover {
-  color: #EEE;
-  /*box-shadow: inset 0px 0px 16px 1px #CCC;*/
-  background: #333;
-}
-
-#reset i {
-  margin: 0;
+#pause {
+  width: 50px;
+  padding: 0;
+  z-index: 5;
 }

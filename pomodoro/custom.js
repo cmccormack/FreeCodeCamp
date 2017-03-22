@@ -8,15 +8,9 @@ var sessionTime = 25,
 $('document').ready(function(){
   console.log("Document loaded!")
 
-  $('input[type="range"]').on("input change", function(e){
-    updateLabelTime($(e.target));
-  });
-
+  $('input[type="range"]').on("input change", function(e){ updateLabelTime($(e.target)); });
   $('.sub, .add').click(function(e){ addSubClick( $(e.target) ); });
-
-
-
-
+  
 });
 
 function updateLabelTime($t){
