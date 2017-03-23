@@ -1,6 +1,7 @@
 var timers = {
       sessionTime: 25,
       breakTime: 5,
+      stopped: true
     },
     intervalID = 0,
     $clockDisplay,
@@ -12,59 +13,68 @@ $('document').ready(function(){
   $clockDisplay = $("#display-time");
   $phase = $("clock-phase");
 
-  // $('button, input').click(function(){ console.log(JSON.stringify(timers)); });
+  $('button, input').click(function(){ console.log(JSON.stringify(timers)); });
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(e){ sliderChange($(this)); });
   $('.stepper').click(function(e){ addSubClick( $(this) ); });
   $('#start-btn').click(function(e){ startCountdown(timers.sessionTime, timers.breakTime); });
   $('#stop-btn').click(function(e){ stopCountdown(); });
 
-  
 });
+
 
 function startCountdown(sessionTime, breakTime) {
 
   // Stop the previous countdown first
-  stopCountdown();
-  var startTime = new Date(),
-      countDownTime = startTime.setUTCMinutes(startTime.getUTCMinutes() + sessionTime)
+  clearInterval(intervalID);
+  setCountDown();
+  timers.stopped = false;
 
-  console.log("sessionTime: " + sessionTime, "breakTime: " + breakTime, 
-    "startTime: " + startTime, "countDownTime: " + countDownTime);
+  var countDown = function(time){
 
-  intervalID = setInterval( function() {
-    
-    var currentTime = new Date().getTime();
-    var delta = countDownTime - currentTime;
-    var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
-    if (seconds < 10) { seconds = "0" + seconds }
-    $("#mins").text(minutes);
-    $("#secs").text(seconds);
-    if (seconds % 2 == 0){
-      $("#sep").fadeTo("fast", 0.1);
-      $("#sep").fadeTo("fast", 1);
-    } else {
-      $("#sep").fadeTo("fast", 0.1);
-      $("#sep").fadeTo("fast", 1);
-    }
-  }, 1000);
+    var startTime = new Date(),
+        countDownTime = startTime.setUTCMinutes(startTime.getUTCMinutes() + time);
+
+    intervalID = setInterval( function() {
+      var delta = countDownTime - new Date().getTime();
+      var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
+      var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
+      if (seconds < 10) { seconds = "0" + seconds }
+      // $("#mins").text(minutes);
+      // $("#secs").text(seconds);
+      setCountDown(String(minutes), String(seconds));
+      if (seconds % 2 == 0){
+        $("#sep").fadeTo("fast", 0.1);
+        $("#sep").fadeTo("fast", 1);
+      } else {
+        $("#sep").fadeTo("fast", 0.1);
+        $("#sep").fadeTo("fast", 1);
+      }
+    }, 1000);
+  }
+
+  countDown(sessionTime);
   console.log("Timer " + intervalID + " started");
 }
 
 function stopCountdown() {
+  timers.stopped = true;
   if (intervalID) { 
     clearInterval(intervalID);
     console.log("Timer " + intervalID + " stopped"); 
   }
-  console.log(timers[sessionTime]);
-  displayValue($("#mins"), timers[sessionTime]);
-  displayValue($("#secs"), "00")
+  console.log(timers.sessionTime);
+  setCountDown();
 }
 
 function displayValue( $t, val ){
-  // console.log($t.attr('id'), val);
   $t.text(val);
+}
+
+
+function setCountDown(mins, secs){
+  displayValue($("#mins"), mins || timers.sessionTime);
+  displayValue($("#secs"), secs || "00");
 }
 
 
@@ -74,6 +84,7 @@ function sliderChange( $s ){
       labelID = $label.attr("id");
 
   timers[labelID] = Number(sliderTime);
+  if (timers.stopped){ setCountDown()}
   displayValue($label, timers[labelID]);
 }
 
