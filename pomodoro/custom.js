@@ -6,7 +6,7 @@ $('document').ready(function(){
 
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(e){ updateLabelTime($(this)); });
-  $('.stepper').click(function(){ addSubClick( $(this) ); });
+  $('.stepper').click(function(e){ addSubClick( $(this) ); console.log(e.target); });
   
 });
 
