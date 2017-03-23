@@ -159,3 +159,9 @@ label {
   font-weight: 300;
   line-height: 1.1;
 }
+
+#mins,
+#secs {
+  font-family: 'Droid Sans Mono', monospace;
+  font-weight: 200;
+}
