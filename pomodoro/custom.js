@@ -40,9 +40,12 @@ function startCountdown(sessionTime, breakTime) {
       var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
       if (seconds < 10) { seconds = "0" + seconds }
-      // $("#mins").text(minutes);
-      // $("#secs").text(seconds);
       setCountDown(String(minutes), String(seconds));
+
+      if (delta < 0) {
+        // what to do here??
+      }
+
       if (seconds % 2 == 0){
         $("#sep").fadeTo("fast", 0.1);
         $("#sep").fadeTo("fast", 1);
@@ -52,8 +55,6 @@ function startCountdown(sessionTime, breakTime) {
       }
     }, 1000);
   }
-
-  countDown(sessionTime);
   console.log("Timer " + intervalID + " started");
 }
 
