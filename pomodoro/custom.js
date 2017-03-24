@@ -6,6 +6,8 @@ var timers = {
     intervalID = 0,
     $clockDisplay,
     $phase;
+    MIN = 60 * 1000,
+    SEC = 1000;
 
 $('document').ready(function(){
   console.log("Document loaded!");
@@ -23,41 +25,40 @@ $('document').ready(function(){
 });
 
 
-function startCountdown(sessionTime, breakTime) {
+function startCountdown( sessionTime, breakTime ) {
 
-  // Stop the previous countdown first
+  var time = sessionTime,
+      secs = sessionTime * SEC,
+      mins = sessionTime * MIN;
+
+  // Stop the previous countdown then set display to latest sessionTime value
   clearInterval(intervalID);
-
-  // Set the display to latest sessionTime value
   setCountDown();
 
   timers.stopped = false;
 
-  var countDown = function(time){
+  intervalID = setInterval( function() {
 
-    var startTime = new Date(),
-        countDownTime = startTime.setUTCMinutes(startTime.getUTCMinutes() + time);
+    // Convert minutes to milliseconds
+    var delta = countDownTime - new Date().getTime();
+    var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
+    if (seconds < 10) { seconds = "0" + seconds; }
+    setCountDown(String(minutes), String(seconds));
 
-    intervalID = setInterval( function() {
-      var delta = countDownTime - new Date().getTime();
-      var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
-      var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
-      if (seconds < 10) { seconds = "0" + seconds; }
-      setCountDown(String(minutes), String(seconds));
+    if (delta < 0) {
+      // what to do here??
+    }
 
-      if (delta < 0) {
-        // what to do here??
-      }
+    if (seconds % 2 === 0){
+      $("#sep").fadeTo("fast", 0.1);
+      $("#sep").fadeTo("fast", 1);
+    } else {
+      $("#sep").fadeTo("fast", 0.1);
+      $("#sep").fadeTo("fast", 1);
+    }
+  }, 1000);
 
-      if (seconds % 2 === 0){
-        $("#sep").fadeTo("fast", 0.1);
-        $("#sep").fadeTo("fast", 1);
-      } else {
-        $("#sep").fadeTo("fast", 0.1);
-        $("#sep").fadeTo("fast", 1);
-      }
-    }, 1000);
-  };
   console.log("Timer " + intervalID + " started");
 }
 
@@ -76,18 +77,18 @@ function displayValue( $t, val ){
 }
 
 
-function setCountDown(mins, secs){
+function setCountDown( mins, secs ){
   displayValue($("#mins"), mins || timers.sessionTime);
   displayValue($("#secs"), secs || "00");
 }
 
 
 function sliderChange( $s ){
-  var sliderTime = $s.val(),
+  var sval = $s.val(),
       $label = $( $s.attr("data-display") ),
       labelID = $label.attr("id");
 
-  timers[labelID] = Number(sliderTime);
+  timers[labelID] = Number(sval);
   if (timers.stopped){ setCountDown(); }
   displayValue($label, timers[labelID]);
 }
