@@ -13,12 +13,12 @@ $('document').ready(function(){
   $clockDisplay = $("#display-time");
   $phase = $("clock-phase");
 
-  $('button, input').click(function(){ console.log(JSON.stringify(timers)); });
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(e){ sliderChange($(this)); });
   $('.stepper').click(function(e){ addSubClick( $(this) ); });
   $('#start-btn').click(function(e){ startCountdown(timers.sessionTime, timers.breakTime); });
   $('#stop-btn').click(function(e){ stopCountdown(); });
+  $('button, input').click(function(){ console.log(JSON.stringify(timers)); });
 
 });
 
@@ -27,7 +27,10 @@ function startCountdown(sessionTime, breakTime) {
 
   // Stop the previous countdown first
   clearInterval(intervalID);
+
+  // Set the display to latest sessionTime value
   setCountDown();
+
   timers.stopped = false;
 
   var countDown = function(time){
@@ -91,15 +94,7 @@ function sliderChange( $s ){
 
 
 function addSubClick( $t ){
-  var $s = $($t.attr("data-target")),
-      $label = $( $s.attr("data-display") ),
-      labelID = $label.attr("id");
-      inc = $t.attr("data-increment");
-
-      // Update slider value after 
-      $s.val(Number($s.val()) + Number(inc));
-      timers[labelID] = Number($s.val());
-
-  // Display new value
-  displayValue($label, timers[labelID]);
+  var $s = $($t.attr("data-target"));
+  $s.val(Number($s.val()) + Number($t.attr("data-increment")));
+  sliderChange($s);
 }
