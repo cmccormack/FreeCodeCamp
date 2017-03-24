@@ -8,7 +8,7 @@ var timers = {
     $phase;
 
 $('document').ready(function(){
-  console.log("Document loaded!")
+  console.log("Document loaded!");
 
   $clockDisplay = $("#display-time");
   $phase = $("clock-phase");
@@ -39,14 +39,14 @@ function startCountdown(sessionTime, breakTime) {
       var delta = countDownTime - new Date().getTime();
       var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
       var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
-      if (seconds < 10) { seconds = "0" + seconds }
+      if (seconds < 10) { seconds = "0" + seconds; }
       setCountDown(String(minutes), String(seconds));
 
       if (delta < 0) {
         // what to do here??
       }
 
-      if (seconds % 2 == 0){
+      if (seconds % 2 === 0){
         $("#sep").fadeTo("fast", 0.1);
         $("#sep").fadeTo("fast", 1);
       } else {
@@ -54,7 +54,7 @@ function startCountdown(sessionTime, breakTime) {
         $("#sep").fadeTo("fast", 1);
       }
     }, 1000);
-  }
+  };
   console.log("Timer " + intervalID + " started");
 }
 
@@ -85,7 +85,7 @@ function sliderChange( $s ){
       labelID = $label.attr("id");
 
   timers[labelID] = Number(sliderTime);
-  if (timers.stopped){ setCountDown()}
+  if (timers.stopped){ setCountDown(); }
   displayValue($label, timers[labelID]);
 }
 
