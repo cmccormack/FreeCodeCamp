@@ -11,8 +11,6 @@ var timers = {
     intervalID = 0,
     $title,
     title,
-    // $sessionAlarm,
-    // $breakAlarm,
     paused = false,
     stopped = true,
     audio = true;
@@ -21,9 +19,6 @@ $('document').ready(function(){
 
   $title = $('html head').find('title');
   title = $title.text();
-  // sessionAlarm = $("#session-start-alarm");
-  // breakAlarm = $("#break-start-alarm");
-
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(){ sliderChange($(this)); });
   $('.stepper').click(function(){ addSubClick( $(this) ); });
