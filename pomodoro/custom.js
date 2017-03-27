@@ -1,56 +1,75 @@
 var timers = {
       sessionTime: 25,
+      breakTime: 5
+    },
+    resumeTimer = {
+      sessionTime: 25,
       breakTime: 5,
-      stopped: true
+      secs: 25 * 60,
+      current: "Session"
     },
     intervalID = 0,
-    $clockDisplay,
-    $phase;
-    MIN = 60 * 1000,
-    SEC = 1000;
+    $title,
+    title,
+    paused = false,
+    stopped = true;
 
 $('document').ready(function(){
-  console.log("Document loaded!");
 
-  $clockDisplay = $("#display-time");
-  $phase = $("clock-phase");
-
+  $title = $('html head').find('title');
+  title = $title.text();
   $('button').click(function(){ $(this).blur(); });
-  $('input[type="range"]').on("input change", function(e){ sliderChange($(this)); });
-  $('.stepper').click(function(e){ addSubClick( $(this) ); });
-  $('#start-btn').click(function(e){ startCountdown(timers.sessionTime, timers.breakTime); });
-  $('#stop-btn').click(function(e){ stopCountdown(); });
-  $('button, input').click(function(){ console.log(JSON.stringify(timers)); });
+  $('input[type="range"]').on("input change", function(){ sliderChange($(this)); });
+  $('.stepper').click(function(){ addSubClick( $(this) ); });
+  $('#start-btn').click(function(){ startCountdown(timers.sessionTime, timers.breakTime); });
+  $('#pause-btn').click(function(){ pauseCountdown(); });
+  $('#stop-btn').click(function(){ stopCountdown(); });
 
 });
 
 
-function startCountdown( sessionTime, breakTime ) {
+function getMins(secs){
+  return Math.floor(secs / 60);
+}
 
-  var time = sessionTime,
-      secs = sessionTime * SEC,
-      mins = sessionTime * MIN;
+
+function getSecs(secs){
+  return Math.ceil(secs % 60);
+}
+
+function startCountdown( sessionTime, breakTime, resumeTime) {
+
+  resumeTimer.secs = resumeTime || sessionTime * 60;
+  resumeTimer.sessionTime = sessionTime;
+  resumeTimer.breakTime = breakTime;
 
   // Stop the previous countdown then set display to latest sessionTime value
-  clearInterval(intervalID);
-  setCountDown();
-
-  timers.stopped = false;
+  stopCountdown();
+  setCountDown(getMins(resumeTimer.secs), getSecs(resumeTimer.secs));
+  stopped = false;
+  paused = false;
 
   intervalID = setInterval( function() {
 
-    // Convert minutes to milliseconds
-    var delta = countDownTime - new Date().getTime();
-    var minutes = Math.floor((delta % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.ceil((delta % (1000 * 60)) / 1000);
-    if (seconds < 10) { seconds = "0" + seconds; }
-    setCountDown(String(minutes), String(seconds));
-
-    if (delta < 0) {
-      // what to do here??
+    resumeTimer.secs -= 1;
+    if (resumeTimer.secs < 0){
+      if (resumeTimer.current === "Session"){
+        resumeTimer.secs = breakTime * 60;
+        resumeTimer.current = "Break!";
+      } else {
+        resumeTimer.secs = sessionTime * 60;
+        resumeTimer.current = "Session";
+      }
+      $("#display").toggleClass('break');
+      $("#clock-phase").text(resumeTimer.current);
     }
+    // Get minutes and seconds for clock display
+    minstr = getMins(resumeTimer.secs);
+    secstr = getSecs(resumeTimer.secs);
 
-    if (seconds % 2 === 0){
+    setCountDown(String(minstr), String(secstr));
+
+    if (resumeTimer.secs % 2 === 0){
       $("#sep").fadeTo("fast", 0.1);
       $("#sep").fadeTo("fast", 1);
     } else {
@@ -62,13 +81,31 @@ function startCountdown( sessionTime, breakTime ) {
   console.log("Timer " + intervalID + " started");
 }
 
-function stopCountdown() {
-  timers.stopped = true;
-  if (intervalID) { 
-    clearInterval(intervalID);
-    console.log("Timer " + intervalID + " stopped"); 
+function pauseCountdown() {
+  if (!stopped){
+    if (paused){
+      startCountdown( resumeTimer.sessionTime, 
+                      resumeTimer.breakTime, 
+                      resumeTimer.secs );
+      paused = false;
+    } else {
+      clearInterval(intervalID);
+      paused = true;
+    }
+    $("#pause-icon").toggleClass("fa-play fa-pause");
   }
-  console.log(timers.sessionTime);
+}
+
+function stopCountdown() {
+  
+  if (intervalID) { clearInterval(intervalID); }
+  if (paused){ $("#pause-icon").toggleClass("fa-play fa-pause"); }
+  $("#display").removeClass('break');
+  $("#clock-phase").text("Session");
+
+  paused = false;
+  stopped = true;
+
   setCountDown();
 }
 
@@ -78,8 +115,22 @@ function displayValue( $t, val ){
 
 
 function setCountDown( mins, secs ){
-  displayValue($("#mins"), mins || timers.sessionTime);
-  displayValue($("#secs"), secs || "00");
+
+  var minstr = String(timers.sessionTime),
+      secstr = "00";
+
+  if (mins !== undefined){ 
+    minstr = String(mins); 
+  }
+
+  if (secs !== undefined){ 
+    secstr = String(secs);  
+    if (secstr < 10) { secstr = "0" + secstr; }
+  }
+
+  displayValue($("#mins"), minstr);
+  displayValue($("#secs"), secstr);
+  $title.text("[" + minstr + ":" + secstr + "] " + title);
 }
 
 
@@ -89,7 +140,7 @@ function sliderChange( $s ){
       labelID = $label.attr("id");
 
   timers[labelID] = Number(sval);
-  if (timers.stopped){ setCountDown(); }
+  if (stopped){ setCountDown(); }
   displayValue($label, timers[labelID]);
 }
 

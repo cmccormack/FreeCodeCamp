@@ -71,7 +71,9 @@ input {
   background: linear-gradient(to top left,  #000 20%, #444 100%);
   box-shadow: inset 3px 3px 4px #111;
 }
-
+#display.break {
+  color: #f0ad4e;
+}
 
 
 .range-group {
@@ -133,7 +135,7 @@ label {
 }
 
  /* Pause button styles */
-#pause {
+#pause-btn {
   width: 50px;
   padding: 0;
   z-index: 5;
