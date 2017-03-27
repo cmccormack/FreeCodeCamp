@@ -11,13 +11,19 @@ var timers = {
     intervalID = 0,
     $title,
     title,
+    // $sessionAlarm,
+    // $breakAlarm,
     paused = false,
-    stopped = true;
+    stopped = true,
+    audio = true;
 
 $('document').ready(function(){
 
   $title = $('html head').find('title');
   title = $title.text();
+  // sessionAlarm = $("#session-start-alarm");
+  // breakAlarm = $("#break-start-alarm");
+
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(){ sliderChange($(this)); });
   $('.stepper').click(function(){ addSubClick( $(this) ); });
@@ -37,9 +43,13 @@ function getSecs(secs){
   return Math.ceil(secs % 60);
 }
 
+function toSecs(mins){
+  return mins;
+}
+
 function startCountdown( sessionTime, breakTime, resumeTime) {
 
-  resumeTimer.secs = resumeTime || sessionTime * 60;
+  resumeTimer.secs = resumeTime || toSecs(sessionTime);
   resumeTimer.sessionTime = sessionTime;
   resumeTimer.breakTime = breakTime;
 
@@ -54,12 +64,15 @@ function startCountdown( sessionTime, breakTime, resumeTime) {
     resumeTimer.secs -= 1;
     if (resumeTimer.secs < 0){
       if (resumeTimer.current === "Session"){
-        resumeTimer.secs = breakTime * 60;
+        resumeTimer.secs = toSecs(breakTime);
         resumeTimer.current = "Break!";
+        alarm = $("#break-alarm").get(0);
       } else {
-        resumeTimer.secs = sessionTime * 60;
+        resumeTimer.secs = toSecs(sessionTime);
         resumeTimer.current = "Session";
+        alarm = $("#session-alarm").get(0);
       }
+      if (audio){ alarm.play(); }
       $("#display").toggleClass('break');
       $("#clock-phase").text(resumeTimer.current);
     }
@@ -99,7 +112,8 @@ function pauseCountdown() {
 function stopCountdown() {
   
   if (intervalID) { clearInterval(intervalID); }
-  if (paused){ $("#pause-icon").toggleClass("fa-play fa-pause"); }
+  $("#pause-icon").addClass("fa-pause");
+  $("#pause-icon").removeClass("fa-play");
   $("#display").removeClass('break');
   $("#clock-phase").text("Session");
 
