@@ -9,12 +9,16 @@ var timers = {
     title,
     paused = false,
     stopped = true,
-    audio = true;
+    audio = true,
+    interval = 1000;
 
 $('document').ready(function(){
 
+  // Grab title to use when updating clock in title area
   $title = $('html head').find('title');
   title = $title.text();
+  
+  // Bind functions to events after document has loaded
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(){ sliderChange($(this)); });
   $('.stepper').click(function(){ addSubClick( $(this) ); });
@@ -23,6 +27,7 @@ $('document').ready(function(){
   $('#stop-btn').click(function(){ stopCountdown(); });
   $('#volume-btn').click(function(){ volumeChange(); });
 
+  // For debug purposes
   $('.btn').click(function(e){
     $t = $(e.target);
     console.log($t.attr("id"), JSON.stringify(resumeTimer), "paused: " + paused, "stopped: " + stopped);
@@ -31,39 +36,25 @@ $('document').ready(function(){
 });
 
 
+// Converts seconds to minutes
 function getMins(secs){
   return Math.floor(secs / 60);
 }
 
 
+// Converts total seconds to a value used in display
 function getSecs(secs){
   return Math.ceil(secs % 60);
 }
 
+
+// Converts minutes to seconds
 function toSecs(mins){
   return mins * 60;
 }
 
-function startCountdownOld( sessionTime, breakTime, resumeTime ) {
 
-  resumeTimer.secs = resumeTime || toSecs(sessionTime);
-  resumeTimer.sessionTime = sessionTime;
-  resumeTimer.breakTime = breakTime;
-
-  // Stop the previous countdown then set display to latest sessionTime value
-  stopCountdown();
-  setCountDown(getMins(resumeTimer.secs), getSecs(resumeTimer.secs));
-  stopped = false;
-  paused = false;
-
-  intervalID = setInterval( function() { 
-    countDown(); 
-  }, 1000);
-
-  console.log("Timer " + intervalID + " started");
-}
-
-
+// Sets up the timer when the start button is clicked
 function startCountdown() {
 
   stopCountdown();
@@ -76,14 +67,17 @@ function startCountdown() {
 }
 
 
+// Countdown timer using interval of 1 second
 function countdown( timer ){
 
   stopped = false;
   paused = false;
 
   intervalID = setInterval( function() { 
+    // Decrement timer by 1 second
     timer.secs -= 1;
 
+    // Switch timers when a timer completes
     if (timer.secs < 0){
       if (timer.current === "Session"){
         timer.secs = toSecs(timer.breakTime);
@@ -98,12 +92,13 @@ function countdown( timer ){
       $("#display").toggleClass('break');
       $("#clock-phase").text(timer.current);
     }
-    // Get minutes and seconds for clock display
+
+    // Get minutes and seconds string and display
     minstr = getMins(timer.secs);
     secstr = getSecs(timer.secs);
-
     setCountDown(String(minstr), String(secstr));
 
+    // Animated blinking seperator
     if (timer.secs % 2 === 0){
       $("#sep").fadeTo("fast", 0.1);
       $("#sep").fadeTo("fast", 1);
@@ -111,25 +106,26 @@ function countdown( timer ){
       $("#sep").fadeTo("fast", 0.1);
       $("#sep").fadeTo("fast", 1);
     }
-  }, 1000);
+  }, interval);
 }
 
 
+// Pause button pauses current countdown and resumes if already paused
 function pauseCountdown() {
 
-  if (stopped) { return 0; }
-
+  if (stopped) { return 0; } // Break early if no timer
   if (paused){
     countdown(resumeTimer);
   } else {
     clearInterval(intervalID);
     paused = true;
   }
-
+  // Toggle icon on pause button
   $("#pause-icon").toggleClass("fa-play fa-pause");
 }
 
 
+// Clears current timer and resets flags and display
 function stopCountdown() {
   
   clearInterval(intervalID);
@@ -141,6 +137,7 @@ function stopCountdown() {
 }
 
 
+// Displays current countdown on display in human-readable format
 function setCountDown( mins, secs ){
 
   var minstr = String(timers.sessionTime),
@@ -161,6 +158,7 @@ function setCountDown( mins, secs ){
 }
 
 
+// Sets display to default values
 function resetDisplay(){
   $("#pause-icon").addClass("fa-pause");
   $("#pause-icon").removeClass("fa-play");
@@ -170,17 +168,18 @@ function resetDisplay(){
 }
 
 
+// Updtes timers and display when range slider is used
 function sliderChange( $s ){
-  var sval = $s.val(),
-      $label = $( $s.attr("data-display") ),
+  var $label = $( $s.attr("data-display") ),
       labelID = $label.attr("id");
 
-  timers[labelID] = Number(sval);
+  timers[labelID] = Number($s.val());
   if (stopped){ setCountDown(); }
   $label.text(timers[labelID]);
 }
 
 
+// Updates slider when +/- buttons are clicked
 function addSubClick( $t ){
   var $s = $($t.attr("data-target"));
   $s.val(Number($s.val()) + Number($t.attr("data-increment")));
@@ -188,6 +187,7 @@ function addSubClick( $t ){
 }
 
 
+// Toggles audio alarms
 function volumeChange() {
   if (audio) {
     audio = false;
