@@ -67,11 +67,21 @@
       <div class="row">
         <div id="clock" class="m-auto">
 
+          <!-- Clock Display -->
           <div id="display" class="text-center unselectable">
+
             <div id="volume"><button type="button" id="volume-btn" class="icon-btn"><i class="fa fa-volume-up"></i></button></div>
             <div id="clock-phase" class="display-5">Session</div>
             <div id="display-time" class="display-2" ><span id="mins">25</span><span id="sep">:</span><span id="secs">00</span></div>
-          </div>
+
+            <div class="container">
+              <div class="row">
+                <div id="current-timer" class="col-sm-5 col-sm-offset-2 text-muted">Session:&nbsp;<span id="current-session"></span></div>
+                <div id="break-timer" class="col-sm-5 text-muted">Break:&nbsp;<span id="current-break"></span></div>
+              </div>
+            </div>
+
+          </div><!-- End Clock Display -->
 
           <div class="range-group">
             <label class="range-group-label unselectable" for="session-length-slider">Session Time:&nbsp;

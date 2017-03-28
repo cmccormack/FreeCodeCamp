@@ -51,12 +51,12 @@ input {
 
 #clock {
   width: 320px;
-  height: 450px;
+  /*height: 475px;*/
   border-radius: 20px;
   padding: 10px;
   background: #222;
   background: #222 -webkit-radial-gradient(20% 80%, 60% 60%, rgba(255,255,255,.12), rgba(0,0,0,.2));
-  box-shadow:0px 2px .7px 1px #777, inset 0 -7px rgba(0,0,0,.4);
+  box-shadow: 0px 2px .7px 1px #777, inset 0 -7px rgba(0,0,0,.4);
 }
 
 #display {
@@ -122,11 +122,11 @@ label {
 }
 
 #buttons {
-  margin-top: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
   width: 100%;
   display:flex;
-  justify-content:center;.
-  align-items:center;
+  justify-content:center;
 }
 
 /* Start and Stop button styles */
