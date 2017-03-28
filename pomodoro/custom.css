@@ -179,4 +179,9 @@ label {
   footer {
     text-align: center;
   }
+
+  .display-3 {
+    font-size: 3rem;
+  }
+
 }
