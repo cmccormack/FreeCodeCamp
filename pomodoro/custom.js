@@ -164,6 +164,8 @@ function resetDisplay(){
   $("#pause-icon").removeClass("fa-play");
   $("#display").removeClass('break');
   $("#clock-phase").text("Session");
+  $("#current-session").text(timers.sessionTime + " Min");
+  $("#current-break").text(timers.breakTime + " Min");
   setCountDown();
 }
 
