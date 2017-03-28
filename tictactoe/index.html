@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tic Tac Toe - Chris McCormack</title>
+  <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Play|VT323|Quicksand|Merriweather|Droid+Sans+Mono" rel="stylesheet">
+
+  <!-- JavaScript - jQuery must be loaded prior to Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <!-- Additional CSS for icons, etc... -->
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="custom.css">
+
+  <!-- Addtional JavaScript -->
+  <script src="custom.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+</head>
+
+<body>
+
+  <!-- Navbar Begin -->
+  <header class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse unselectable">
+    <!-- Navbar Toggler for smaller screens -->
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navToggle">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Brand -->
+    <a class="navbar-brand white-shadow" href="../index.html"><i class="fa fa-th fa-lg fa-fw"></i>Chris McCormack</a>
+
+    <!-- Navbar Toggler Items -->
+    <div class="collapse navbar-collapse" id="navToggle">
+      <div class="navbar-nav ml-auto">
+        <a class="nav-item nav-link active white-shadow" href="../index.html">Home</a>
+        <a class="nav-item nav-link white-shadow" href="../index.html">Portfolio</a>
+      </div>
+    </div>
+  </header> <!-- Navbar End -->
+
+  <main>
+    <div class="container">
+
+      <div id="main-header" class="row text-center">
+        <div class="col">
+          <h1 class="display-3 text-center">Tic Tac Toe</h1>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="clock" class="m-auto">
+
+          <!-- Clock Display -->
+          <div id="display" class="text-center unselectable">
+            <button type="button" class="board-cell br bb" data-row="0" data-col="0"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bb"    data-row="0" data-col="1"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bb bl" data-row="0" data-col="2"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell br"    data-row="1" data-col="0"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell"       data-row="1" data-col="1"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bl"    data-row="1" data-col="2"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bt br" data-row="2" data-col="0"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bt"    data-row="2" data-col="1"><i class="cell-i fa fa-3x"></i></button>
+            <button type="button" class="board-cell bl bt" data-row="2" data-col="2"><i class="cell-i fa fa-3x"></i></button>
+
+          </div><!-- End Clock Display -->
+
+          <div id="buttons" class="input-group">
+            <span class="input-group-btn">
+              <button type="button" id="start-btn" class="btn btn-outline-success control">Start</button>
+            </span>
+            <span class="input-group-btn">
+              <button type="button" id="pause-btn" class="btn btn-outline-warning"><i id="pause-icon" class="fa fa-pause"></i></button>
+            </span>
+            <span class="input-group-btn">
+              <button type="button" id="stop-btn" class="btn btn-outline-danger control">Stop</button>
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+  </main>
+
+  <!-- Bottom Footer -->
+  <footer class="bg-inverse navbar-inverse unselectable">
+
+        <a class="navbar-brand white-shadow" href="https://www.facebook.com/christopher.j.mccormack" target="_blank">
+          <i class="fa fa-facebook text-shadow-white"></i>
+        </a>
+        
+        <a class="navbar-brand white-shadow" href="https://twitter.com/chrisjmccormack" target="_blank">
+          <i class="fa fa-twitter text-shadow-white"></i>
+        </a>
+        
+        <a class="navbar-brand white-shadow" href="https://github.com/cmccormack" target="_blank">
+          <i class="fa fa-github text-shadow-white"></i>
+        </a>
+        
+        <a class="navbar-brand white-shadow" href="https://www.linkedin.com/in/christopherjmccormack" target="_blank">
+          <i class="fa fa-linkedin text-shadow-white"></i>
+        </a>
+    
+  </footer>  <!-- End Bottom Footer -->
+
+</body>
+</html>
