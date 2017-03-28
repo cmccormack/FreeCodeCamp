@@ -1,13 +1,9 @@
 var timers = {
       sessionTime: 25,
-      breakTime: 5
-    },
-    resumeTimer = {
-      sessionTime: 25,
       breakTime: 5,
-      secs: 25 * 60,
       current: "Session"
     },
+    resumeTimer,
     intervalID = 0,
     $title,
     title,
@@ -22,9 +18,14 @@ $('document').ready(function(){
   $('button').click(function(){ $(this).blur(); });
   $('input[type="range"]').on("input change", function(){ sliderChange($(this)); });
   $('.stepper').click(function(){ addSubClick( $(this) ); });
-  $('#start-btn').click(function(){ startCountdown(timers.sessionTime, timers.breakTime); });
+  $('#start-btn').click(function(){ startCountdown(resumeTimer); });
   $('#pause-btn').click(function(){ pauseCountdown(); });
   $('#stop-btn').click(function(){ stopCountdown(); });
+
+  $('.btn').click(function(e){
+    $t = $(e.target);
+    console.log($t.attr("id"), JSON.stringify(resumeTimer), "paused: " + paused, "stopped: " + stopped);
+  });
 
 });
 
@@ -42,7 +43,7 @@ function toSecs(mins){
   return mins;
 }
 
-function startCountdown( sessionTime, breakTime, resumeTime) {
+function startCountdownOld( sessionTime, breakTime, resumeTime ) {
 
   resumeTimer.secs = resumeTime || toSecs(sessionTime);
   resumeTimer.sessionTime = sessionTime;
@@ -54,30 +55,55 @@ function startCountdown( sessionTime, breakTime, resumeTime) {
   stopped = false;
   paused = false;
 
-  intervalID = setInterval( function() {
+  intervalID = setInterval( function() { 
+    countDown(); 
+  }, 1000);
 
-    resumeTimer.secs -= 1;
-    if (resumeTimer.secs < 0){
-      if (resumeTimer.current === "Session"){
-        resumeTimer.secs = toSecs(breakTime);
-        resumeTimer.current = "Break!";
+  console.log("Timer " + intervalID + " started");
+}
+
+
+function startCountdown() {
+
+  stopCountdown();
+
+  resumeTimer = Object.assign({}, timers);
+  resumeTimer.secs = toSecs(resumeTimer.sessionTime);
+
+  setCountDown(getMins(resumeTimer.secs), getSecs(resumeTimer.secs));
+  countdown(resumeTimer);
+}
+
+
+function countdown( timer ){
+
+  stopped = false;
+  paused = false;
+
+  intervalID = setInterval( function() { 
+    timer.secs -= 1;
+
+    if (timer.secs < 0){
+      if (timer.current === "Session"){
+        timer.secs = toSecs(timer.breakTime);
+        timer.current = "Break!";
         alarm = $("#break-alarm").get(0);
       } else {
-        resumeTimer.secs = toSecs(sessionTime);
-        resumeTimer.current = "Session";
+        timer.secs = toSecs(timer.sessionTime);
+        timer.current = "Session";
         alarm = $("#session-alarm").get(0);
       }
       if (audio){ alarm.play(); }
       $("#display").toggleClass('break');
-      $("#clock-phase").text(resumeTimer.current);
+      $("#clock-phase").text(timer.current);
     }
     // Get minutes and seconds for clock display
-    minstr = getMins(resumeTimer.secs);
-    secstr = getSecs(resumeTimer.secs);
+    minstr = getMins(timer.secs);
+    secstr = getSecs(timer.secs);
 
     setCountDown(String(minstr), String(secstr));
 
-    if (resumeTimer.secs % 2 === 0){
+    if (timer.secs % 2 === 0){
       $("#sep").fadeTo("fast", 0.1);
       $("#sep").fadeTo("fast", 1);
     } else {
@@ -85,41 +111,32 @@ function startCountdown( sessionTime, breakTime, resumeTime) {
       $("#sep").fadeTo("fast", 1);
     }
   }, 1000);
-
-  console.log("Timer " + intervalID + " started");
 }
+
 
 function pauseCountdown() {
-  if (!stopped){
-    if (paused){
-      startCountdown( resumeTimer.sessionTime, 
-                      resumeTimer.breakTime, 
-                      resumeTimer.secs );
-      paused = false;
-    } else {
-      clearInterval(intervalID);
-      paused = true;
-    }
-    $("#pause-icon").toggleClass("fa-play fa-pause");
+
+  if (stopped) { return 0; }
+
+  if (paused){
+    countdown(resumeTimer);
+  } else {
+    clearInterval(intervalID);
+    paused = true;
   }
+
+  $("#pause-icon").toggleClass("fa-play fa-pause");
 }
+
 
 function stopCountdown() {
   
-  if (intervalID) { clearInterval(intervalID); }
-  $("#pause-icon").addClass("fa-pause");
-  $("#pause-icon").removeClass("fa-play");
-  $("#display").removeClass('break');
-  $("#clock-phase").text("Session");
+  clearInterval(intervalID);
 
   paused = false;
   stopped = true;
 
-  setCountDown();
-}
-
-function displayValue( $t, val ){
-  $t.text(val);
+  resetDisplay();
 }
 
 
@@ -137,9 +154,18 @@ function setCountDown( mins, secs ){
     if (secstr < 10) { secstr = "0" + secstr; }
   }
 
-  displayValue($("#mins"), minstr);
-  displayValue($("#secs"), secstr);
   $title.text("[" + minstr + ":" + secstr + "] " + title);
+  $("#mins").text(minstr);
+  $("#secs").text(secstr);
+}
+
+
+function resetDisplay(){
+  $("#pause-icon").addClass("fa-pause");
+  $("#pause-icon").removeClass("fa-play");
+  $("#display").removeClass('break');
+  $("#clock-phase").text("Session");
+  setCountDown();
 }
 
 
@@ -150,7 +176,7 @@ function sliderChange( $s ){
 
   timers[labelID] = Number(sval);
   if (stopped){ setCountDown(); }
-  displayValue($label, timers[labelID]);
+  $label.text(timers[labelID]);
 }
 
 
@@ -159,3 +185,5 @@ function addSubClick( $t ){
   $s.val(Number($s.val()) + Number($t.attr("data-increment")));
   sliderChange($s);
 }
+
+
