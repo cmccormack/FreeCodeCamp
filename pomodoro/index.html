@@ -58,65 +58,66 @@
   <main>
     <div class="container">
 
-    <div id="main-header" class="row text-center">
-      <div class="col">
-        <h1 class="display-3 text-center">Pomodoro Clock</h1>
+      <div id="main-header" class="row text-center">
+        <div class="col">
+          <h1 class="display-3 text-center">Pomodoro Clock</h1>
+        </div>
       </div>
-    </div>
 
-    <div class="row">
-      <div id="clock" class="m-auto">
+      <div class="row">
+        <div id="clock" class="m-auto">
 
-        <div id="display" class="text-center unselectable">
+          <div id="display" class="text-center unselectable">
+            <div id="volume"><button type="button" id="volume-btn" class="icon-btn"><i class="fa fa-volume-up"></i></button></div>
             <div id="clock-phase" class="display-5">Session</div>
             <div id="display-time" class="display-2" ><span id="mins">25</span><span id="sep">:</span><span id="secs">00</span></div>
-        </div>
-
-        <div class="range-group">
-          <label class="range-group-label unselectable" for="session-length-slider">Session Time:&nbsp;
-            <span class="slider-label-time" id="sessionTime">25</span>&nbsp;Min
-          </label>
-          <div class="slider input-group text-center">
-            <button type="button" class="stepper" data-increment="-1" data-target="#session-length-slider">
-              <i class="fa fa-minus-square fa-fw fa-lg"></i>
-            </button>
-            <input id="session-length-slider" type="range" min="1" max="60" step="1" value="25" data-display="#sessionTime">
-            <button type="button" class="stepper" data-increment="1" data-target="#session-length-slider">
-              <i class="fa fa-plus-square fa-fw fa-lg"></i>
-            </button>
-
           </div>
-        </div>
 
-        <div class="range-group">
-          <label class="range-group-label unselectable" for="break-length-slider">Break Time:&nbsp;
-            <span class="slider-label-time" id="breakTime">5</span>&nbsp;Min
-          </label>
-          <div class="slider input-group text-center">
-            <button type="button" class="stepper" data-increment="-1" data-target="#break-length-slider">
-              <i class="fa fa-minus-square fa-fw fa-lg"></i>
-            </button>
-            <input id="break-length-slider" type="range" min="1" max="60" step="1" value="5" data-display="#breakTime">
-            <button type="button" class="stepper" data-increment="1" data-target="#break-length-slider">
-              <i class="fa fa-plus-square fa-fw fa-lg"></i>
-            </button>
+          <div class="range-group">
+            <label class="range-group-label unselectable" for="session-length-slider">Session Time:&nbsp;
+              <span class="slider-label-time" id="sessionTime">25</span>&nbsp;Min
+            </label>
+            <div class="slider input-group text-center">
+              <button type="button" class="stepper icon-btn" data-increment="-1" data-target="#session-length-slider">
+                <i class="fa fa-minus-square fa-fw fa-lg"></i>
+              </button>
+              <input id="session-length-slider" type="range" min="1" max="60" step="1" value="25" data-display="#sessionTime">
+              <button type="button" class="stepper icon-btn" data-increment="1" data-target="#session-length-slider">
+                <i class="fa fa-plus-square fa-fw fa-lg"></i>
+              </button>
+
+            </div>
           </div>
-        </div>
 
-        <div id="buttons" class="input-group">
-          <span class="input-group-btn">
-            <button type="button" id="start-btn" class="btn btn-outline-success control">Start</button>
-          </span>
-          <span class="input-group-btn">
-            <button type="button" id="pause-btn" class="btn btn-outline-warning"><i id="pause-icon" class="fa fa-pause"></i></button>
-          </span>
-          <span class="input-group-btn">
-            <button type="button" id="stop-btn" class="btn btn-outline-danger control">Stop</button>
-          </span>
-        </div>
+          <div class="range-group">
+            <label class="range-group-label unselectable" for="break-length-slider">Break Time:&nbsp;
+              <span class="slider-label-time" id="breakTime">5</span>&nbsp;Min
+            </label>
+            <div class="slider input-group text-center">
+              <button type="button" class="stepper icon-btn" data-increment="-1" data-target="#break-length-slider">
+                <i class="fa fa-minus-square fa-fw fa-lg"></i>
+              </button>
+              <input id="break-length-slider" type="range" min="1" max="60" step="1" value="5" data-display="#breakTime">
+              <button type="button" class="stepper icon-btn" data-increment="1" data-target="#break-length-slider">
+                <i class="fa fa-plus-square fa-fw fa-lg"></i>
+              </button>
+            </div>
+          </div>
 
+          <div id="buttons" class="input-group">
+            <span class="input-group-btn">
+              <button type="button" id="start-btn" class="btn btn-outline-success control">Start</button>
+            </span>
+            <span class="input-group-btn">
+              <button type="button" id="pause-btn" class="btn btn-outline-warning"><i id="pause-icon" class="fa fa-pause"></i></button>
+            </span>
+            <span class="input-group-btn">
+              <button type="button" id="stop-btn" class="btn btn-outline-danger control">Stop</button>
+            </span>
+          </div>
+
+        </div>
       </div>
-    </div>
 
 
 

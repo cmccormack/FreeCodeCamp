@@ -65,7 +65,7 @@ input {
   border-radius: 10px;
   margin: auto;
   padding: 5px;
-  padding-top: 25px;
+  padding-top: 12px;
   color: #DDD;
   background: #222;
   background: linear-gradient(to top left,  #000 20%, #444 100%);
@@ -75,6 +75,11 @@ input {
   color: #f0ad4e;
 }
 
+#volume {
+  text-align: left;
+  margin-top: -5px;
+  margin-bottom: -5px;
+}
 
 .range-group {
   margin-top: 16px;
@@ -100,7 +105,7 @@ label {
   align-items:center;
 }
 
-.stepper {
+.icon-btn {
   background: transparent;
   border: none;
   margin: 0;
@@ -110,7 +115,7 @@ label {
 }
 
 /* Transform provides pushed button effect to increment/decrement buttons */
-.stepper:focus {
+.icon-btn:focus {
   outline: none;
   transform: translateY(1px);
 }

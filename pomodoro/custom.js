@@ -21,6 +21,7 @@ $('document').ready(function(){
   $('#start-btn').click(function(){ startCountdown(resumeTimer); });
   $('#pause-btn').click(function(){ pauseCountdown(); });
   $('#stop-btn').click(function(){ stopCountdown(); });
+  $('#volume-btn').click(function(){ volumeChange(); });
 
   $('.btn').click(function(e){
     $t = $(e.target);
@@ -187,3 +188,11 @@ function addSubClick( $t ){
 }
 
 
+function volumeChange() {
+  if (audio) {
+    audio = false;
+  } else {
+    audio = true;
+  }
+  $("#volume-btn i").toggleClass("fa-volume-up fa-volume-off");
+}
