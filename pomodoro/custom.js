@@ -41,7 +41,7 @@ function getSecs(secs){
 }
 
 function toSecs(mins){
-  return mins;
+  return mins * 60;
 }
 
 function startCountdownOld( sessionTime, breakTime, resumeTime ) {
