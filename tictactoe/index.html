@@ -73,12 +73,27 @@
             <button type="button" class="board-cell bl bt" id="2_2"><i class="cell-i fa fa-3x"></i></button>
           </div> <!-- End Clock Display -->
 
-          <div id="buttons">
-            <div id="playerSelect" class="btn-group" data-toggle="buttons">
-              <label class="btn btn-outline-secondary active">
-                <input type="radio" name="X" id="radio-x" autocomplete="off" checked><i class="fa fa-times"></i></label>
-              <label class="btn btn-outline-secondary">
-                <input type="radio" name="O" id="radio-o" autocomplete="off"><i class="fa fa-circle-o"></i></label>
+          <div id="buttons" class="container">
+            <div class="row btn-row">
+
+              <div id="playerSelect" class="btn-group col" data-toggle="buttons">
+                <label class="btn btn-outline-secondary active">
+                  <input type="radio" name="X" id="radio-x" autocomplete="off" checked><i class="fa fa-times"></i></label>
+                <label class="btn btn-outline-secondary">
+                  <input type="radio" name="O" id="radio-o" autocomplete="off"><i class="fa fa-circle-o"></i></label>
+              </div>
+
+              <div class="col">
+                <label id="reset" class="btn btn-outline-secondary"><i class="fa fa-rotate-left"></i></label>
+              </div>
+
+              <div id="opponentSelect" class="btn-group col" data-toggle="buttons">
+                <label class="btn btn-outline-secondary active">
+                  <input type="radio" name="human" id="human" autocomplete="off" checked><i class="fa fa-group"></i></label>
+                <label class="btn btn-outline-secondary">
+                  <input type="radio" name="computer" id="computer" autocomplete="off"><i class="fa fa-laptop"></i></label>
+              </div>
+
             </div>
           </div>
 
