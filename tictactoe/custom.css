@@ -117,6 +117,10 @@ input {
   padding-right: 5px;
 }
 
+.radio.disabled {
+  pointer-events: none;
+}
+
 
 
 /* Utility Styles */
