@@ -85,12 +85,11 @@ input {
   outline: none;
 }
 
-.cell-i:before {
-  font-family: FontAwesome;
-  content: "\f00d"; /* X */
-  content: "\f10c"; /* O */
-
+/* Fixes issus with FontAwesome resizing buttons */
+.board-cell i.fa {
+  display: inline;
 }
+
 
 
 
@@ -102,6 +101,8 @@ input {
   display:flex;
   justify-content:center;
 }
+
+
 
 /* Utility Styles */
 
@@ -142,6 +143,10 @@ input {
 }
 .bl {
   border-left: 2px solid #666 !important;
+}
+
+label.active i {
+  font-size: 1.33em !important;
 }
 
 /* Display size adjustments */
