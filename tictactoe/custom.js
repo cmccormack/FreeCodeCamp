@@ -13,4 +13,5 @@ $('document').ready(function(){
 function cellClicked($cell){
   var x = $cell.attr("data-row"),
       y = $cell.attr("data-col");
+      console.log(x,y);
 }
