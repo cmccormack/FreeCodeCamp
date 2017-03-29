@@ -81,6 +81,10 @@ input {
   background-color: transparent;
 }
 
+.board-cell:focus {
+  outline: none;
+}
+
 .cell-i:before {
   font-family: FontAwesome;
   content: "\f00d"; /* X */

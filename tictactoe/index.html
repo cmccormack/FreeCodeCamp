@@ -55,9 +55,11 @@
       </div>
 
       <div class="row">
+
+        <!-- Clock Begin -->
         <div id="clock" class="m-auto">
 
-          <!-- Clock Display -->
+          <!-- Clock Display Being-->
           <div id="display" class="text-center unselectable">
             <button type="button" class="board-cell br bb" data-row="0" data-col="0"><i class="cell-i fa fa-3x"></i></button>
             <button type="button" class="board-cell bb"    data-row="0" data-col="1"><i class="cell-i fa fa-3x"></i></button>
@@ -71,22 +73,17 @@
 
           </div><!-- End Clock Display -->
 
+
           <div id="buttons" class="input-group">
-            <span class="input-group-btn">
-              <button type="button" id="start-btn" class="btn btn-outline-success control">Start</button>
-            </span>
-            <span class="input-group-btn">
-              <button type="button" id="pause-btn" class="btn btn-outline-warning"><i id="pause-icon" class="fa fa-pause"></i></button>
-            </span>
-            <span class="input-group-btn">
-              <button type="button" id="stop-btn" class="btn btn-outline-danger control">Stop</button>
-            </span>
-          </div>
 
+            <div class="btn-group" data-toggle="buttons">
+              <label class="btn btn-secondary active">
+                <input type="radio" name="options" id="option1" autocomplete="off" checked><i class="fa fa-times"></i></label>
+              <label class="btn btn-secondary">
+                <input type="radio" name="options" id="option2" autocomplete="off"><i class="fa fa-circle-o"></i></label>
+            </div>
         </div>
-      </div>
-
-
+      </div><!-- End Clock -->
 
     </div>
   </main>
