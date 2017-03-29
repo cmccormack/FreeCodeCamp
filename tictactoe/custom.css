@@ -102,6 +102,21 @@ input {
   justify-content:center;
 }
 
+#buttons .btn {
+  padding: 0.4rem 0.4rem;
+}
+
+#buttons .btn-group {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#buttons .btn-row {
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
 
 
 /* Utility Styles */
