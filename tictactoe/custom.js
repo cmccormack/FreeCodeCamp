@@ -4,21 +4,22 @@ Array.prototype.clone = function() {
 
 var board,
     player,
-    opponent = "O",
-    currentPlayer;
+    currentPlayer,
+    opponent,
+    opponentType;
 
 $('document').ready(function(){
 
   // Initialize variables
-  player = $("#playerSelect label.active input").attr('name');
-  if (player == "O") { opponent = "X"; }
+  
 
   resetGame();
   
   // Bind functions to events
   $('button').click(function(){ $(this).blur(); });
   $('.board-cell').click(function(){ cellClicked($(this)); });
-  $('#playerSelect input').on('change', function(){ player = this.getAttribute("name"); });
+  $('#playerSelect input').on('change', function(){ switchPlayer(); });
+  $('#opponentSelect input').on('change', function(){ opponentType = this.getAttribute("name"); });
   $('#reset').click(function(){ resetGame(); });
 });
 
@@ -29,6 +30,7 @@ function lockRadios(){
   $("input", "#buttons").prop("disabled", true);
 }
 
+
 function cellClicked($cell){
   var pos = $cell.attr("id").split("_").map(Number),
       x = pos[0], y = pos[1];
@@ -37,12 +39,37 @@ function cellClicked($cell){
 
   // Make move if cell is available
   if (!board[x][y]){ 
-    board[x][y] = player;
-    displayMove(player, x, y);
+    board[x][y] = currentPlayer;
+    displayMove(currentPlayer, x, y);
   }
-  if (checkForWin() === 10){ console.log(player + " is the winner!"); }
-  else if (checkForWin() === 10) { console.log(player + "is the winner!"); }
+
+  // Check for a winner
+  var winner = checkForWin();
+  if (winner){
+    if (checkForWin() === 10){ 
+      console.log(player + " is the winner!"); 
+    }
+    else if (checkForWin() === -10) { 
+      console.log(opponent + "is the winner!");
+    }
+  } else {
+    switchPlayer();
+  }
   console.log(player, x,y, JSON.stringify(board));
+}
+
+
+function switchPlayer(){
+  console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
+  if (opponentType == "human"){
+    if (currentPlayer == player){
+      currentPlayer = opponent;
+    } else {
+      currentPlayer = player;
+    }
+
+  }
+
 }
 
 
@@ -64,6 +91,10 @@ function resetGame() {
   $("label", "#buttons").removeClass("disabled");
   $("input", "#buttons").prop("disabled", false);
 
+  player = $("#playerSelect label.active input").attr('name');
+  if (player == "O") { opponent = "X"; } else { opponent = "O"; }
+  currentPlayer = player;
+  opponentType = $("#opponentSelect label.active input").attr('name');
 }
 
 
