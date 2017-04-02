@@ -19,7 +19,7 @@ footer {
 main {
   margin-top: 56px;
   min-height: 100%;
-  margin-bottom: 60px;
+  margin-bottom: 56px;
 }
 
 i.fa {
@@ -39,6 +39,7 @@ footer {
   left: 0;
   padding: .5rem 1.5rem;
   z-index: 50;
+  height: 56px;
 }
 
 input {

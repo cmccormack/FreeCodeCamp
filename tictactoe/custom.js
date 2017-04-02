@@ -4,7 +4,8 @@ Array.prototype.clone = function() {
 
 var board,
     player,
-    opponent = "O";
+    opponent = "O",
+    currentPlayer;
 
 $('document').ready(function(){
 
@@ -22,26 +23,32 @@ $('document').ready(function(){
 });
 
 
+function lockRadios(){
+  // Lock board once first move has been made
+  $(".radio", "#buttons").addClass("disabled");
+  $("input", "#buttons").prop("disabled", true);
+}
 
 function cellClicked($cell){
   var pos = $cell.attr("id").split("_").map(Number),
       x = pos[0], y = pos[1];
 
-  $(".radio", "#buttons").addClass("disabled");
-  $("input", "#buttons").prop("disabled", true);
+  lockRadios();
 
+  // Make move if cell is available
   if (!board[x][y]){ 
     board[x][y] = player;
     displayMove(player, x, y);
   }
-  if (checkForWin() === 10){ console.log("Winner!"); };
+  if (checkForWin() === 10){ console.log(player + " is the winner!"); }
+  else if (checkForWin() === 10) { console.log(player + "is the winner!"); }
   console.log(player, x,y, JSON.stringify(board));
 }
 
 
-function displayMove(player, x, y){
+function displayMove(currPlayer, x, y){
   var $cellIcon = $("#" + x + "_" + y + " i"); 
-  if (player == "X"){
+  if (currPlayer == "X"){
     $cellIcon.addClass("fa-times");
   } else {
     $cellIcon.addClass("fa-circle-o");
