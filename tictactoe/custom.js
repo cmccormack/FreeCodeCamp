@@ -45,12 +45,12 @@ function cellClicked($cell){
 
   // Check for a winner
   var winner = checkForWin();
-  if (winner){
-    if (checkForWin() === 10){ 
+  if (winner.score){
+    if (winner.score === 10){ 
       console.log(player + " is the winner!"); 
     }
-    else if (checkForWin() === -10) { 
-      console.log(opponent + "is the winner!");
+    else if (winner.score === -10) { 
+      console.log(opponent + " is the winner!");
     }
   } else {
     switchPlayer();
@@ -98,47 +98,40 @@ function resetGame() {
 }
 
 
-function checkForWin(){
 
-  // Check rows
-  for (var row = 0; row < 3; row++){
-    if (board[row][0] == board[row][1] && board[row][1] == board[row][2]){
-      if (board[row][0] == player){
-        return 10;
-      } else if (board[row][0] == opponent){
-        return -10;
+
+
+function checkForWin(){
+  var result = {pos: [], score: 0};
+
+  function threeInRow(pos) {
+    var r = {pos:pos, score:0};
+
+    if (pos[0] == pos[1] && pos[1] == pos[2]){
+      if (pos[0] == player){
+        r.score = 10;
+      } else if (pos[0] == opponent){
+        r.score = -10;
       }
     }
+    return r;
   }
 
-  // Check cols
-  for (var col = 0; col < 3; col++){
-    if (board[0][col] == board[1][col] && board[1][col] == board[2][col]){
-      if (board[0][col] == player){
-        return 10;
-      } else if (board[0][col] == opponent){
-        return -10;
-      }
-    }
+  // Check rows
+  for (var i = 0; i < 3; i++){
+    row = threeInRow([ board[i][0], board[i][1], board[i][2] ]);
+    if (row.score){ return row; }
+    col = threeInRow([ board[0][i], board[1][i], board[2][i] ]);
+    if (col.score){ return col; }
   }
 
   // Check diagonals
-  if (board[0][0] == board[1][1] && board[1][1] == board[2][2]){
-    if (board[0][0] == player){
-      return 10;
-    } else if (board[0][0] == opponent){
-      return -10;
-    }
-  }
+  result = threeInRow([ board[0][0], board[1][1], board[2][2] ]);
+  if (result.score){ return result; }
 
-  if (board[0][2] == board[1][1] && board[1][1] == board[2][0]){
-    if (board[0][2] == player){
-      return 10;
-    } else if (board[0][2] == opponent){
-      return -10;
-    }
-  }
+  result = threeInRow([ board[0][2], board[1][1], board[2][0] ]);
+  if (result.score){ return result; }
 
   // Return 0 if no winner
-  return 0;
+  return result;
 }
