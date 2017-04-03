@@ -67,9 +67,7 @@ function switchPlayer(){
     } else {
       currentPlayer = player;
     }
-
   }
-
 }
 
 
@@ -98,13 +96,10 @@ function resetGame() {
 }
 
 
-
-
-
 function checkForWin(){
   var result = {pos: [], score: 0};
 
-  function threeInRow(pos) {
+  function threeInARow(pos) {
     var r = {pos:pos, score:0};
 
     if (pos[0] == pos[1] && pos[1] == pos[2]){
@@ -119,19 +114,19 @@ function checkForWin(){
 
   // Check rows
   for (var i = 0; i < 3; i++){
-    row = threeInRow([ board[i][0], board[i][1], board[i][2] ]);
+    row = threeInARow([ board[i][0], board[i][1], board[i][2] ]);
     if (row.score){ return row; }
-    col = threeInRow([ board[0][i], board[1][i], board[2][i] ]);
+    col = threeInARow([ board[0][i], board[1][i], board[2][i] ]);
     if (col.score){ return col; }
   }
 
   // Check diagonals
-  result = threeInRow([ board[0][0], board[1][1], board[2][2] ]);
+  result = threeInARow([ board[0][0], board[1][1], board[2][2] ]);
   if (result.score){ return result; }
 
-  result = threeInRow([ board[0][2], board[1][1], board[2][0] ]);
+  result = threeInARow([ board[0][2], board[1][1], board[2][0] ]);
   if (result.score){ return result; }
 
-  // Return 0 if no winner
+  // Return results with score of 0 if no winner
   return result;
 }
