@@ -10,9 +10,6 @@ var board,
 
 $('document').ready(function(){
 
-  // Initialize variables
-  
-
   resetGame();
   
   // Bind functions to events
@@ -21,6 +18,7 @@ $('document').ready(function(){
   $('#playerSelect input').on('change', function(){ switchPlayer(); });
   $('#opponentSelect input').on('change', function(){ opponentType = this.getAttribute("name"); });
   $('#reset').click(function(){ resetGame(); });
+
 });
 
 
@@ -60,6 +58,7 @@ function cellClicked($cell){
 
 
 function switchPlayer(){
+  var bestMove = {row: -1, col: -1};
   console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
   if (opponentType == "human"){
     if (currentPlayer == player){
@@ -67,6 +66,10 @@ function switchPlayer(){
     } else {
       currentPlayer = player;
     }
+  }
+
+  if (opponentType == "computer"){
+
   }
 }
 
@@ -89,6 +92,7 @@ function resetGame() {
   $("label", "#buttons").removeClass("disabled");
   $("input", "#buttons").prop("disabled", false);
 
+  // Set initial values for player and oppenent selections
   player = $("#playerSelect label.active input").attr('name');
   if (player == "O") { opponent = "X"; } else { opponent = "O"; }
   currentPlayer = player;
@@ -143,14 +147,86 @@ function movesLeft(){
   return false;
 }
 
+
+// minimax function from https://goo.gl/Se8kN4
 function minimax(depth, isMax){
-  var score = checkForWin();
+  var score = checkForWin(),
+      best, row, col;
 
   // Return score if player or opponent has won the game
   if (score === 10 || score === -10){
     return score;
   }
 
+  if (!movesLeft()){ return 0; }
+
+  // Computer's turn
+  if (isMax){
+    best = -1000;
+
+    // Iterate over board
+    for (row = 0; row < 3; row++){
+      for (col = 0; col < 3; col++){
+
+        // Make a move at first empty position then recursively choose the best
+        if (!board[row][col]) {
+          board[row][col] = opponent;
+          best = max( best, minimax(depth + 1, !isMax) );
+
+          // Undo move
+          board[row][col] = "";
+        }
+      }
+    }
+    return best;
+  } else {
+    best = 1000;
+
+    // Iterate over board
+    for (row = 0; row < 3; row++){
+      for (col = 0; col < 3; col++){
+
+        // Make a move at first empty position then recursively choose the worst
+        if (!board[row][col]){
+          board[row][col] = player;
+          best = min( best, minimax(depth + 1, !isMax) );
+          
+          // Undo move
+          board[row][col] = "";
+        } 
+      }
+    }
+    return best;
+  }
+}
 
 
+function bestMove(){
+  var bestVal = -1000,
+      bestMove = {row: -1, col: -1},
+      row, col;
+
+  // Iterate over board
+  for (row = 0; row < 3; row++){
+    for (col = 0; col < 3; col++){
+
+      // Check if cell is empty
+      if (!board[row][col]){
+        board[i][j] = opponent;
+
+        // Compute evaluation function for this move
+        var moveVal = minimax(0, false);
+
+        // Undo the move
+        board[row][col] = "";
+
+        // If value of current move is greater than best value, update best
+        if (moveVal > bestVal){
+          bestMove.row = row;
+          bestMove.col = col;
+        }
+      }
+    }
+  }
+  return bestMove;
 }
