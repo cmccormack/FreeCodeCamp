@@ -6,7 +6,8 @@ var board,
     player,
     currentPlayer,
     opponent,
-    opponentType;
+    opponentType,
+    gameStarted;
 
 $('document').ready(function(){
 
@@ -29,11 +30,13 @@ function lockRadios(){
 }
 
 
+// Action when a cell on the board is clicked.  pos=[row, col]
 function cellClicked(pos){
   var row = pos[0], 
       col = pos[1];
 
   lockRadios();
+  gameStarted = true;
 
   // Make move if cell is available
   if (!board[row][col]){ 
@@ -44,10 +47,10 @@ function cellClicked(pos){
   // Check for a winner
   var winner = checkForWin();
   if (winner.score){
-    if (winner.score === 10){ 
+    if (winner.score === -10){ 
       console.log(player + " is the winner!"); 
     }
-    else if (winner.score === -10) { 
+    else if (winner.score === 10) { 
       console.log(opponent + " is the winner!");
     }
   } else {
@@ -58,19 +61,23 @@ function cellClicked(pos){
 
 
 function switchPlayer(){
-  var bestMove = {row: -1, col: -1};
-  console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
-  if (opponentType == "human"){
-    if (currentPlayer == player){
-      currentPlayer = opponent;
-    } else {
-      currentPlayer = player;
+  var best = {row: -1, col: -1};
+  
+
+  if (currentPlayer == player){
+    currentPlayer = opponent;
+  } else {
+    currentPlayer = player;
+  }
+
+  if (gameStarted){
+    if (currentPlayer == opponent && opponentType == "computer"){
+      best = bestMove();
+      cellClicked([best.row, best.col]);
     }
   }
 
-  if (opponentType == "computer"){
-
-  }
+  console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
 }
 
 
@@ -97,6 +104,7 @@ function resetGame() {
   if (player == "O") { opponent = "X"; } else { opponent = "O"; }
   currentPlayer = player;
   opponentType = $("#opponentSelect label.active input").attr('name');
+  gameStarted = false;
 }
 
 
@@ -108,9 +116,9 @@ function checkForWin(){
 
     if (pos[0] == pos[1] && pos[1] == pos[2]){
       if (pos[0] == player){
-        r.score = 10;
-      } else if (pos[0] == opponent){
         r.score = -10;
+      } else if (pos[0] == opponent){
+        r.score = 10;
       }
     }
     return r;
@@ -149,19 +157,21 @@ function movesLeft(){
 
 
 // minimax function from https://goo.gl/Se8kN4
-function minimax(depth, isMax){
-  var score = checkForWin(),
+function minimax(depth, isMaximizingPlayer){
+  var score = checkForWin().score,
       best, row, col;
 
+  // console.log("minimax score: " + score, "board: " + board);
+
   // Return score if player or opponent has won the game
-  if (score === 10 || score === -10){
+  if (score == 10 || score == -10){
     return score;
   }
 
   if (!movesLeft()){ return 0; }
 
   // Computer's turn
-  if (isMax){
+  if (isMaximizingPlayer){
     best = -1000;
 
     // Iterate over board
@@ -171,7 +181,7 @@ function minimax(depth, isMax){
         // Make a move at first empty position then recursively choose the best
         if (!board[row][col]) {
           board[row][col] = opponent;
-          best = max( best, minimax(depth + 1, !isMax) );
+          best = Math.max( best, minimax(depth + 1, false) );
 
           // Undo move
           board[row][col] = "";
@@ -189,7 +199,7 @@ function minimax(depth, isMax){
         // Make a move at first empty position then recursively choose the worst
         if (!board[row][col]){
           board[row][col] = player;
-          best = min( best, minimax(depth + 1, !isMax) );
+          best = Math.min( best, minimax(depth + 1, true) );
           
           // Undo move
           board[row][col] = "";
@@ -203,7 +213,7 @@ function minimax(depth, isMax){
 
 function bestMove(){
   var bestVal = -1000,
-      bestMove = {row: -1, col: -1},
+      move = {row: -1, col: -1},
       row, col;
 
   // Iterate over board
@@ -212,7 +222,7 @@ function bestMove(){
 
       // Check if cell is empty
       if (!board[row][col]){
-        board[i][j] = opponent;
+        board[row][col] = opponent;
 
         // Compute evaluation function for this move
         var moveVal = minimax(0, false);
@@ -222,11 +232,13 @@ function bestMove(){
 
         // If value of current move is greater than best value, update best
         if (moveVal > bestVal){
-          bestMove.row = row;
-          bestMove.col = col;
+          move.row = row;
+          move.col = col;
+          bestVal = moveVal;
         }
       }
     }
   }
-  return bestMove;
+  console.log("bestMove bestVal: " + bestVal, "row: " + move.row, "col: " + move.col);
+  return move;
 }
