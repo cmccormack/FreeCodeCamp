@@ -16,7 +16,7 @@ $('document').ready(function(){
   // Bind functions to events
   $('button').click(function(){ $(this).blur(); });
   $('.board-cell').click(function(){ cellClicked($(this).attr("id").split("_").map(Number)); });
-  $('#playerSelect input').on('change', function(){ switchPlayer(this.getAttribute("name")); });
+  $('#playerSelect input').on('change', function(){ setPlayer(this.getAttribute("name")); });
   $('#opponentSelect input').on('change', function(){ opponentType = this.getAttribute("name"); });
   $('#reset').click(function(){ resetGame(); });
 
@@ -61,24 +61,18 @@ function cellClicked(pos){
 }
 
 
-function switchPlayer(name){
+function setPlayer(name){
+  currentPlayer = player = name;
+  if (player == "X") { opponent = "O"; }
+  else { opponent = "X"; }
+} 
 
-  if (name){
-    player = name;
+function switchPlayer(){
+
+  if (currentPlayer == player){
+    currentPlayer = opponent;
+  } else {
     currentPlayer = player;
-    if (player == "X") { 
-      opponent = "O"; 
-    }
-    else {
-      opponent = "X";
-    }
-  } 
-  else {
-    if (currentPlayer == player){
-      currentPlayer = opponent;
-    } else {
-      currentPlayer = player;
-    }
   }
 
   if (gameStarted){
