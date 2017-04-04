@@ -62,22 +62,32 @@ function cellClicked(pos){
 
 
 function switchPlayer(name){
-  var best = {row: -1, col: -1};
-  
 
-  if (currentPlayer == player){
-    currentPlayer = opponent;
-  } else {
+  if (name){
+    player = name;
     currentPlayer = player;
+    if (player == "X") { 
+      opponent = "O"; 
+    }
+    else {
+      opponent = "X";
+    }
+  } 
+  else {
+    if (currentPlayer == player){
+      currentPlayer = opponent;
+    } else {
+      currentPlayer = player;
+    }
   }
 
   if (gameStarted){
     if (currentPlayer == opponent && opponentType == "computer"){
-      best = bestMove();
+      var best = bestMove();
+      console.log("bestMove: " + best);
       cellClicked([best.row, best.col]);
-    }
-  }
-
+    } 
+  } 
   console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
 }
 
