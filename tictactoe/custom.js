@@ -55,7 +55,7 @@ function cellClicked($cell){
   } else {
     switchPlayer();
   }
-  console.log(player, x,y, JSON.stringify(board));
+  console.log(player, x,y, JSON.stringify(board), "movesLeft: " + movesLeft());
 }
 
 
@@ -129,4 +129,28 @@ function checkForWin(){
 
   // Return results with score of 0 if no winner
   return result;
+}
+
+
+function movesLeft(){
+  for (var row = 0; row < 3; row++){
+    for (var col = 0; col < 3; col++){
+      if (!board[row][col]){
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+function minimax(depth, isMax){
+  var score = checkForWin();
+
+  // Return score if player or opponent has won the game
+  if (score === 10 || score === -10){
+    return score;
+  }
+
+
+
 }
