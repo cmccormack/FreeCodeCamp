@@ -16,7 +16,7 @@ $('document').ready(function(){
   // Bind functions to events
   $('button').click(function(){ $(this).blur(); });
   $('.board-cell').click(function(){ cellClicked($(this).attr("id").split("_").map(Number)); });
-  $('#playerSelect input').on('change', function(){ switchPlayer(); });
+  $('#playerSelect input').on('change', function(){ switchPlayer(this.getAttribute("name")); });
   $('#opponentSelect input').on('change', function(){ opponentType = this.getAttribute("name"); });
   $('#reset').click(function(){ resetGame(); });
 
@@ -42,25 +42,26 @@ function cellClicked(pos){
   if (!board[row][col]){ 
     board[row][col] = currentPlayer;
     displayMove(currentPlayer, row, col);
+    switchPlayer();
   }
 
   // Check for a winner
   var winner = checkForWin();
   if (winner.score){
+    $(".board-cell").prop("disabled", true);
+
     if (winner.score === -10){ 
       console.log(player + " is the winner!"); 
     }
     else if (winner.score === 10) { 
       console.log(opponent + " is the winner!");
     }
-  } else {
-    switchPlayer();
   }
   console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
 }
 
 
-function switchPlayer(){
+function switchPlayer(name){
   var best = {row: -1, col: -1};
   
 
@@ -98,6 +99,7 @@ function resetGame() {
   $(".cell-i").removeClass("fa-circle-o");
   $("label", "#buttons").removeClass("disabled");
   $("input", "#buttons").prop("disabled", false);
+  $(".board-cell").prop("disabled", false);
 
   // Set initial values for player and oppenent selections
   player = $("#playerSelect label.active input").attr('name');
