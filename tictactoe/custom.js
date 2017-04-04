@@ -14,7 +14,7 @@ $('document').ready(function(){
   
   // Bind functions to events
   $('button').click(function(){ $(this).blur(); });
-  $('.board-cell').click(function(){ cellClicked($(this)); });
+  $('.board-cell').click(function(){ cellClicked($(this).attr("id").split("_").map(Number)); });
   $('#playerSelect input').on('change', function(){ switchPlayer(); });
   $('#opponentSelect input').on('change', function(){ opponentType = this.getAttribute("name"); });
   $('#reset').click(function(){ resetGame(); });
@@ -29,16 +29,16 @@ function lockRadios(){
 }
 
 
-function cellClicked($cell){
-  var pos = $cell.attr("id").split("_").map(Number),
-      x = pos[0], y = pos[1];
+function cellClicked(pos){
+  var row = pos[0], 
+      col = pos[1];
 
   lockRadios();
 
   // Make move if cell is available
-  if (!board[x][y]){ 
-    board[x][y] = currentPlayer;
-    displayMove(currentPlayer, x, y);
+  if (!board[row][col]){ 
+    board[row][col] = currentPlayer;
+    displayMove(currentPlayer, row, col);
   }
 
   // Check for a winner
@@ -53,7 +53,7 @@ function cellClicked($cell){
   } else {
     switchPlayer();
   }
-  console.log(player, x,y, JSON.stringify(board), "movesLeft: " + movesLeft());
+  console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
 }
 
 
