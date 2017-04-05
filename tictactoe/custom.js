@@ -52,13 +52,13 @@ function cellClicked(pos){
     if (winner.score === -10){ 
       console.log(player + " is the winner!!"); 
       for (i in winner.pos){
-        $("#" + winner.pos[i]).css("color", "green");
+        $("#" + winner.pos[i]).addClass("winner");
       }
     }
     else if (winner.score === 10) { 
       console.log(opponent + " is the winner!");
       for (i in winner.pos){
-        $("#" + winner.pos[i]).css("color", "red");
+        $("#" + winner.pos[i]).addClass("loser");
       }
     }
   }
@@ -108,6 +108,7 @@ function resetGame() {
   $("label", "#buttons").removeClass("disabled");
   $("input", "#buttons").prop("disabled", false);
   $(".board-cell").prop("disabled", false);
+  $(".board-cell").removeClass("winner loser");
 
   // Set initial values for player and oppenent selections
   currentPlayer = player = $("#playerSelect label.active input").attr('name');

@@ -91,6 +91,14 @@ input {
   display: inline;
 }
 
+.winner {
+  color: limegreen;
+}
+
+.loser {
+  color: red;
+}
+
 
 
 
