@@ -92,6 +92,10 @@ input {
   display: inline;
 }
 
+#statusdisplay {
+  font-family: 'Permanent Marker', cursive;
+}
+
 .winner {
   color: limegreen;
 }
