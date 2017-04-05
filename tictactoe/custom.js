@@ -4,7 +4,8 @@ var board,
     currentPlayer,
     opponent,
     opponentType,
-    gameStarted;
+    gameStarted,
+    timeoutID;
 
 $('document').ready(function(){
 
@@ -29,7 +30,6 @@ function lockRadios(){
 
 // Action when a cell on the board is clicked.  pos=[row, col]
 function cellClicked(pos){
-
   var row = pos[0], 
       col = pos[1];
 
@@ -40,9 +40,6 @@ function cellClicked(pos){
   if (!board[row][col]){ 
     board[row][col] = currentPlayer;
     displayMove(currentPlayer, row, col);
-    if (movesLeft()){
-      switchPlayer();
-    }
   }
 
   // Check for a winner
@@ -51,28 +48,41 @@ function cellClicked(pos){
     $(".board-cell").prop("disabled", true);
 
     if (winner.score === -10){ 
-      console.log(player + " is the winner!!"); 
+      gameOver("Winner!");
       for (i in winner.pos){
         $("#" + winner.pos[i]).addClass("winner");
       }
     }
-    else if (winner.score === 10) { 
-      console.log(opponent + " is the winner!!");
+    else if (winner.score === 10) {
+      gameOver("Loser!");
       for (i in winner.pos){
         $("#" + winner.pos[i]).addClass("loser");
       }
     }
-    setTimeout(function(){ resetGame(); }, 2000);
+    return;
+  // End game as draw if no moves left and no winner
   } else {
     if (!movesLeft()){
-      console.log("Draw!");
-      setTimeout(function(){ resetGame(); }, 2000);
+      gameOver("Draw!");
+      return;
     }
   }
 
-  // console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
+  // Switch player if there are still moves on the board
+  if (movesLeft()){
+    switchPlayer();
+  }
 }
 
+
+function gameOver(message){
+  $("#status").text(message);
+  $(".board-cell").prop("disabled", true);
+  $("#status, .board-cell i").fadeOut(2000, function(){
+    resetGame();
+  });
+  
+}
 
 
 function setPlayer(name){
@@ -83,7 +93,6 @@ function setPlayer(name){
 
 
 function switchPlayer(){
-
   if (currentPlayer == player){
     currentPlayer = opponent;
   } else {
@@ -96,7 +105,6 @@ function switchPlayer(){
       cellClicked([best.row, best.col]);
     } 
   } 
-  console.log("switchPlayer currentPlayer: " + currentPlayer, "player: " + player, "opponent: " + opponent);
 }
 
 
@@ -111,6 +119,7 @@ function displayMove(currPlayer, x, y){
 
 
 function resetGame() {
+  clearTimeout(timeoutID);
   board = [ ["","",""], ["","",""], ["","",""] ];
   $(".cell-i").removeClass("fa-times");
   $(".cell-i").removeClass("fa-circle-o");
@@ -118,6 +127,8 @@ function resetGame() {
   $("input", "#buttons").prop("disabled", false);
   $(".board-cell").prop("disabled", false);
   $(".board-cell").removeClass("winner loser");
+  $("#status").text("");
+  $("#status, .board-cell i").show();
 
   // Set initial values for player and oppenent selections
   currentPlayer = player = $("#playerSelect label.active input").attr('name');
@@ -270,6 +281,6 @@ function bestMove(){
       }
     }
   }
-  console.log("bestMove bestVal: " + bestVal, "row: " + move.row, "col: " + move.col);
+
   return move;
 }

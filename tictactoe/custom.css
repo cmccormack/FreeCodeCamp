@@ -100,9 +100,6 @@ input {
 }
 
 
-
-
-
 #buttons {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -128,6 +125,10 @@ input {
 
 .radio.disabled {
   pointer-events: none;
+}
+
+#statusdisplay {
+  /*margin: 0;*/
 }
 
 
