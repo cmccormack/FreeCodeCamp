@@ -29,6 +29,7 @@ function lockRadios(){
 
 // Action when a cell on the board is clicked.  pos=[row, col]
 function cellClicked(pos){
+
   var row = pos[0], 
       col = pos[1];
 
@@ -45,7 +46,7 @@ function cellClicked(pos){
   }
 
   // Check for a winner
-  var winner = checkForWin();
+  var winner = checkForWin(), i;
   if (winner.score){
     $(".board-cell").prop("disabled", true);
 
@@ -56,14 +57,22 @@ function cellClicked(pos){
       }
     }
     else if (winner.score === 10) { 
-      console.log(opponent + " is the winner!");
+      console.log(opponent + " is the winner!!");
       for (i in winner.pos){
         $("#" + winner.pos[i]).addClass("loser");
       }
     }
+    setTimeout(function(){ resetGame(); }, 2000);
+  } else {
+    if (!movesLeft()){
+      console.log("Draw!");
+      setTimeout(function(){ resetGame(); }, 2000);
+    }
   }
-  console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
+
+  // console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
 }
+
 
 
 function setPlayer(name){
