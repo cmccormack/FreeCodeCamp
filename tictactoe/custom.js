@@ -42,7 +42,9 @@ function cellClicked(pos){
   if (!board[row][col]){ 
     board[row][col] = currentPlayer;
     displayMove(currentPlayer, row, col);
-    switchPlayer();
+    if (movesLeft()){
+      switchPlayer();
+    }
   }
 
   // Check for a winner
@@ -67,6 +69,7 @@ function setPlayer(name){
   else { opponent = "X"; }
 } 
 
+
 function switchPlayer(){
 
   if (currentPlayer == player){
@@ -78,7 +81,6 @@ function switchPlayer(){
   if (gameStarted){
     if (currentPlayer == opponent && opponentType == "computer"){
       var best = bestMove();
-      console.log("bestMove: " + best);
       cellClicked([best.row, best.col]);
     } 
   } 
@@ -98,7 +100,6 @@ function displayMove(currPlayer, x, y){
 
 function resetGame() {
   board = [ ["","",""], ["","",""], ["","",""] ];
-  console.log("reset: " + JSON.stringify(board));
   $(".cell-i").removeClass("fa-times");
   $(".cell-i").removeClass("fa-circle-o");
   $("label", "#buttons").removeClass("disabled");
@@ -106,9 +107,8 @@ function resetGame() {
   $(".board-cell").prop("disabled", false);
 
   // Set initial values for player and oppenent selections
-  player = $("#playerSelect label.active input").attr('name');
+  currentPlayer = player = $("#playerSelect label.active input").attr('name');
   if (player == "O") { opponent = "X"; } else { opponent = "O"; }
-  currentPlayer = player;
   opponentType = $("#opponentSelect label.active input").attr('name');
   gameStarted = false;
 }
