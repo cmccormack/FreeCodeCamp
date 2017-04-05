@@ -49,6 +49,7 @@ input {
 
 #main-header {
   padding: 15px 0 15px 0;
+  font-family: 'Permanent Marker', cursive;
 }
 
 #clock {
@@ -112,6 +113,20 @@ input {
   padding: 0.4rem 0.4rem;
 }
 
+#buttons label.active {
+  background-color: #DDD;
+  color: #222;
+}
+
+#buttons label i {
+  font-size: 0.8em;
+}
+
+#buttons label.active i,
+#reset-i {
+  font-size: 1.33em !important;
+}
+
 #buttons .btn-group {
   padding-left: 0;
   padding-right: 0;
@@ -123,18 +138,10 @@ input {
   padding-right: 5px;
 }
 
-.radio.disabled {
-  pointer-events: none;
-}
-
-#statusdisplay {
-  /*margin: 0;*/
-}
 
 
 
 /* Utility Styles */
-
 .unselectable {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -160,7 +167,11 @@ input {
   text-shadow: 0 0 8px #FFF;
 }
 
+.radio.disabled {
+  pointer-events: none;
+}
 
+/* Borders for game board */
 .bt {
   border-top: 2px solid #666 !important;
 }
@@ -174,9 +185,7 @@ input {
   border-left: 2px solid #666 !important;
 }
 
-label.active i {
-  font-size: 1.33em !important;
-}
+
 
 /* Display size adjustments */
 @media only screen and (max-width: 768px){
