@@ -206,8 +206,11 @@ function minimax(depth, isMaximizingPlayer){
   // console.log("minimax score: " + score, "board: " + board);
 
   // Return score if player or opponent has won the game
-  if (score == 10 || score == -10){
-    return score;
+  if (score == 10) {
+    return score - depth;
+  }
+  if (score == -10){
+    return score + depth;
   }
 
   if (!movesLeft()){ return 0; }
