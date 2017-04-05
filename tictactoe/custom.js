@@ -1,6 +1,3 @@
-Array.prototype.clone = function() {
-  return this.slice(0);
-};
 
 var board,
     player,
@@ -53,10 +50,16 @@ function cellClicked(pos){
     $(".board-cell").prop("disabled", true);
 
     if (winner.score === -10){ 
-      console.log(player + " is the winner!"); 
+      console.log(player + " is the winner!!"); 
+      for (i in winner.pos){
+        $("#" + winner.pos[i]).css("color", "green");
+      }
     }
     else if (winner.score === 10) { 
       console.log(opponent + " is the winner!");
+      for (i in winner.pos){
+        $("#" + winner.pos[i]).css("color", "red");
+      }
     }
   }
   console.log(player, row, col, JSON.stringify(board), "movesLeft: " + movesLeft());
@@ -132,18 +135,30 @@ function checkForWin(){
 
   // Check rows
   for (var i = 0; i < 3; i++){
-    row = threeInARow([ board[i][0], board[i][1], board[i][2] ]);
-    if (row.score){ return row; }
-    col = threeInARow([ board[0][i], board[1][i], board[2][i] ]);
-    if (col.score){ return col; }
+    result = threeInARow([ board[i][0], board[i][1], board[i][2] ]);
+    if (result.score){ 
+      result.pos = [ i+"_0", i+"_1", i+"_2" ];
+      return result; 
+    }
+    result = threeInARow([ board[0][i], board[1][i], board[2][i] ]);
+    if (result.score){ 
+      result.pos = [ "0_"+i, "1_"+i, "2_"+i ];
+      return result; 
+    }
   }
 
   // Check diagonals
   result = threeInARow([ board[0][0], board[1][1], board[2][2] ]);
-  if (result.score){ return result; }
+  if (result.score){ 
+    result.pos = [ "0_0", "1_1", "2_2"];
+    return result; 
+  }
 
   result = threeInARow([ board[0][2], board[1][1], board[2][0] ]);
-  if (result.score){ return result; }
+  if (result.score){ 
+    result.pos = [ "0_2", "1_1", "2_0" ];
+    return result; 
+  }
 
   // Return results with score of 0 if no winner
   return result;
