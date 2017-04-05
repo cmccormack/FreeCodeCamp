@@ -92,6 +92,10 @@ label {
   color: #DDD;
 }
 
+#timers {
+  font-size: 0.8rem;
+}
+
 .range-group-label {
   font-weight: 300;
   font-size: 1rem;
