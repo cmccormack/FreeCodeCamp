@@ -4,8 +4,7 @@ var board,
     currentPlayer,
     opponent,
     opponentType,
-    gameStarted,
-    timeoutID;
+    gameStarted;
 
 $('document').ready(function(){
 
@@ -21,14 +20,14 @@ $('document').ready(function(){
 });
 
 
+// Lock board once first move has been made
 function lockRadios(){
-  // Lock board once first move has been made
   $(".radio", "#buttons").addClass("disabled");
   $("input", "#buttons").prop("disabled", true);
 }
 
 
-// Action when a cell on the board is clicked.  pos=[row, col]
+// Action performed when a cell on the board is clicked.  pos=[row, col]
 function cellClicked(pos){
   var row = pos[0], 
       col = pos[1];
@@ -36,8 +35,10 @@ function cellClicked(pos){
   lockRadios();
   gameStarted = true;
 
-  // Make move if cell is available
-  if (!board[row][col]){ 
+  // Make move if cell clicked is available else do nothing
+  if (board[row][col]){
+    return;
+  } else { 
     board[row][col] = currentPlayer;
     displayMove(currentPlayer, row, col);
   }
@@ -68,23 +69,25 @@ function cellClicked(pos){
     }
   }
 
-  // Switch player if there are still moves on the board
+  // Switch player if there are still moves available and no winner
   if (movesLeft()){
     switchPlayer();
   }
 }
 
 
+// Displays message and fades out board when game is over
 function gameOver(message){
   $("#status").text(message);
   $(".board-cell").prop("disabled", true);
-  $("#status, .board-cell i").fadeOut(2000, function(){
+  $("#status, .cell-i").fadeOut(2000, function(){
     resetGame();
   });
   
 }
 
 
+// Sets player and opponent when user toggles playerSelect radio btn-group
 function setPlayer(name){
   currentPlayer = player = name;
   if (player == "X") { opponent = "O"; }
@@ -92,6 +95,7 @@ function setPlayer(name){
 } 
 
 
+// Switches currentPlayer when player completes a move
 function switchPlayer(){
   if (currentPlayer == player){
     currentPlayer = opponent;
@@ -99,15 +103,15 @@ function switchPlayer(){
     currentPlayer = player;
   }
 
-  if (gameStarted){
-    if (currentPlayer == opponent && opponentType == "computer"){
-      var best = bestMove();
-      cellClicked([best.row, best.col]);
-    } 
+  // Computer selects move based on minimax algorithm then pseudo clicks cell
+  if (gameStarted && currentPlayer == opponent && opponentType == "computer"){
+    var best = bestMove();
+    cellClicked([best.row, best.col]);
   } 
 }
 
 
+// Displays move on board
 function displayMove(currPlayer, x, y){
   var $cellIcon = $("#" + x + "_" + y + " i"); 
   if (currPlayer == "X"){
@@ -118,9 +122,17 @@ function displayMove(currPlayer, x, y){
 }
 
 
+// Resets game board to initial state
 function resetGame() {
-  clearTimeout(timeoutID);
+
+  // Set initial values for player and oppenent selections and empties board
   board = [ ["","",""], ["","",""], ["","",""] ];
+  currentPlayer = player = $("#playerSelect label.active input").attr('name');
+  if (player == "O") { opponent = "X"; } else { opponent = "O"; }
+  opponentType = $("#opponentSelect label.active input").attr('name');
+  gameStarted = false;
+
+  // Set CSS and HTML to inital state
   $(".cell-i").removeClass("fa-times");
   $(".cell-i").removeClass("fa-circle-o");
   $("label", "#buttons").removeClass("disabled");
@@ -128,19 +140,16 @@ function resetGame() {
   $(".board-cell").prop("disabled", false);
   $(".board-cell").removeClass("winner loser");
   $("#status").text("");
-  $("#status, .board-cell i").show();
+  $("#status, .cell-i").show();
 
-  // Set initial values for player and oppenent selections
-  currentPlayer = player = $("#playerSelect label.active input").attr('name');
-  if (player == "O") { opponent = "X"; } else { opponent = "O"; }
-  opponentType = $("#opponentSelect label.active input").attr('name');
-  gameStarted = false;
 }
 
 
+// Checks rows, cols, and diagnols for three of the same
 function checkForWin(){
   var result = {pos: [], score: 0};
 
+  // Checks if three values in row,col, or diagonal are same. Returns object
   function threeInARow(pos) {
     var r = {pos:pos, score:0};
 
@@ -154,13 +163,15 @@ function checkForWin(){
     return r;
   }
 
-  // Check rows
+  // Check rows and columns
   for (var i = 0; i < 3; i++){
+    // Check row
     result = threeInARow([ board[i][0], board[i][1], board[i][2] ]);
     if (result.score){ 
       result.pos = [ i+"_0", i+"_1", i+"_2" ];
       return result; 
     }
+    // Check col
     result = threeInARow([ board[0][i], board[1][i], board[2][i] ]);
     if (result.score){ 
       result.pos = [ "0_"+i, "1_"+i, "2_"+i ];
@@ -174,7 +185,6 @@ function checkForWin(){
     result.pos = [ "0_0", "1_1", "2_2"];
     return result; 
   }
-
   result = threeInARow([ board[0][2], board[1][1], board[2][0] ]);
   if (result.score){ 
     result.pos = [ "0_2", "1_1", "2_0" ];
@@ -186,6 +196,7 @@ function checkForWin(){
 }
 
 
+// Iterates over board and checks for available moves
 function movesLeft(){
   for (var row = 0; row < 3; row++){
     for (var col = 0; col < 3; col++){
@@ -198,12 +209,10 @@ function movesLeft(){
 }
 
 
-// minimax function from https://goo.gl/Se8kN4
+// minimax function from https://goo.gl/Se8kN4 converted to JS
 function minimax(depth, isMaximizingPlayer){
   var score = checkForWin().score,
       best, row, col;
-
-  // console.log("minimax score: " + score, "board: " + board);
 
   // Return score if player or opponent has won the game
   if (score == 10) {
@@ -256,6 +265,7 @@ function minimax(depth, isMaximizingPlayer){
 }
 
 
+// bestMove function from https://goo.gl/Se8kN4 converted to JS
 function bestMove(){
   var bestVal = -1000,
       move = {row: -1, col: -1},
