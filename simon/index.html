@@ -2,10 +2,12 @@
 <html>
 
 <head>
-  <title>Simon Game - Chris McCormack</title>
+  <title>Simon&#174; Game - Chris McCormack</title>
   <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+
   <!-- JavaScript - jQuery must be loaded prior to Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
     crossorigin="anonymous"></script>
@@ -13,15 +15,20 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
     integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
     crossorigin="anonymous"></script>
+  <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
   <!-- Bootstrap CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
     rel="stylesheet" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
     crossorigin="anonymous">
+
   <!-- Additional CSS for icons, etc... -->
+  <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
     crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="custom.css">
+
   <!-- Addtional JavaScript -->
   <script src="custom.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -68,7 +75,7 @@
 
       <div id="main-header" class="row text-center">
         <div class="col">
-          <h1 class="display-4 text-center unselectable">Simon</h1>
+          <h1 class="display-3 text-center unselectable">Simon<span class="ip">&#174;</span></h1>
         </div>
       </div>
 
@@ -87,9 +94,23 @@
           </div> <!-- End Board Display -->
 
           <!-- Buttons Begin -->
-          <div id="buttons" class="container">buttons
+          <div id="buttons" class="container">
 
-          <!-- Buttons Go Here -->
+            <div class="row btn-row">
+
+              <div id="startStop" class="col">
+                <label id="play" class="btn btn-outline-secondary"><i class="fa fa-lg fa-fw fa-play"></i></label>
+              </div>
+
+              <div class="col">
+                <label id="reset" class="btn btn-outline-secondary"><i id="reset-i" class="fa fa-rotate-left"></i></label>
+              </div>
+
+              <div class="col">
+                <label id="strict" class="btn btn-outline-secondary"><span>Strict</span></label>
+              </div>
+
+            </div>
 
           </div> <!-- End Buttons -->
 

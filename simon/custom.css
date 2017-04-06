@@ -145,26 +145,33 @@ input {
 
 #buttons .btn {
   padding: 0.4rem 0.4rem;
+  border: 0;
+  text-transform: uppercase;
 }
 
-#buttons label.active {
-  background-color: #DDD;
-  color: #222;
+#buttons .btn:hover {
+  background: none;
+}
+
+#buttons .btn:focus,
+#buttons .btn:active {
+  border: 0;
+}
+
+#buttons .btn:active {
+  transform: translateY(2px);
 }
 
 #buttons label i {
-  font-size: 0.8em;
+  font-size: 1.5em;
+}
+#buttons label span {
+  font-size: 1.2em;
 }
 
-#buttons label.active i,
-#reset-i {
-  font-size: 1.33em !important;
-}
 
-#buttons .btn-group {
-  padding-left: 0;
-  padding-right: 0;
-}
+
+
 
 #buttons .btn-row {
   padding-top: 10px;
@@ -190,6 +197,11 @@ input {
   font-size: 2.5rem;
   font-weight: 300;
   line-height: 1.1;
+}
+
+.ip {
+  font-size: 1.5rem;
+  vertical-align: super;
 }
 
 .white-shadow {
