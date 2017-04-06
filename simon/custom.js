@@ -1,21 +1,28 @@
-var isStrict = true;
+var isStrict = false;
 
 $('document').ready(function(){
 
   // Bind functions to events after document has loaded
-  $('.cell-btn').click(function(){ playSound(this.getAttribute('id')); });
-  $('#strict').click(function(){ setStrictMode(); });
+  $('.cell-btn').click( (e) => playSound( $(e.currentTarget).attr('id')) );
+  $('#strict').click( () => setStrictMode() );
 
 });
 
 
-function setStrictMode(){
+var setStrictMode = () => {
   $('#strict').toggleClass('strike');
   if (isStrict){
     isStrict = false;
+  } else {
+    isStrict = true;
   }
-}
+  console.log("Strict mode set to " + isStrict);
+};
 
 function playSound(id){
   $('#' + id + '-audio').get(0).play();
+}
+
+function resetGame(){
+
 }
