@@ -28,6 +28,22 @@
 </head>
 
 <body>
+  <!-- Sound file plays buttons are pressed on gameboard -->
+  <audio id="red-btn-audio">
+    <source src="https://s3.amazonaws.com/freecodecamp/simonSound1.mp3" type="audio/mp3">
+  </audio>
+  <audio id="green-btn-audio">
+    <source src="https://s3.amazonaws.com/freecodecamp/simonSound2.mp3" type="audio/mp3">
+  </audio>
+  <audio id="yellow-btn-audio">
+    <source src="https://s3.amazonaws.com/freecodecamp/simonSound3.mp3" type="audio/mp3">
+  </audio>
+  <audio id="blue-btn-audio">
+    <source src="https://s3.amazonaws.com/freecodecamp/simonSound4.mp3" type="audio/mp3">
+  </audio>
+
+
+
   <!-- Navbar Begin -->
   <header class="navbar fixed-top navbar-toggleable-md navbar-inverse bg-inverse unselectable">
     <!-- Navbar Toggler for smaller screens -->
@@ -63,10 +79,10 @@
           <!-- Board Display Begin-->
           <div id="display" class="text-center unselectable">
 
-            <div class="board-cell" id="redcell"><div class="cell-btn" id="red"></div></div><!--
-            --><div class="board-cell" id="greencell"><div class="cell-btn" id="lime"></div></div><!--
-            --><div class="board-cell" id="yellowcell"><div class="cell-btn" id="yellow"></div></div><!--
-            --><div class="board-cell" id="bluecell"><div class="cell-btn" id="blue"></div></div>
+            <div class="board-cell" id="redcell"><div class="cell-btn" id="red-btn"></div></div><!--
+            --><div class="board-cell" id="greencell"><div class="cell-btn" id="green-btn"></div></div><!--
+            --><div class="board-cell" id="yellowcell"><div class="cell-btn" id="yellow-btn"></div></div><!--
+            --><div class="board-cell" id="bluecell"><div class="cell-btn" id="blue-btn"></div></div>
 
           </div> <!-- End Board Display -->
 

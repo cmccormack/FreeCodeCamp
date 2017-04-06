@@ -2,13 +2,14 @@
 
 $('document').ready(function(){
 
-  resetGame();
-  
+  // Bind functions to events after document has loaded
+  $('.cell-btn').click(function(){ playSound(this.getAttribute("id")); });
 
 
 });
 
 
-function resetGame(){
-  
+
+function playSound(id){
+  $("#" + id + "-audio").get(0).play();
 }

@@ -106,22 +106,22 @@ input {
   box-shadow: inset 5px 5px 12px rgba(0,0,0,0.4);
 }
 
-#red {
+#red-btn {
   background-color: red;
   background-image: linear-gradient(to top left, red, darkorange);
   border-top-left-radius: 40%;
 }
-#lime {
+#green-btn {
   background-color: lime;
   background-image: linear-gradient(to top right, green, lime);
   border-top-right-radius: 40%;
 }
-#yellow {
+#yellow-btn {
   background-color: yellow;
   background-image: linear-gradient(to bottom left, orange, yellow);
   border-bottom-left-radius: 40%;
 }
-#blue {
+#blue-btn {
   background-color: #05B;
   background-image: linear-gradient(to bottom right, #05B, #6BF);
   border-bottom-right-radius: 40%;
