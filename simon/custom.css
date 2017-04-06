@@ -169,10 +169,6 @@ input {
   font-size: 1.2em;
 }
 
-
-
-
-
 #buttons .btn-row {
   padding-top: 10px;
   padding-left: 5px;
@@ -215,6 +211,11 @@ input {
 
 .radio.disabled {
   pointer-events: none;
+}
+
+.strike,
+.strike:hover {
+  text-decoration: line-through;
 }
 
 .btl {
