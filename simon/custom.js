@@ -10,7 +10,7 @@ $('document').ready(function(){
 
 
 var setStrictMode = () => {
-  $('#strict').toggleClass('strike');
+  $('#strict-i').toggleClass('fa-chain-broken fa-chain');
   if (isStrict){
     isStrict = false;
   } else {

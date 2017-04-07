@@ -6,7 +6,7 @@
   <link href="images/favicon.ico" rel="icon" type="image/x-icon" />
 
   <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Roboto+Mono:400,700" rel="stylesheet">
 
   <!-- JavaScript - jQuery must be loaded prior to Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s="
@@ -103,12 +103,11 @@
               </div>
 
               <div class="col">
-                <!-- <label id="counter" class="btn btn-outline-secondary"><i id="reset-i" class="fa fa-rotate-left"></i></label> -->
-                <input id="counter" type="text" class="form-control text-center" value="20" size="2" readonly="readonly">
+                <input id="counter" type="text" class="form-control text-center unselectable" value="20" size="2" readonly="readonly">
               </div>
 
               <div class="col">
-                <label id="strict" class="btn btn-outline-secondary strike"><span>Strict</span></label>
+                <label id="strict" class="btn btn-outline-secondary" title="Strict Mode"><i id="strict-i" class="fa fa-lg fa-fw fa-chain-broken"></i></label>
               </div>
 
             </div>
