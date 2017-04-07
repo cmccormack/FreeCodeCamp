@@ -55,14 +55,18 @@ var computerTurn = () => {
 
   moves.push(chooseRandomColor());
 
-  var computerAction = move => {
-    resetDisplay();
-    setTimeout( () => {
-      color = $(move);
-      color.click();
-      color.css('opacity', '1');
-    }, 100); // End setTimeout
-  };
+
+
+  iterateMoves();
+
+  // Switch to player
+  playerTurn();
+  // Stop if counter reaches 20
+  
+};
+
+
+var iterateMoves = () => {
 
   var i = 0;
   intervalID = setInterval( () => {
@@ -72,15 +76,29 @@ var computerTurn = () => {
       resetDisplay();
       clearInterval(intervalID);
     }
-    computerAction(moves[i]);
+    displayMove(moves[i]);
 
     i++;
   }, 600);
 
-  // Switch to player
+};
 
-  // Stop if counter reaches 20
-  
+var displayMove = move => {
+  resetDisplay();
+  setTimeout( () => {
+    color = $(move);
+    color.click();
+    color.css('opacity', '1');
+  }, 100); // End setTimeout
+};
+
+var playerTurn = () => {
+
+  intervalID = setTimeout( () => {
+
+
+  }, 10000); // 10 Second timeout
+
 };
 
 
