@@ -216,7 +216,7 @@ input {
   text-shadow: 0 0 8px #FFF;
 }
 
-.radio.disabled {
+.disabled {
   pointer-events: none;
 }
 
@@ -237,7 +237,6 @@ input {
 .bbr {
   border-bottom-right-radius: 10%;
 }
-
 
 
 /* Display size adjustments */

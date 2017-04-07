@@ -3,33 +3,31 @@ var isStrict = false,
     intervalID,
     counter,
     moves = [],
+    isPlayerTurn,
     btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
 
 $('document').ready(function(){
 
   resetBoard();
   // Bind functions to events after document has loaded
-  $('.cell-btn').click( (e) => playSound( $(e.currentTarget).attr('id')) );
+  $('.cell-btn').click( (e) => cellClicked( $(e.currentTarget).attr('id')) );
   $('#play').click( () => startStop() );
   $('#strict').click( () => setStrictMode() );
 
 });
 
 
-var setStrictMode = () => {
-  $('#strict-i').toggleClass('fa-chain-broken fa-chain');
-  if (isStrict){
-    isStrict = false;
-    $('#strict').attr('title', 'Enable Strict Mode');
-  } else {
-    isStrict = true;
-    $('#strict').attr('title', 'Disable Strict Mode');
+
+
+var cellClicked = cellid => {
+
+  playSound(cellid);
+  if (isPlayerTurn){
+    clearInterval(intervalID);
+    playerTurn();
   }
-  console.log('Strict mode set to ' + isStrict);
+
 };
-
-var playSound = id => $('#' + id + '-audio').get(0).play();
-
 
 var startStop = () => {
   $('#startStop label i').toggleClass('fa-play fa-stop');
@@ -53,20 +51,22 @@ var startStop = () => {
 
 var computerTurn = () => {
 
-  moves.push(chooseRandomColor());
+  moves.push(getRandColor());
 
-
+  
 
   iterateMoves();
 
   // Switch to player
-  playerTurn();
+  // playerTurn();
   // Stop if counter reaches 20
-  
 };
 
 
 var iterateMoves = () => {
+
+  // Disable user input until moves have been displayed
+  $('#display').addClass('disabled');
 
   var i = 0;
   intervalID = setInterval( () => {
@@ -75,10 +75,11 @@ var iterateMoves = () => {
       console.log("i===counter.length, clearing display and clearing interval");
       resetDisplay();
       clearInterval(intervalID);
+      playerTurn();
     }
     displayMove(moves[i]);
-
     i++;
+
   }, 600);
 
 };
@@ -93,28 +94,50 @@ var displayMove = move => {
 };
 
 var playerTurn = () => {
-
+  $('#display').removeClass('disabled');
+  isPlayerTurn = true;
   intervalID = setTimeout( () => {
-
-
-  }, 10000); // 10 Second timeout
+    isPlayerTurn = false;
+    iterateMoves(); 
+  }, 2000); // 10 Second timeout
 
 };
 
 
-var chooseRandomColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 
-var resetDisplay = () => {
-  $('.cell-btn', '#display').removeAttr('style');
-};
+
+
+
+
+var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
+var playSound = id => $('#' + id + '-audio').get(0).play();
+
+var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
+
 
 var resetBoard = () => {
-
+  $('#display').removeClass('disabled');
   clearInterval(intervalID);
   isPlaying = false;
+  isPlayerTurn = false;
   counter = 1;
   $('#play').attr('title', 'Play!');
   resetDisplay();
 
 };
+
+
+var setStrictMode = () => {
+  $('#strict-i').toggleClass('fa-chain-broken fa-chain');
+  if (isStrict){
+    isStrict = false;
+    $('#strict').attr('title', 'Enable Strict Mode');
+  } else {
+    isStrict = true;
+    $('#strict').attr('title', 'Disable Strict Mode');
+  }
+  console.log('Strict mode set to ' + isStrict);
+};
+
+
 
