@@ -1,7 +1,8 @@
 var isStrict = false,
     isPlaying = false,
     intervalID,
-    counter = 0,
+    counter,
+    moves = [],
     btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
 
 $('document').ready(function(){
@@ -27,12 +28,10 @@ var setStrictMode = () => {
   console.log('Strict mode set to ' + isStrict);
 };
 
-function playSound(id){
-  $('#' + id + '-audio').get(0).play();
-}
+var playSound = id => $('#' + id + '-audio').get(0).play();
 
 
-function startStop() {
+var startStop = () => {
   $('#startStop label i').toggleClass('fa-play fa-stop');
 
   // Stop game if currently playing
@@ -47,39 +46,50 @@ function startStop() {
   $('#play').attr('title', 'Quit!');
   console.log('Game started, isPlaying: ' + isPlaying);
 
+  computerTurn2();
+
+};
 
 
-}
+var computerTurn = () => {
 
+  moves.push(chooseRandomColor());
 
-function computerTurn(){
-
-  $('#display').attr('disabled', true);
-  intervalID = setInterval(function(){
-    $('.cell-btn', '#display').css('opacity', '0.7');
-
-    // Use a small delay to better see multiple clicks of same button
+  var computerAction = move => {
+    resetDisplay();
     setTimeout( () => {
-      color = $(chooseRandomColor());
+      color = $(move);
       color.click();
       color.css('opacity', '1');
-
     }, 100); // End setTimeout
+  };
 
-  }, 1000); // End setInterval
+  var i = 1;
+  moves.forEach( move => {
+    setTimeout( () => computerAction(move), 600*i++);
+  });
 
-}
+  resetDisplay();
+
+  // Switch to player
+
+  // Stop if counter reaches 20
+  
+};
 
 
-function chooseRandomColor(){
-  return btnArray[Math.floor(Math.random() * btnArray.length)];
-}
+var chooseRandomColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 
-function resetBoard(){
+var resetDisplay = () => {
+  $('.cell-btn', '#display').removeAttr('style');
+};
+
+var resetBoard = () => {
 
   clearInterval(intervalID);
   isPlaying = false;
+  counter = 1;
   $('#play').attr('title', 'Play!');
-  $('.cell-btn', '#display').removeAttr('style');
+  resetDisplay();
 
-}
+};
