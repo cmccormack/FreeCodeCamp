@@ -46,7 +46,7 @@ var startStop = () => {
   $('#play').attr('title', 'Quit!');
   console.log('Game started, isPlaying: ' + isPlaying);
 
-  computerTurn2();
+  computerTurn();
 
 };
 
@@ -64,12 +64,18 @@ var computerTurn = () => {
     }, 100); // End setTimeout
   };
 
-  var i = 1;
-  moves.forEach( move => {
-    setTimeout( () => computerAction(move), 600*i++);
-  });
+  var i = 0;
+  intervalID = setInterval( () => {
+    console.log(i, moves.length, i===moves.length);
+    if (i === moves.length) {
+      console.log("i===counter.length, clearing display and clearing interval");
+      resetDisplay();
+      clearInterval(intervalID);
+    }
+    computerAction(moves[i]);
 
-  resetDisplay();
+    i++;
+  }, 600);
 
   // Switch to player
 
@@ -93,3 +99,4 @@ var resetBoard = () => {
   resetDisplay();
 
 };
+
