@@ -4,6 +4,8 @@ var isStrict = false,
     counter,
     moves = [],
     isPlayerTurn,
+    timeoutSpeed = 3 * 1000,
+    moveSpeed = 0.6 * 1000,
     btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
 
 $('document').ready(function(){
@@ -80,7 +82,7 @@ var iterateMoves = () => {
     displayMove(moves[i]);
     i++;
 
-  }, 600);
+  }, moveSpeed);
 
 };
 
@@ -99,7 +101,7 @@ var playerTurn = () => {
   intervalID = setTimeout( () => {
     isPlayerTurn = false;
     iterateMoves(); 
-  }, 2000); // 10 Second timeout
+  }, timeoutSpeed);
 
 };
 
