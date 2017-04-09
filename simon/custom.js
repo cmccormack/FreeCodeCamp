@@ -1,11 +1,13 @@
 var isStrict = false,
     isPlaying = false,
     intervalID,
+    moveIntervalID,
     counter,
     moves = [],
+    playerCnt,
     isPlayerTurn,
     timeoutSpeed = 3 * 1000,
-    moveSpeed = 0.6 * 1000,
+    moveSpeed = 0.7 * 1000,
     btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
 
 $('document').ready(function(){
@@ -20,16 +22,21 @@ $('document').ready(function(){
 
 
 
-
 var cellClicked = cellid => {
 
   playSound(cellid);
   if (isPlayerTurn){
     clearInterval(intervalID);
+    if ("#" + cellid === moves[playerCnt]){
+      console.log("cellid: #" + cellid, "matches moves[playerCnt]: " + moves[playerCnt]);
+    } else {
+      iterateMoves();
+    }
     playerTurn();
   }
 
 };
+
 
 var startStop = () => {
   $('#startStop label i').toggleClass('fa-play fa-stop');
@@ -54,14 +61,22 @@ var startStop = () => {
 var computerTurn = () => {
 
   moves.push(getRandColor());
-
-  
-
   iterateMoves();
 
-  // Switch to player
-  // playerTurn();
-  // Stop if counter reaches 20
+};
+
+
+var playerTurn = () => {
+
+  $('#display').removeClass('disabled');
+
+  // Reset player turn if timeout
+  intervalID = setTimeout( () => {
+    isPlayerTurn = false;
+    iterateMoves();
+    playerCnt = 0;
+  }, timeoutSpeed);
+
 };
 
 
@@ -71,12 +86,13 @@ var iterateMoves = () => {
   $('#display').addClass('disabled');
 
   var i = 0;
-  intervalID = setInterval( () => {
+  moveIntervalID = setInterval( () => {
     console.log(i, moves.length, i===moves.length);
     if (i === moves.length) {
       console.log("i===counter.length, clearing display and clearing interval");
       resetDisplay();
       clearInterval(intervalID);
+      isPlayerTurn = true;
       playerTurn();
     }
     displayMove(moves[i]);
@@ -95,15 +111,6 @@ var displayMove = move => {
   }, 100); // End setTimeout
 };
 
-var playerTurn = () => {
-  $('#display').removeClass('disabled');
-  isPlayerTurn = true;
-  intervalID = setTimeout( () => {
-    isPlayerTurn = false;
-    iterateMoves(); 
-  }, timeoutSpeed);
-
-};
 
 
 
@@ -113,16 +120,18 @@ var playerTurn = () => {
 
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 var playSound = id => $('#' + id + '-audio').get(0).play();
-
+var displayCounter = () => $("#counter").val(playerCnt + 1);
 var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
 
 
 var resetBoard = () => {
   $('#display').removeClass('disabled');
   clearInterval(intervalID);
+  clearInterval(moveIntervalID);
   isPlaying = false;
   isPlayerTurn = false;
   counter = 1;
+  playerCnt = 0;
   $('#play').attr('title', 'Play!');
   resetDisplay();
 
