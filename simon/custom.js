@@ -1,7 +1,7 @@
 var isStrict = false,
     isPlaying = false,
-    intervalID,
-    moveIntervalID,
+    playerIntervalId,
+    moveIntervalId,
     counter,
     moves = [],
     playerCnt,
@@ -14,7 +14,7 @@ $('document').ready(function(){
 
   resetBoard();
   // Bind functions to events after document has loaded
-  $('.cell-btn').click( (e) => cellClicked( $(e.currentTarget).attr('id')) );
+  $('.cell-btn').click( (e) => cellClicked( "#" + $(e.currentTarget).attr('id')) );
   $('#play').click( () => startStop() );
   $('#strict').click( () => setStrictMode() );
 
@@ -25,14 +25,16 @@ $('document').ready(function(){
 var cellClicked = cellid => {
 
   playSound(cellid);
+
   if (isPlayerTurn){
-    clearInterval(intervalID);
-    if ("#" + cellid === moves[playerCnt]){
-      console.log("cellid: #" + cellid, "matches moves[playerCnt]: " + moves[playerCnt]);
+    clearInterval(playerIntervalId);
+    if (cellid === moves[playerCnt]){
+      console.log("cellid: " + cellid, "matches moves[playerCnt]: " + moves[playerCnt]);
+      playerCnt++;
+      playerTurn();
     } else {
       iterateMoves();
     }
-    playerTurn();
   }
 
 };
@@ -71,11 +73,12 @@ var playerTurn = () => {
   $('#display').removeClass('disabled');
 
   // Reset player turn if timeout
-  intervalID = setTimeout( () => {
-    isPlayerTurn = false;
+  playerIntervalId = setTimeout( () => {
+    console.log("Player timed out - id: " + playerIntervalId);
     iterateMoves();
-    playerCnt = 0;
   }, timeoutSpeed);
+
+  console.log("Player timer started with id: " + playerIntervalId);
 
 };
 
@@ -85,13 +88,15 @@ var iterateMoves = () => {
   // Disable user input until moves have been displayed
   $('#display').addClass('disabled');
 
+  playerCnt = 0;
+  isPlayerTurn = false;
+
   var i = 0;
-  moveIntervalID = setInterval( () => {
+  moveIntervalId = setInterval( () => {
     console.log(i, moves.length, i===moves.length);
     if (i === moves.length) {
-      console.log("i===counter.length, clearing display and clearing interval");
       resetDisplay();
-      clearInterval(intervalID);
+      clearInterval(moveIntervalId);
       isPlayerTurn = true;
       playerTurn();
     }
@@ -119,15 +124,15 @@ var displayMove = move => {
 
 
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
-var playSound = id => $('#' + id + '-audio').get(0).play();
+var playSound = id => $(id + '-audio').get(0).play();
 var displayCounter = () => $("#counter").val(playerCnt + 1);
 var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
 
 
 var resetBoard = () => {
   $('#display').removeClass('disabled');
-  clearInterval(intervalID);
-  clearInterval(moveIntervalID);
+  clearInterval(playerIntervalId);
+  clearInterval(moveIntervalId);
   isPlaying = false;
   isPlayerTurn = false;
   counter = 1;
