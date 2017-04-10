@@ -3,9 +3,10 @@ var isStrict = false,
     playerIntervalId,
     moveIntervalId,
     counter = 0,
+    audio = true,
     moves = [],
     playerCnt = 0,
-    maxturns = 5,
+    maxturns = 2,
     isPlayerTurn = false,
     timeoutSpeed = 5 * 1000,
     moveSpeed = 0.75 * 1000,
@@ -15,6 +16,7 @@ $('document').ready(function(){
 
   resetBoard();
   // Bind functions to events after document has loaded
+  $('#volume-btn').click(function(){ volumeChange(); });
   $('.cell-btn').click( (e) => cellClicked( "#" + $(e.currentTarget).attr('id')) );
   $('#play').click( () => startStop() );
   $('#strict').click( () => setStrictMode() );
@@ -154,7 +156,7 @@ var displayMove = move => {
 
 
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
-var playSound = id => $(id + '-audio').get(0).play();
+var playSound = id => { if(audio) { $(id + '-audio').get(0).play(); }};
 var displayCounter = count => $("#counter").val(count<=9?'0'+count:count);
 var displayStatus = status => $("#status").text(status);
 var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
@@ -175,6 +177,13 @@ var resetBoard = () => {
   resetDisplay();
 
 };
+
+
+// Toggles audio
+function volumeChange() {
+  if (audio) { audio = false; } else { audio = true; }
+  $("#volume-btn i").toggleClass("fa-volume-up fa-volume-off");
+}
 
 
 var setStrictMode = () => {
