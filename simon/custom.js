@@ -5,7 +5,7 @@ var isStrict = false,
     counter = 0,
     moves = [],
     playerCnt = 0,
-    maxturns = 2,
+    maxturns = 5,
     isPlayerTurn = false,
     timeoutSpeed = 5 * 1000,
     moveSpeed = 0.75 * 1000,
@@ -45,7 +45,7 @@ var cellClicked = cellid => {
     // Check for win
     if(playerCnt === maxturns){
       console.log("You Win!");
-      resetBoard();
+      startStop();
       displayCounter("=)");
       displayStatus("You Win!");
 
@@ -72,6 +72,7 @@ var startStop = () => {
 
   // Moving from Stopped state to Started state
   isPlaying = true;
+  displayStatus("");
   $('#play').attr('title', 'Quit!');
   console.log('Game started, isPlaying: ' + isPlaying);
 
@@ -142,10 +143,6 @@ var displayMove = move => {
 
 
 
-
-
-
-
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 var playSound = id => $(id + '-audio').get(0).play();
 var displayCounter = count => $("#counter").val(count<=9?'0'+count:count);
@@ -158,6 +155,7 @@ var resetBoard = () => {
   clearInterval(playerIntervalId);
   clearInterval(moveIntervalId);
   displayCounter("--");
+  displayStatus("");
   isPlaying = false;
   isPlayerTurn = false;
   counter = 0;
