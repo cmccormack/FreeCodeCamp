@@ -44,21 +44,26 @@ var cellClicked = cellid => {
 
     // Check for win
     if(playerCnt === maxturns){
-      console.log("You Win!");
-      startStop();
-      displayCounter("=)");
-      displayStatus("You Win!");
-
+      playerWin();
     } else {
       computerTurn();
     }
   } else {
     playerTurn();
   }
+};
+
+
+var playerWin = () => {
+  console.log("You Win!");
+  startStop();
+  displayCounter("=)");
+  displayStatus("You Win!");
+
+
 
 
 };
-
 
 var startStop = () => {
   $('#startStop label i').toggleClass('fa-play fa-stop');
@@ -117,14 +122,17 @@ var iterateMoves = () => {
 
   var i = 0;
   moveIntervalId = setInterval( () => {
-    console.log(i, moves.length, i===moves.length);
+    console.log("iterateMoves i: " + i, "moves.length: " + moves.length, "i===moves.length: " + (i === moves.length));
     if (i === moves.length) {
       resetDisplay();
       clearInterval(moveIntervalId);
       isPlayerTurn = true;
       playerTurn();
+    } else {
+      console.log("iterateMoves calling displayMove(" + moves[i] + ")");
+      displayMove(moves[i]);
+      
     }
-    displayMove(moves[i]);
     i++;
 
   }, moveSpeed);
@@ -132,10 +140,12 @@ var iterateMoves = () => {
 };
 
 var displayMove = move => {
+  console.log("displayMove move: " + move, moves);
   resetDisplay();
   setTimeout( () => {
     color = $(move);
-    color.click();
+
+    playSound(move);
     color.css('opacity', '1');
   }, 100); // End setTimeout
 };
