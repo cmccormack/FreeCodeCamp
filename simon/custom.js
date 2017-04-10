@@ -2,12 +2,13 @@ var isStrict = false,
     isPlaying = false,
     playerIntervalId,
     moveIntervalId,
-    counter,
+    counter = 0,
     moves = [],
-    playerCnt,
-    isPlayerTurn,
-    timeoutSpeed = 3 * 1000,
-    moveSpeed = 0.7 * 1000,
+    playerCnt = 0,
+    maxturns = 2,
+    isPlayerTurn = false,
+    timeoutSpeed = 5 * 1000,
+    moveSpeed = 0.75 * 1000,
     btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
 
 $('document').ready(function(){
@@ -26,16 +27,35 @@ var cellClicked = cellid => {
 
   playSound(cellid);
 
-  if (isPlayerTurn){
-    clearInterval(playerIntervalId);
-    if (cellid === moves[playerCnt]){
-      console.log("cellid: " + cellid, "matches moves[playerCnt]: " + moves[playerCnt]);
-      playerCnt++;
-      playerTurn();
-    } else {
-      iterateMoves();
-    }
+  if (!isPlayerTurn){ return; }
+
+  clearInterval(playerIntervalId);
+
+  // Check if wrong color clicked
+  if (cellid !== moves[playerCnt]){
+    iterateMoves();
+    return;
   }
+
+  console.log("cellid: " + cellid, "matches moves[playerCnt]: " + moves[playerCnt]);
+  playerCnt++;
+  if(playerCnt === moves.length){
+    clearInterval(playerIntervalId);
+
+    // Check for win
+    if(playerCnt === maxturns){
+      console.log("You Win!");
+      resetBoard();
+      displayCounter("=)");
+      displayStatus("You Win!");
+
+    } else {
+      computerTurn();
+    }
+  } else {
+    playerTurn();
+  }
+
 
 };
 
@@ -63,12 +83,15 @@ var startStop = () => {
 var computerTurn = () => {
 
   moves.push(getRandColor());
+  displayCounter(moves.length);
   iterateMoves();
 
 };
 
 
 var playerTurn = () => {
+
+  console.log(moves);
 
   $('#display').removeClass('disabled');
 
@@ -125,7 +148,8 @@ var displayMove = move => {
 
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 var playSound = id => $(id + '-audio').get(0).play();
-var displayCounter = () => $("#counter").val(playerCnt + 1);
+var displayCounter = count => $("#counter").val(count<=9?'0'+count:count);
+var displayStatus = status => $("#status").text(status);
 var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
 
 
@@ -133,10 +157,12 @@ var resetBoard = () => {
   $('#display').removeClass('disabled');
   clearInterval(playerIntervalId);
   clearInterval(moveIntervalId);
+  displayCounter("--");
   isPlaying = false;
   isPlayerTurn = false;
-  counter = 1;
+  counter = 0;
   playerCnt = 0;
+  moves = [];
   $('#play').attr('title', 'Play!');
   resetDisplay();
 
