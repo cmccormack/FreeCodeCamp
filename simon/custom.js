@@ -10,7 +10,7 @@ var isStrict = false,
     isPlayerTurn = false,
     timeoutSpeed = 5 * 1000,
     moveSpeed = 0.75 * 1000,
-    btnArray = ['#red-btn', '#green-btn', '#yellow-btn', '#blue-btn'];
+    btnArray = ['#red-btn', '#green-btn', '#blue-btn', '#yellow-btn'];
 
 $('document').ready(function(){
 
@@ -57,15 +57,26 @@ var cellClicked = cellid => {
 
 
 var playerWin = () => {
-  console.log("You Win!");
   startStop();
   displayCounter("=)");
   displayStatus("You Win!");
+  lockBoard();
 
-
-
-
+  var i = 0,
+      t = audio;
+  audio = false;
+  winIntervalId = setInterval( () => {
+    if (i === 18){
+      audio = t;
+      resetBoard();
+      clearInterval(winIntervalId);
+    } else {
+      displayMove(btnArray[i % 4]);
+      i++;
+    }
+  }, 150);
 };
+
 
 var startStop = () => {
   $('#startStop label i').toggleClass('fa-play fa-stop');
@@ -117,7 +128,7 @@ var playerTurn = () => {
 var iterateMoves = () => {
 
   // Disable user input until moves have been displayed
-  $('#display').addClass('disabled');
+  lockBoard();
 
   playerCnt = 0;
   isPlayerTurn = false;
@@ -141,8 +152,9 @@ var iterateMoves = () => {
 
 };
 
+
 var displayMove = move => {
-  console.log("displayMove move: " + move, moves);
+  // console.log("displayMove move: " + move, moves);
   resetDisplay();
   setTimeout( () => {
     color = $(move);
@@ -153,13 +165,12 @@ var displayMove = move => {
 };
 
 
-
-
 var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
 var playSound = id => { if(audio) { $(id + '-audio').get(0).play(); }};
 var displayCounter = count => $("#counter").val(count<=9?'0'+count:count);
 var displayStatus = status => $("#status").text(status);
 var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
+var lockBoard = () => $('#display').addClass('disabled');
 
 
 var resetBoard = () => {
