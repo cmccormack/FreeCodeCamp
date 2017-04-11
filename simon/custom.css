@@ -47,8 +47,13 @@ input {
   background-color: transparent;
 }
 
+.bg-red {
+  background-color: #300 !important;
+}
+
 #main-header {
   padding: 15px 0 15px 0;
+  color: #400;
   font-family: 'Permanent Marker', cursive;
 }
 
@@ -56,8 +61,9 @@ input {
   width: 320px;
   border-radius: 20px;
   padding: 10px;
-  background: #222;
-  background: #222 -webkit-radial-gradient(20% 80%, 60% 60%, rgba(255,255,255,.12), rgba(0,0,0,.2));
+  /*background: #222;*/
+  background: #600;
+  background: #600 -webkit-radial-gradient(20% 80%, 60% 60%, rgba(255,255,255,.12), rgba(0,0,0,.2));
   box-shadow: 0px 2px .7px 1px #976, inset 0 -7px rgba(0,0,0,.4);
 }
 
@@ -72,7 +78,7 @@ input {
   padding-top: 21px;
   color: #DDD;
   background: #111;
-  background: linear-gradient(to top left,  #000 20%, #444 100%);
+  background: linear-gradient(to top left,  #100 5%, #600 100%);
   box-shadow: inset 3px 3px 4px #111;
 }
 
@@ -139,12 +145,6 @@ input {
 }
 
 
-#statusdisplay {
-  font-family: 'Permanent Marker', cursive;
-  background-image: none;
-}
-
-
 #buttons {
   margin-top: 20px;
   margin-bottom: 20px;
@@ -187,11 +187,17 @@ input {
 #counter {
   border-color: black;
   background-color: black;
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.4);
   color: #A00;
   font-family: 'Roboto Mono', monospace;
   font-weight: 400;
   font-size: 1.3em;
+}
+
+#statusdisplay {
+  font-family: 'Permanent Marker', cursive;
+  color: #400;
+  background-image: none;
 }
 
 

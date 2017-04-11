@@ -27,7 +27,6 @@ $('document').ready(function(){
 
 
 var togglePlay = () => {
-  // $('#play i').toggleClass('fa-play fa-stop');
 
   // Stop game if currently playing
   if (isPlaying){
