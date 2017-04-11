@@ -7,7 +7,7 @@ var isStrict = false,
     moveIntervalId,
     moves = [],
     playerCnt = 0,
-    maxturns = 3,
+    maxturns = 20,
     timeoutSpeed = 5 * 1000,
     moveSpeed = 0.75 * 1000,
     btnArray = ['#red-btn', '#green-btn', '#blue-btn', '#yellow-btn'];
@@ -56,7 +56,6 @@ var stopGame = () => {
   $('#play i').removeClass('fa-stop');
   
   resetBoard();
-  console.log('Game stopped, resetting board, isPlaying: ' + isPlaying);
 };
 
 
@@ -118,6 +117,7 @@ var playerTurn = () => {
 var cellClicked = cellid => {
 
   clearInterval(playerIntervalId);
+  $(cellid).blur();
 
   if (!isPlaying) {
     playSound(cellid + "-audio");
