@@ -1,5 +1,5 @@
 var locApiUrl = "http://ipinfo.io/json";
-var owmURL = "http://api.openweathermap.org/data/2.5/weather?";
+var owmURL = "http://api.openweathermap.org/data/2.5/weather?callback=?";
 
 var ak = "a9d11dcfa9a27225404a44952890d6ea";
 var unit = "imperial"; // Default: Kelvin.  Celsius:metric, Farhenheit:imperial
@@ -117,6 +117,22 @@ function getLatLong() {
     .always(function() {
       console.log("getLatLong: Completed call.");
     });
+}
+
+function getLatLongTest() {
+  
+  function getLatLong(position){
+      latlon = "&lat=" + position.coords.latitude + "&lon=" + position.coords.longitude;
+      getWeather(owmURL + appid + units + latlon);
+  }
+  
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(getLatLong);
+      
+  } else {
+      getLatLongHttp();
+  }
+  
 }
 
 
