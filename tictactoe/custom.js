@@ -80,6 +80,7 @@ function cellClicked(pos){
 function gameOver(message){
   $("#status").text(message);
   $(".board-cell").prop("disabled", true);
+  $("#reset").prop("disabled", true);
   $("#status, .cell-i").fadeOut(2000, function(){
     resetGame();
   });
@@ -138,6 +139,7 @@ function resetGame() {
   $("label", "#buttons").removeClass("disabled");
   $("input", "#buttons").prop("disabled", false);
   $(".board-cell").prop("disabled", false);
+  $("#reset").prop("disabled", false);
   $(".board-cell").removeClass("winner loser");
   $("#status").text("");
   $("#status, .cell-i").show();
