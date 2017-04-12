@@ -81,6 +81,7 @@ function gameOver(message){
   $("#status").text(message);
   $(".board-cell").prop("disabled", true);
   $("#reset").prop("disabled", true);
+  $("#reset").addClass("disabled");
   $("#status, .cell-i").fadeOut(2000, function(){
     resetGame();
   });
@@ -140,6 +141,7 @@ function resetGame() {
   $("input", "#buttons").prop("disabled", false);
   $(".board-cell").prop("disabled", false);
   $("#reset").prop("disabled", false);
+  $("#reset").removeClass("disabled");
   $(".board-cell").removeClass("winner loser");
   $("#status").text("");
   $("#status, .cell-i").show();
