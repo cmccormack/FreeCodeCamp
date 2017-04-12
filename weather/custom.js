@@ -31,7 +31,7 @@ var unit = "us", // Celsius:si, Farhenheit:us
       "fog": ['fog'],
       "cloudy": ['cloudy'],
       "partly-cloudy-day": ['day-cloudy'],
-      "partly-cloudy-night": ['alt-cloudy']
+      "partly-cloudy-night": ['night-alt-cloudy']
     };
 
 
@@ -54,6 +54,7 @@ var getWeather = () => {
       url = dsapi.url + dsapi.k + latlon + "?callback=?";
 
   $.getJSON(url, dsapi.params, function(response) {
+    console.log(response);
 
     weather_icon = response.currently.icon;
     weather_desc = response.currently.summary;
@@ -68,14 +69,15 @@ var getWeather = () => {
 
 var getLatLong = () => {
   
-  var geoApiCall = $.getJSON(locapi.url, function(data) {
+  var geoApiCall = $.getJSON(locapi.url, function(response) {
 
-    locapi.lat = data.latitude;
-    locapi.lon = data.longitude;
-    locapi.city = data.city;
-    locapi.state = data.region_name;
-    locapi.country = data.country_name;
-    locapi.countrycode = data.country_code;
+    locapi.lat = response.latitude;
+    locapi.lon = response.longitude;
+    locapi.city = response.city;
+    locapi.state = response.region_name;
+    locapi.country = response.country_name;
+    locapi.countrycode = response.country_code;
+
     $('#location').text(locapi.city + ", " + locapi.state);
   });
 
