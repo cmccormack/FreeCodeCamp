@@ -1,6 +1,5 @@
 
 var unit = "us"; // Celsius:si, Farhenheit:us
-var weather = "";
 
 var dsapi = {
   url: "https://api.darksky.net/forecast/",
@@ -20,8 +19,6 @@ var locapi = {
   country: "",
   countrycode: "",
 };
-
-var time = {};
 
 var temps = {
   "us": "",
@@ -43,114 +40,88 @@ var conditions = {
 };
 
 
+$('document').ready(function() {
+
+  // Display spinning icon until API loads
+  $('#temp').html("<i class='fa fa-spinner fa-spin'></i>");
+  
+  // Call geo API first then weather API once completed
+  getLatLong().done(getWeather);
+
+  // Bind functions to events
+  $('.btn-toggle').click(toggleUnits);
+});
+
+
 function getWeather() {
 
-  var url = dsapi.url + dsapi.k + locapi.lat + "," + locapi.lon + "?callback=?";
-  $.getJSON(url, dsapi.params, function(json) {
+  var latlon = [locapi.lat,locapi.lon].join(','),
+      url = dsapi.url + dsapi.k + latlon + "?callback=?";
 
-    weather = json.currently.icon;
-    weather_desc = json.currently.summary;
-    dsapi.params.units = json.flags.units;
-    console.log(json.flags.units);
+  $.getJSON(url, dsapi.params, function(response) {
+
+    weather_icon = response.currently.icon;
+    weather_desc = response.currently.summary;
+    dsapi.params.units = response.flags.units;
     $('#condition').text(weather_desc);
 
-
-    // Build icon class string for displaying weather icon
-    setTemp(unit, json.currently.temperature, "wi wi-" + conditions[weather]);
-    convertTemp(json.currently.temperature);
-
+    displayTemp(unit, response.currently.temperature, conditions[weather_icon]);
+    convertTemp(response.currently.temperature);
   });
 }
 
 
-function setTemp(unit, temp, icon) {
-
-  $('#temp').text(temp);
-  $('#weather-icon').addClass(icon);
-
-  $("#units").removeClass();
-  if (unit == "us") {
-    $("#units").addClass("wi wi-fahrenheit");
-  } else if (unit == "si") {
-    $('#units').addClass("wi wi-celsius");
-  } 
-}
-
-
-function getLatLong(){
+var getLatLong = () => {
   
-  $.getJSON(locapi.url, function(data) {
+  var geoApiCall = $.getJSON(locapi.url, function(data) {
+
     locapi.lat = data.latitude;
     locapi.lon = data.longitude;
     locapi.city = data.city;
     locapi.state = data.region_name;
     locapi.country = data.country_name;
     locapi.countrycode = data.country_code;
-
     $('#location').text(locapi.city + ", " + locapi.state);
-
-    getWeather();
   });
-  
-}
 
-
-$('document').ready(function() {
-
-  $('#temp').html("<i class='fa fa-spinner fa-spin'></i>");
-  
-  // Toggle conversion button if original unit is imperial
-  if (unit == "us") {
-    $('.btn', '#unit-selector').toggleClass('btn-primary btn-secondary');
-  }
-  getLatLong();
-  console.log("Returned from getLatLong() function.");
-
-  // Bind functions to events
-  $('.btn-toggle').click(convertUnit);
-
-});
-
-
-var convertUnit = () => {
-  $('.btn').toggleClass('btn-primary');
-  $('.btn').toggleClass('btn-secondary');
-
-  unit = $('.btn-toggle').find('.btn-primary').attr('id');
-  setTemp(unit, temps[unit]);
+  return geoApiCall;
 };
 
 
+var toggleUnits = () => {
+  $('.btn', '#unit-selector').toggleClass('btn-primary btn-secondary');
+  unit = $(".btn-primary", "#unit-selector").attr('id');
+  displayTemp(unit, temps[unit]);
+};
 
 
+var displayTemp = (unit, temp, icon) => {
 
-// Conversion functions
-// Celsius = (Farenheit - 32) * 5/9
-// Celsius = Kelvin − 273.15
-// Farenheit = (Celsius * 9/5) + 32
-// Farenheit = Kelvin ×  9⁄5 − 459.67
-// Kelvin = Celsius + 273.15
-// Kelvin = (Farenheit + 459.67) × 5/9
+  $('#temp').text(temp);
+  $('#weather-icon').addClass("wi wi-" + icon);
+
+  $("#units").removeClass();
+  if (unit === "us") {
+    $("#units").addClass("wi wi-fahrenheit");
+  } else if (unit === "si") {
+    $('#units').addClass("wi wi-celsius");
+  } 
+};
+
+
 var convertTemp = temp => {
 
-  var ktof = () => temp * 9 / 5 - 459.67;
-  var ktoc = () => temp - 273.15;
   var ftoc = () => (temp - 32) * 5 / 9;
-  var ftok = () => (temp + 459.67) * 5 / 9;
   var ctof = () => (temp * 9 / 5) + 32;
-  var ctok = () => temp + 273.15;
 
   if (unit == "us") {
     temps.us = temp;
     temps.si = ftoc().toFixed(1);
-    return;
   }
 
   if (unit == "si") {
     temps.si = temp;
     temps.us = ctof().toFixed(1);
-    return;
   }
-
 
 };
