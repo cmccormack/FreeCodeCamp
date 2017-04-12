@@ -1,13 +1,13 @@
 
-var unit = "imperial"; // Default: Kelvin.  Celsius:metric, Farhenheit:imperial
-var units = "&units=" + unit;
+var unit = "us"; // Celsius:si, Farhenheit:us
 var weather = "";
 
 var dsapi = {
   url: "https://api.darksky.net/forecast/",
   k: "ffb654af71fb3be46e3fd5e502b54751/",
-  params: {
-    "exclude": "minutely,hourly,alerts,flags"
+  params: { 
+    "exclude": "minutely,hourly,alerts",
+    "units": "us"  // si for celsius
   }
 };
 
@@ -24,9 +24,8 @@ var locapi = {
 var time = {};
 
 var temps = {
-  "imperial": "",
-  "metric": "",
-  "kelvin": ""
+  "us": "",
+  "si": ""
 };
 
 
@@ -48,16 +47,16 @@ function getWeather() {
 
   var url = dsapi.url + dsapi.k + locapi.lat + "," + locapi.lon + "?callback=?";
   $.getJSON(url, dsapi.params, function(json) {
-    console.log(json);
+
     weather = json.currently.icon;
     weather_desc = json.currently.summary;
+    dsapi.params.units = json.flags.units;
+    console.log(json.flags.units);
     $('#condition').text(weather_desc);
 
 
     // Build icon class string for displaying weather icon
-    condition = conditions[weather];
-    var icon = "wi wi-" + condition;
-    setTemp(unit, json.currently.temperature, icon);
+    setTemp(unit, json.currently.temperature, "wi wi-" + conditions[weather]);
     convertTemp(json.currently.temperature);
 
   });
@@ -65,20 +64,16 @@ function getWeather() {
 
 
 function setTemp(unit, temp, icon) {
-  console.log("Inside setTemp() function [unit:" + unit + "][temp:" + temp + "]");
+
   $('#temp').text(temp);
   $('#weather-icon').addClass(icon);
 
   $("#units").removeClass();
-  if (unit == "imperial") {
+  if (unit == "us") {
     $("#units").addClass("wi wi-fahrenheit");
-  } else if (unit == "metric") {
+  } else if (unit == "si") {
     $('#units').addClass("wi wi-celsius");
-  } else {
-    $('#units').removeClass();
-    $('#temp').append("K");
-  }
-  console.log("Leaving setTemp() function");
+  } 
 }
 
 
@@ -105,7 +100,7 @@ $('document').ready(function() {
   $('#temp').html("<i class='fa fa-spinner fa-spin'></i>");
   
   // Toggle conversion button if original unit is imperial
-  if (unit == "imperial") {
+  if (unit == "us") {
     $('.btn', '#unit-selector').toggleClass('btn-primary btn-secondary');
   }
   getLatLong();
@@ -145,25 +140,17 @@ var convertTemp = temp => {
   var ctof = () => (temp * 9 / 5) + 32;
   var ctok = () => temp + 273.15;
 
-  if (unit == "imperial") {
-    temps.imperial = temp;
-    temps.metric = ftoc().toFixed(2);
-    temps.kelvin = ftok().toFixed(2);
+  if (unit == "us") {
+    temps.us = temp;
+    temps.si = ftoc().toFixed(1);
     return;
   }
 
-  if (unit == "metric") {
-    temps.metric = temp;
-    temps.imperial = ctof().toFixed(2);
-    temps.kelvin = ctok().toFixed(2);
+  if (unit == "si") {
+    temps.si = temp;
+    temps.us = ctof().toFixed(1);
     return;
   }
 
-  if (unit == "kelvin" || unit === "") {
-    temps.kelvin = temp;
-    temps.imperial = ktof().toFixed(2);
-    temps.metric = ktoc().toFixed(2);
-    return;
-  }
 
 };
