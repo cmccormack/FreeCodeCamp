@@ -9,7 +9,6 @@ function getNewQuote() {
   $.getJSON(apiurl, function(json) {
     author_name = json.author;
     quote_text = json.quote;
-    console.log(quote_text);
     
     // Add quote and author to well elements
     $("#quote_msg").empty();
