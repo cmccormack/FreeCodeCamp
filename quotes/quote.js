@@ -1,4 +1,4 @@
-var apiurl = "https://quotes.stormconsultancy.co.uk/random.json";
+var apiurl = "http://quotes.stormconsultancy.co.uk/random.json?callback=?";
 var lqt = '<i class="fa fa-quote-left fa-2x fa-pull-left fa-border" aria-hidden="true"></i>';
 var author_name = "";
 var quote_text = "";
