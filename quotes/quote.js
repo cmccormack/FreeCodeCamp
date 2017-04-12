@@ -1,8 +1,8 @@
-var apiurl = "http://quotes.stormconsultancy.co.uk/random.json";
-var lqt = '<i class="fa fa-quote-left fa-2x fa-pull-left fa-border" aria-hidden="true"></i>'
+var apiurl = "https://quotes.stormconsultancy.co.uk/random.json";
+var lqt = '<i class="fa fa-quote-left fa-2x fa-pull-left fa-border" aria-hidden="true"></i>';
 var author_name = "";
 var quote_text = "";
-var twitter_url = "https://twitter.com/intent/tweet?related=freecodecamp&text="
+var twitter_url = "https://twitter.com/intent/tweet?related=freecodecamp&text=";
 
 // Request a new random quote using API
 function getNewQuote() {
