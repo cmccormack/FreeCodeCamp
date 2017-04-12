@@ -1,46 +1,41 @@
 
-var unit = "us"; // Celsius:si, Farhenheit:us
-
-var dsapi = {
-  url: "https://api.darksky.net/forecast/",
-  k: "ffb654af71fb3be46e3fd5e502b54751/",
-  params: { 
-    "exclude": "minutely,hourly,alerts",
-    "units": "us"  // si for celsius
-  }
-};
-
-var locapi = {
-  url: "https://freegeoip.net/json/?callback=?",
-  lat: "",
-  lon: "",
-  city: "", 
-  state: "",
-  country: "",
-  countrycode: "",
-};
-
-var temps = {
-  "us": "",
-  "si": ""
-};
-
-
-var conditions = {
-  "clear-day": ['day-sunny'],
-  "clear-night": ['night-clear'],
-  "rain": ['rain'],
-  "snow": ['snow'],
-  "sleet": ['sleet'],
-  "wind": ['wind'],
-  "fog": ['fog'],
-  "cloudy": ['cloudy'],
-  "partly-cloudy-day": ['day-cloudy'],
-  "partly-cloudy-night": ['alt-cloudy']
-};
+var unit = "us", // Celsius:si, Farhenheit:us
+    dsapi = {
+      url: "https://api.darksky.net/forecast/",
+      k: "ffb654af71fb3be46e3fd5e502b54751/",
+      params: { 
+        "exclude": "minutely,hourly,alerts",
+        "units": "us"  // si for celsius
+      }
+    },
+    locapi = {
+      url: "https://freegeoip.net/json/?callback=?",
+      lat: "",
+      lon: "",
+      city: "", 
+      state: "",
+      country: "",
+      countrycode: "",
+    },
+    temps = {
+      "us": "",
+      "si": ""
+    },
+    conditions = {
+      "clear-day": ['day-sunny'],
+      "clear-night": ['night-clear'],
+      "rain": ['rain'],
+      "snow": ['snow'],
+      "sleet": ['sleet'],
+      "wind": ['wind'],
+      "fog": ['fog'],
+      "cloudy": ['cloudy'],
+      "partly-cloudy-day": ['day-cloudy'],
+      "partly-cloudy-night": ['alt-cloudy']
+    };
 
 
-$('document').ready(function() {
+$('document').ready( () => {
 
   // Display spinning icon until API loads
   $('#temp').html("<i class='fa fa-spinner fa-spin'></i>");
@@ -53,7 +48,7 @@ $('document').ready(function() {
 });
 
 
-function getWeather() {
+var getWeather = () => {
 
   var latlon = [locapi.lat,locapi.lon].join(','),
       url = dsapi.url + dsapi.k + latlon + "?callback=?";
@@ -68,7 +63,7 @@ function getWeather() {
     displayTemp(unit, response.currently.temperature, conditions[weather_icon]);
     convertTemp(response.currently.temperature);
   });
-}
+};
 
 
 var getLatLong = () => {
