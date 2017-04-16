@@ -6,8 +6,7 @@ class AddMarkdown extends Component {
     return (
       <div>
         <form>
-          <textarea 
-              cols={50} 
+          <textarea cols={50} 
               rows={20}
           >{'text'}</textarea>
         </form>

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import './styles/app.css'
 import AddMarkdownForm from './components/AddMarkdownForm'
-import AppHeader from './components/AppHeader'
 
 class MarkdownViewer extends Component {
   constructor() {
@@ -18,11 +17,11 @@ class MarkdownViewer extends Component {
     return true
   }
 
+
   render() {
     return (
-
+ 
       <div className="app">
-        <AppHeader />
         <div className="app-wrapper">
           <div className="app-nav" />
           <div className="main-content">
