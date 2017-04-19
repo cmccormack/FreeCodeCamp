@@ -1,4 +1,5 @@
 $body-bg: #FFD;
+$output-border: #885;
 
 body {
   background-color: $body-bg;
@@ -27,4 +28,12 @@ footer {
   padding: .5rem 1.5rem;
   z-index: 50;
   height: 56px;
+}
+
+.outputDiv {
+  min-height: 486px;
+  width: 422px;
+  padding: 2px;
+  border: 1px solid $output-border;
+  margin: auto;
 }

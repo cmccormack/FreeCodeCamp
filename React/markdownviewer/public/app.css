@@ -23,4 +23,11 @@ footer {
   z-index: 50;
   height: 56px; }
 
+.outputDiv {
+  min-height: 486px;
+  width: 422px;
+  padding: 2px;
+  border: 1px solid #885;
+  margin: auto; }
+
 /*# sourceMappingURL=app.css.map */
