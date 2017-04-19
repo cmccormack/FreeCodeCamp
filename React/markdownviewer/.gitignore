@@ -18,3 +18,5 @@ yarn-error.log*
 .eslintrc.json
 
 
+.sass-cache/
+*.map
