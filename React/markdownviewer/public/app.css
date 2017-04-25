@@ -54,6 +54,9 @@ a:hover {
 .text-shadow {
   text-shadow: -3px 3px 8px #885; }
 
+.white-shadow:hover {
+  text-shadow: 0 0 8px #EEE; }
+
 .display-6 {
   font-size: 1.6rem;
   font-weight: 300;

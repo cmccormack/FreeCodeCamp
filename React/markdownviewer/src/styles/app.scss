@@ -2,6 +2,7 @@ $body-bg: #FFD;
 $output-border: #885;
 $text-shadow: #885;
 $box-shadow: #444;
+$white-shadow: #EEE;
 $output-bg: #EED;
 
 body {
@@ -72,6 +73,13 @@ a {
 
 .text-shadow {
   text-shadow: -3px 3px 8px $text-shadow;
+}
+.white-shadow {
+
+  &:hover {
+    text-shadow: 0 0 8px $white-shadow;
+  }
+  
 }
 
 .display-6 {
