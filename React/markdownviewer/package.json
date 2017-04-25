@@ -2,6 +2,7 @@
   "name": "markdownviewer",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "marked": "^0.3.6",
     "react": "^15.5.4",
