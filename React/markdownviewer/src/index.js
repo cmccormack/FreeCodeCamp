@@ -41,10 +41,10 @@ class MarkdownViewer extends React.Component {
   }
   
   handleClick(event){
-    if (event.target.id === "clear"){
+    if (event.target.id === 'clear'){
       this.clearInput()
       return
-    } else if (event.target.id === "help"){
+    } else if (event.target.id === 'help'){
       this.displayHelp()
     }
   }
