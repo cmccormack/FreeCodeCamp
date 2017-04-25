@@ -15,6 +15,7 @@ class MarkdownViewer extends React.Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
 
@@ -25,12 +26,37 @@ class MarkdownViewer extends React.Component {
     })
   }
 
+  clearInput(){
+    this.setState({
+      inputText: '',
+      outputText: ''
+    })
+  }
+  
+  displayHelp(){
+    this.setState({
+      inputText: initText,
+      outputText: marked(initText)
+    })
+  }
+  
+  handleClick(event){
+    if (event.target.id === "clear"){
+      this.clearInput()
+      return
+    } else if (event.target.id === "help"){
+      this.displayHelp()
+    }
+  }
+
   render() {
     return (
  
       <div className="container">
         <div className="row">
-          <InputForm value={this.state.inputText} onChange={this.handleChange}/>
+          <InputForm value={this.state.inputText} 
+                     onChange={this.handleChange} 
+                     onClick={this.handleClick} />
           <OutputDiv value={this.state.outputText} />
         </div>
       </div>
@@ -42,17 +68,18 @@ class InputForm extends React.Component {
 
   render() {
     return (
-      <div className="col text-center">
+      <div className="col-lg-6 col-md-12 text-center">
         <form>
           <textarea
             className="inputForm"
             style={{boxShadow: '0px 0px 12px #444'}}
-            cols={50} 
-            rows={20}
             value={this.props.value}
             onChange={this.props.onChange.bind(this)}
           />
         </form>
+        <div id="buttons" className="btn-group">
+        <button type="button" id="clear" className="btn btn-primary" onClick={this.props.onClick.bind(this)}>Clear</button>
+        <button type="button" id="help" className="btn btn-default" onClick={this.props.onClick.bind(this)}>Help</button></div>
       </div>
     )
   }
