@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "jquery": "^3.2.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
@@ -12,6 +13,8 @@
     "react-scripts": "0.9.5"
   },
   "scripts": {
+    "sass": "sass --watch src/styles:public/styles",
+    "dev": "npm run sass | npm run start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
