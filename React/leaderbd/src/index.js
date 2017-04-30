@@ -11,8 +11,11 @@ class App extends React.Component {
     this.state = {
       alltime: [],
       recent: [],
-      time: 'recent'
+      time: 'recent',
+
     }
+
+    this.handleClick = this.handleClick.bind(this)
   }
 
   componentDidMount(){
@@ -27,29 +30,16 @@ class App extends React.Component {
     $.getJSON(url + time).then( data => {this.setState( {[time]: data })} )
   }
 
-  render() {
-    return (
-      <Leaderboard time={this.state[this.state.time]} />
-    )
-  }
-}
-
-class LeaderboardHead extends React.Component {
-
-  shouldComponentUpdate(nextProps, nextState){
-    return this.props === nextProps && this.state===nextState ? false : true
+  handleClick(event){
+    console.log(event)
   }
 
   render() {
     return (
-      <thead className="thead-inverse">
-        <tr>
-          <th>{'#'}</th>
-          <th>{'Name'}</th>
-          <th>{'Past 30 Days'}</th>
-          <th>{'All Time'}</th>
-        </tr>
-      </thead>
+      <Leaderboard 
+          onClick={this.handleClick}
+          time={this.state[this.state.time]} 
+      />
     )
   }
 }
@@ -70,28 +60,75 @@ class Leaderboard extends React.Component {
         </div>
         <div className="row">
           <table className="table table-sm table-striped table-hover">
-            <LeaderboardHead />
-            <tbody>
-
-              {this.props.time.map( (val,i) =>
-                <User 
-                    cookiesall={val.alltime}
-                    cookiesrecent={val.recent}
-                    img={val.img}
-                    key={val.username}
-                    name={val.username}
-                    position={i+1}
-                />
-              )}
-            </tbody>
+            <LeaderboardHeader onClick={this.props.handleClick} />
+            <LeaderboardBody time={this.props.time} />
           </table>
         </div>
       </div>
     )
   }
-
-
 }
+
+
+class LeaderboardHeader extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  render() {
+    return (
+      <thead className="thead-inverse">
+        <tr>
+          <th>{'#'}</th>
+          <th>{'Name'}</th>
+          <th>
+            <div onClick={this.props.handleClick}>
+              {'Past 30 Days'}
+              <i 
+                  className="fa fa-fw fa-lg fa-unsorted"
+                  id="recent-i"
+              />
+            </div>
+          </th>
+          <th>{'All Time'}
+            <i 
+                className="fa fa-fw fa-lg fa-unsorted"
+                id="recent-i"
+            />
+          </th>
+        </tr>
+      </thead>
+    )
+  }
+}
+
+
+class LeaderboardBody extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  render() {
+    return (
+      <tbody>
+
+        {this.props.time.map( (val,i) =>
+          <User 
+              cookiesall={val.alltime}
+              cookiesrecent={val.recent}
+              img={val.img}
+              key={val.username}
+              name={val.username}
+              position={i+1}
+          />
+        )}
+      </tbody>
+    )
+  }
+}
+
 
 class User extends React.Component {
 
@@ -106,8 +143,9 @@ class User extends React.Component {
         <td>
           <a href={'https://www.freecodecamp.com/' + this.props.name}>
             <img 
+                alt={this.props.name}
                 className="avatar"
-                src={this.props.img} 
+                src={this.props.img}
             />
             {this.props.name}
           </a>
