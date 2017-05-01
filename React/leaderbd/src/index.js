@@ -39,10 +39,8 @@ class App extends React.Component {
   }
 
   parseLastUpdate(user){
-    console.log(user.lastUpdate)
     var date = new Date(user.lastUpdate),
       month = date.toLocaleString('en-us', { month: 'long' })
-    console.log(date.getDate())
     user.lastUpdate = month + ' ' + date.getDate() + ', ' + date.getFullYear()
   }
 
