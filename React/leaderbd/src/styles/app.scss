@@ -67,8 +67,6 @@ a {
 
 
 
-
-
 .text-shadow {
   text-shadow: -3px 3px 8px $text-shadow;
 }
@@ -82,4 +80,11 @@ a {
   font-size: 1.6rem;
   font-weight: 300;
   line-height: 1.1;
+}
+
+
+@media screen and (max-width: 720px) {
+    .title {
+      font-size: 2.4rem;
+    }
 }

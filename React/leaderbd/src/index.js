@@ -19,19 +19,31 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    this.getApiData(this.props.apiurl, this.state.time)
+    var recent = $.getJSON(this.props.apiurl + 'recent')
+    var alltime = $.getJSON(this.props.apiurl + 'alltime')
+    $.when(recent, alltime).done( (r, a) => {
+      r[0].map(this.parseLastUpdate)
+      a[0].map(this.parseLastUpdate)
+      this.setState( {recent: r[0], alltime: a[0]} )
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  getApiData(url, time){
-    $.getJSON(url + time).then( data => {this.setState( {[time]: data })} )
+  handleClick(event, time){
+    this.setState({time})
+    $('.header-sort').removeClass('fa-unsorted fa-sort-amount-desc')
+    $('#' + time + '-i').addClass('fa-sort-amount-desc')
   }
 
-  handleClick(event, time){
-    console.log(time)
+  parseLastUpdate(user){
+    console.log(user.lastUpdate)
+    var date = new Date(user.lastUpdate),
+      month = date.toLocaleString('en-us', { month: 'long' })
+    console.log(date.getDate())
+    user.lastUpdate = month + ' ' + date.getDate() + ', ' + date.getFullYear()
   }
 
   render() {
@@ -89,26 +101,29 @@ class LeaderboardHeader extends React.Component {
 
   render() {
     return (
-      <thead className="thead-inverse">
+      <thead className='thead-inverse'>
         <tr>
-          <th>{'#'}</th>
-          <th>{'Name'}</th>
+          <th width='5%' className='text-center'>{'#'}</th>
+          <th width="40%">{'Name'}</th>
+          <th width="25%">{'Last Updated'}</th>
           <th 
               id="recent"
               onClick={this._onClick}
+              width="15%"
           >{'Past 30 Days'}
             <i 
-                className="fa fa-fw fa-lg fa-unsorted"
+                className="fa fa-fw fa-lg fa-unsorted header-sort"
                 id="recent-i"
             />
           </th>
           <th 
               id="alltime"
               onClick={this._onClick}
+              width="15%"
           >{'All Time'}
             <i 
-                className="fa fa-fw fa-lg fa-unsorted"
-                id="recent-i"
+                className="fa fa-fw fa-lg fa-unsorted header-sort"
+                id="alltime-i"
             />
           </th>
         </tr>
@@ -133,6 +148,7 @@ class LeaderboardBody extends React.Component {
               cookiesall={val.alltime}
               cookiesrecent={val.recent}
               img={val.img}
+              lastUpdate={val.lastUpdate}
               key={val.username}
               name={val.username}
               position={i+1}
@@ -153,9 +169,12 @@ class User extends React.Component {
   render() {
     return (
       <tr>
-        <th scope="row">{this.props.position}</th>
+        <th scope="row" className="text-center">{this.props.position}</th>
         <td>
-          <a href={'https://www.freecodecamp.com/' + this.props.name}>
+          <a 
+            href={'https://www.freecodecamp.com/' + this.props.name}
+            target="_blank"
+          >
             <img 
                 alt={this.props.name}
                 className="avatar"
@@ -164,6 +183,7 @@ class User extends React.Component {
             {this.props.name}
           </a>
         </td>
+        <td>{this.props.lastUpdate}</td>
         <td>{this.props.cookiesrecent}</td>
         <td>{this.props.cookiesall}</td>
       </tr>
