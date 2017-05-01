@@ -34,7 +34,7 @@ class App extends React.Component {
 
   handleClick(event, time){
     this.setState({time})
-    $('.header-sort').removeClass('fa-unsorted fa-sort-amount-desc')
+    $('.i-sort').removeClass('fa-unsorted fa-sort-amount-desc')
     $('#' + time + '-i').addClass('fa-sort-amount-desc')
   }
 
@@ -101,29 +101,31 @@ class LeaderboardHeader extends React.Component {
 
   render() {
     return (
-      <thead className='thead-inverse'>
+      <thead className='thead-inverse unselectable'>
         <tr>
           <th width='5%' className='text-center'>{'#'}</th>
           <th width="40%">{'Name'}</th>
           <th width="25%">{'Last Updated'}</th>
           <th 
-              id="recent"
+              className='header-sort'
+              id='recent'
               onClick={this._onClick}
-              width="15%"
+              width='15%'
           >{'Past 30 Days'}
             <i 
-                className="fa fa-fw fa-lg fa-unsorted header-sort"
-                id="recent-i"
+                className='fa fa-fw fa-lg fa-unsorted i-sort'
+                id='recent-i'
             />
           </th>
           <th 
-              id="alltime"
+              className='header-sort'
+              id='alltime'
               onClick={this._onClick}
-              width="15%"
+              width='15%'
           >{'All Time'}
             <i 
-                className="fa fa-fw fa-lg fa-unsorted header-sort"
-                id="alltime-i"
+                className='fa fa-fw fa-lg fa-unsorted i-sort'
+                id='alltime-i'
             />
           </th>
         </tr>

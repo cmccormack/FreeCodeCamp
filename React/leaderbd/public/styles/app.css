@@ -1,5 +1,5 @@
 body {
-  background-color: #FFD;
+  background-color: #EFE;
   width: 100%;
   margin-bottom: 60px; }
 
@@ -20,6 +20,9 @@ main {
   min-width: 320px;
   margin-top: 30px;
   margin-bottom: 56px; }
+
+.header-sort {
+  cursor: s-resize; }
 
 tbody tr {
   line-height: 59px; }
@@ -43,7 +46,7 @@ a:hover {
   text-decoration: none; }
 
 .text-shadow {
-  text-shadow: -3px 3px 8px #885; }
+  text-shadow: -3px 3px 8px #8B8; }
 
 .white-shadow:hover {
   text-shadow: 0 0 8px #EEE; }
@@ -52,6 +55,15 @@ a:hover {
   font-size: 1.6rem;
   font-weight: 300;
   line-height: 1.1; }
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default; }
 
 @media screen and (max-width: 720px) {
   .title {

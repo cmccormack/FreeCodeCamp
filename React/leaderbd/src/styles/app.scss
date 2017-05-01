@@ -1,6 +1,7 @@
 $body-bg: #FFD;
+$body-bg: #EFE;
 $output-border: #885;
-$text-shadow: #885;
+$text-shadow: #8B8;
 $box-shadow: #444;
 $white-shadow: #EEE;
 $output-bg: #EED;
@@ -34,6 +35,10 @@ main {
   min-width: 320px;
   margin-top: 30px;
   margin-bottom: 56px;
+}
+
+.header-sort {
+  cursor: s-resize;
 }
 
 tbody tr {
@@ -82,6 +87,15 @@ a {
   line-height: 1.1;
 }
 
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
 
 @media screen and (max-width: 720px) {
     .title {
