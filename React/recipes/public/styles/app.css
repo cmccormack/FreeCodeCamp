@@ -1,5 +1,5 @@
 body {
-  background-color: #EFE;
+  background-color: #EEF;
   width: 100%;
   margin-bottom: 60px; }
 
@@ -21,16 +21,13 @@ main {
   margin-top: 30px;
   margin-bottom: 56px; }
 
-.header-sort {
-  cursor: s-resize; }
+.recipe {
+  width: 300px;
+  height: 400px;
+  border: 2px solid black; }
 
 tbody tr {
   line-height: 59px; }
-
-.avatar {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px; }
 
 footer {
   display: inline-block;
@@ -46,7 +43,7 @@ a:hover {
   text-decoration: none; }
 
 .text-shadow {
-  text-shadow: -3px 3px 8px #8B8; }
+  text-shadow: -3px 3px 8px #88B; }
 
 .white-shadow:hover {
   text-shadow: 0 0 8px #EEE; }

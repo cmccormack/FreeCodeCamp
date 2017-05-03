@@ -1,10 +1,6 @@
-$body-bg: #FFD;
-$body-bg: #EFE;
-$output-border: #885;
-$text-shadow: #8B8;
-$box-shadow: #444;
+$body-bg: #EEF;
+$text-shadow: #88B;
 $white-shadow: #EEE;
-$output-bg: #EED;
 
 body {
   background-color: $body-bg;
@@ -37,19 +33,17 @@ main {
   margin-bottom: 56px;
 }
 
-.header-sort {
-  cursor: s-resize;
+.recipe {
+  width: 300px;
+  height: 400px;
+  border: 2px solid black;
 }
+
 
 tbody tr {
   line-height: 59px;
 }
 
-.avatar {
-  width: 50px;
-  height: 50px;
-  margin-right: 10px;
-}
 
 footer {
   display: inline-block;
