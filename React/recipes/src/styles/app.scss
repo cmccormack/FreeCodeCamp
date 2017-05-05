@@ -37,6 +37,17 @@ main {
   width: 300px;
   height: 400px;
   border: 2px solid black;
+  border-radius: 10px;
+  padding: 10px;
+
+  .recipe-title {
+    text-align: center;
+    background-color: rgba(255,0,0,0.1);
+  }
+
+  .recipe-time {
+    font-size: 1.2rem;
+  }
 }
 
 
