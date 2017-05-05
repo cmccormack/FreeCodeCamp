@@ -22,16 +22,23 @@ main {
   margin-bottom: 56px; }
 
 .recipe {
+  font-size: 12px;
+  font-weight: 200;
   width: 300px;
   height: 400px;
-  border: 2px solid black;
+  border: 1px solid black;
   border-radius: 10px;
-  padding: 10px; }
+  /*padding: 10px;*/
+  text-align: center;
+  background-color: rgba(200, 200, 20, 0.1); }
   .recipe .recipe-title {
-    text-align: center;
+    font-size: 1.4rem;
+    margin-top: 5px;
+    margin-bottom: 5px;
     background-color: rgba(255, 0, 0, 0.1); }
   .recipe .recipe-time {
-    font-size: 1.2rem; }
+    font-size: 1em;
+    background-color: rgba(0, 255, 0, 0.1); }
 
 tbody tr {
   line-height: 59px; }

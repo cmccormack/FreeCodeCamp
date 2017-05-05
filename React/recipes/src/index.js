@@ -84,9 +84,11 @@ class Recipe extends React.Component {
     return (
  
       <div className="col-xs-6">
-        <div className="recipe">
-          <div className="recipe-title">
-            {'Recipe Title'}
+        <div className="container recipe">
+          <div className="row recipe-title">
+            <div className="col">
+              {'Recipe Title'}
+            </div>
           </div>
           <div className="row">
             <div className="col prep-time recipe-time">
