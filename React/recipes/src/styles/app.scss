@@ -40,11 +40,10 @@ main {
   height: 400px;
   border: 1px solid black;
   border-radius: 10px;
-  /*padding: 10px;*/
-  text-align: center;
   background-color: rgba(200,200,20,0.1);
 
   .recipe-title {
+    text-align: center;
     font-size: 1.4rem;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -52,8 +51,15 @@ main {
   }
 
   .recipe-time {
+    text-align: center;
     font-size: 1em;
     background-color: rgba(0,255,0,0.1);
+  }
+
+  .section-title {
+    line-height: 35px;
+    font-weight: 200;
+    font-size: 1.1rem;
   }
 }
 

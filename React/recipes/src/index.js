@@ -85,11 +85,13 @@ class Recipe extends React.Component {
  
       <div className="col-xs-6">
         <div className="container recipe">
+
           <div className="row recipe-title">
             <div className="col">
               {'Recipe Title'}
             </div>
           </div>
+
           <div className="row">
             <div className="col prep-time recipe-time">
               {'Prep Time: 12m'}
@@ -97,6 +99,11 @@ class Recipe extends React.Component {
             <div className="col cook-time recipe-time">
               {'Cook Time: 24m'}
             </div>
+          </div>
+
+          <span className="section-title">{'Ingredients'}</span>
+          <div className="row">
+            <div className="col recipe-ingredients" />
           </div>
         </div>
       </div>
