@@ -32,17 +32,31 @@ main {
   .recipe .recipe-title {
     text-align: center;
     font-size: 1.4rem;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     background-color: rgba(255, 0, 0, 0.1); }
   .recipe .recipe-time {
     text-align: center;
     font-size: 1em;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
     background-color: rgba(0, 255, 0, 0.1); }
   .recipe .section-title {
     line-height: 35px;
     font-weight: 200;
-    font-size: 1.1rem; }
+    font-size: 1.1rem;
+    background-color: rgba(255, 0, 0, 0.1);
+    margin-bottom: -6px; }
+  .recipe .recipe-section {
+    border: 1px solid gray;
+    height: 115px;
+    padding: 5px; }
+  .recipe .btn-group {
+    margin-top: 8px;
+    width: 100%; }
+    .recipe .btn-group button {
+      width: 33.3333%;
+      font-size: 0.8rem; }
 
 tbody tr {
   line-height: 59px; }

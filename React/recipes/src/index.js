@@ -88,7 +88,7 @@ class Recipe extends React.Component {
 
           <div className="row recipe-title">
             <div className="col">
-              {'Recipe Title'}
+              {'Duck-shaped Pickles'}
             </div>
           </div>
 
@@ -97,14 +97,38 @@ class Recipe extends React.Component {
               {'Prep Time: 12m'}
             </div>
             <div className="col cook-time recipe-time">
-              {'Cook Time: 24m'}
+              {'Cook Time: 0m'}
             </div>
           </div>
 
-          <span className="section-title">{'Ingredients'}</span>
+          
+          <div className="row"><div className="col section-title">{'Ingredients'}</div></div>
           <div className="row">
-            <div className="col recipe-ingredients" />
+            <div className="col">
+              <div className="recipe-ingredients recipe-section">
+                {'- pickles'}
+              </div>
+            </div>
           </div>
+
+          <div className="row"><div className="col section-title">{'Directions'}</div></div>
+          <div className="row">
+            <div className="col">
+              <div className="recipe-directions recipe-section">
+                {'1. Cut pickles into duck-shaped pieces'}
+              </div>
+            </div>
+          </div>
+
+          <div className="row">
+            <div className="col btn-group" role="group">
+              <button className="btn btn-outline-primary" type="button">{'View'}</button>
+              <button className="btn btn-outline-primary" type="button">{'Edit'}</button>
+              <button className="btn btn-outline-danger"  type="button">{'Delete'}</button>
+            </div>
+
+          </div>
+
         </div>
       </div>
     )
