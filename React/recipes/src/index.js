@@ -9,9 +9,17 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      alltime: [],
-      recent: [],
-      time: 'recent',
+      recipes: [
+        {
+          recipeName: 'Duck-shaped Pickles',
+          time: {
+            prep: '2',
+            cook: '0'
+          },
+          ingredients: ['pickles', 'salt'],
+          directions: ['1. Cut pickles into duck-shaped pieces']
+        }
+      ]
 
     }
 
@@ -46,7 +54,7 @@ class App extends React.Component {
 
   render() {
     return (
-      <RecipeBox />
+      <RecipeBox recipes={this.state.recipes} />
     )
   }
 }
@@ -66,7 +74,11 @@ class RecipeBox extends React.Component {
           <span className="title display-3 text-center text-shadow">{'Recipe Box'}</span>
         </div>
         <div className="row">
-          <Recipe />
+          {this.props.recipes.map( (recipe) => 
+            <Recipe key={recipe.recipeName} 
+                recipe={recipe} 
+            /> 
+          )}
         </div>
       </div>
     )
@@ -75,6 +87,15 @@ class RecipeBox extends React.Component {
 
 
 class Recipe extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      
+
+    }
+
+    this.r = this.props.recipe
+  }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
@@ -82,7 +103,7 @@ class Recipe extends React.Component {
 
   render() {
     return (
- 
+      
       <div className="col-xs-6">
         <div className="container recipe">
 
@@ -94,10 +115,10 @@ class Recipe extends React.Component {
 
           <div className="row">
             <div className="col prep-time recipe-time">
-              {'Prep Time: 12m'}
+              {'Prep Time: '+ this.r.time.prep + 'm'}
             </div>
             <div className="col cook-time recipe-time">
-              {'Cook Time: 0m'}
+              {'Cook Time: ' + this.r.time.cook + 'm'}
             </div>
           </div>
 
@@ -106,7 +127,9 @@ class Recipe extends React.Component {
           <div className="row">
             <div className="col">
               <div className="recipe-ingredients recipe-section">
-                {'- pickles'}
+                <ul>
+                  {this.r.ingredients.map( ing => <li key={ing}><input type='checkbox' />{ing}</li>)}
+                </ul>
               </div>
             </div>
           </div>
@@ -115,16 +138,26 @@ class Recipe extends React.Component {
           <div className="row">
             <div className="col">
               <div className="recipe-directions recipe-section">
-                {'1. Cut pickles into duck-shaped pieces'}
+                <ul>
+                  {this.r.directions.map( dir => <li key={dir}>{dir}</li>)}
+                </ul>
               </div>
             </div>
           </div>
 
           <div className="row">
-            <div className="col btn-group" role="group">
-              <button className="btn btn-outline-primary" type="button">{'View'}</button>
-              <button className="btn btn-outline-primary" type="button">{'Edit'}</button>
-              <button className="btn btn-outline-danger"  type="button">{'Delete'}</button>
+            <div className="col btn-group"
+                role="group"
+            >
+              <button className="btn btn-outline-primary" 
+                  type="button"
+              >{'View'}</button>
+              <button className="btn btn-outline-primary"
+                  type="button"
+              >{'Edit'}</button>
+              <button className="btn btn-outline-danger"
+                  type="button"
+              >{'Delete'}</button>
             </div>
 
           </div>
@@ -134,10 +167,6 @@ class Recipe extends React.Component {
     )
   }
 }
-
-
-
-
 
 ReactDOM.render(
   <App apiurl='https://fcctop100.herokuapp.com/api/fccusers/top/' />,
