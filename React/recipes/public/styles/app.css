@@ -59,7 +59,8 @@ main {
   .recipe .recipe-section {
     border: 1px solid gray;
     height: 115px;
-    padding: 5px; }
+    padding: 5px;
+    overflow-y: scroll; }
   .recipe .btn-group {
     margin-top: 8px;
     margin-bottom: 8px;
@@ -67,12 +68,11 @@ main {
     .recipe .btn-group button {
       width: 33.3333%;
       font-size: 0.8rem; }
-  .recipe ul {
-    list-style: none;
-    float: left;
-    margin-left: -40px; }
-    .recipe ul input {
-      margin-right: 5px; }
+  .recipe .form-check {
+    margin-bottom: 0; }
+    .recipe .form-check .form-check-input {
+      margin-right: 5px;
+      vertical-align: text-bottom; }
 
 a:hover {
   text-decoration: none; }

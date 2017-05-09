@@ -85,6 +85,7 @@ main {
       border: 1px solid gray;
       height: 115px;
       padding: 5px;
+      overflow-y: scroll;
     }
 
     .btn-group {
@@ -98,14 +99,14 @@ main {
         }
     }
 
-    ul {
-        list-style: none;
-        float: left;
-        margin-left: -40px;
+    .form-check{
 
-        input {
-          margin-right: 5px;
-        }
+      margin-bottom: 0;
+
+      .form-check-input {
+        margin-right: 5px;
+        vertical-align: text-bottom;
+      }
     }
 
 }
