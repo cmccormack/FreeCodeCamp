@@ -21,7 +21,36 @@ var recipes = [
       ['black peppercorn, crushed', true],
       ['knife', true]
     ],
-    directions: ['1. Cut pickles into duck-shaped pieces']
+    directions: [
+      ['Cut pickles into duck-shaped pieces']
+    ]
+  },
+  {
+    recipeName: 'Smoked Chicken Thighs',
+    time: {
+      prep: '10',
+      cook: '120'
+    },
+    ingredients: [
+      ['6 chicken thighs', true],
+      ['4 tablespoons soy sauce', true],
+      ['1 teaspoon sesame oil', true],
+      ['3 garlic cloves', true],
+      ['3 scallions', true],
+      ['1/2 tablespoon thyme', true],
+      ['1 teaspoon allspice', true],
+      ['1 teaspoon pepper', true],
+      ['1/2 teaspoon cinnamon', true],
+      ['1/2 teaspoon red pepper', true]
+    ],
+    directions: [
+      ['Mix soy sauce with sesame oil and lightly rub into chicken.'],
+      ['In a food processor, combine garlic cloves, scallions, thyme, allspice, pepper, cinnamon, and red pepper until smooth. Rub onto and underneath skin of chicken thighs.'],
+      ['Seal chicken in a plastic bag, place in fridge, and let marinate for at least 4 hours.'],
+      ['Preheat smoker to 225 degrees Fahrenheit and add cherry wood chips.'],
+      ['Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.'],
+      ['Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.']
+    ]
   }
 ]
 
@@ -122,7 +151,7 @@ class Recipe extends React.Component {
 
           <div className="row recipe-title">
             <div className="col">
-              {'Duck-shaped Pickles'}
+              {this.r.recipeName}
             </div>
           </div>
 
@@ -154,9 +183,9 @@ class Recipe extends React.Component {
           <div className="row">
             <div className="col">
               <div className="recipe-directions recipe-section">
-                <ul>
+                <ol>
                   {this.r.directions.map( dir => <li key={dir}>{dir}</li>)}
-                </ul>
+                </ol>
               </div>
             </div>
           </div>

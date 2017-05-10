@@ -1,9 +1,19 @@
 $body-bg: #EEF;
 $text-shadow: #88B;
 $white-shadow: #EEE;
+$body-bg-img: "../images/salad.jpg";
+$body-bg-grad: linear-gradient(rgba(240,255,240,.8), rgba(240,255,240,.8));
+$recipe-bg: rgb(252,255,225);
+$recipe-bga: rgba(252,255,225, 0.8);
+$recipe-border-radius: 6px;
 
 body {
   background-color: $body-bg;
+  background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
   width: 100%;
   margin-bottom: 60px;
 }
@@ -36,6 +46,8 @@ footer {
 main {
   max-width: 1024px;
   margin: auto;
+  position: relative;
+
 }
 
 .title {
@@ -54,15 +66,15 @@ main {
 .recipe {
     font-size: 12px;
     border: 1px solid black;
-    border-radius: 10px;
-    background-color: rgba(200,200,20,0.1);
+    border-radius: $recipe-border-radius;
+    background-color: $recipe-bg;
+    background-color: $recipe-bga;
 
     .recipe-title {
       text-align: center;
       font-size: 1.4rem;
       padding-top: 5px;
       padding-bottom: 5px;
-      background-color: rgba(255,0,0,0.1);
     }
 
     .recipe-time {
@@ -70,21 +82,22 @@ main {
       font-size: 1em;
       border-top: 1px solid black;
       border-bottom: 1px solid black;
-      background-color: rgba(0,255,0,0.1);
     }
 
     .section-title {
-      font-weight: 200;
       font-size: 1.1rem;
-      background-color: rgba(255,0,0,0.1);
     }
 
     .recipe-section {
       border: 1px solid gray;
       height: 115px;
       padding: 5px;
-      overflow-y: scroll;
-      box-shadow: inset 0px 1px 2px rgba(0,0,0,0.5);
+      overflow-y: auto;
+      box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5);
+
+      ol {
+        padding-left: 16px;
+      }
     }
 
     .btn-group {
@@ -115,8 +128,8 @@ main {
   width: 100%;
   height: 100%;
   text-align: center;
-  border: 4px dashed rgba(0,0,0,0.5);
-  border-radius: 010px;
+  border: 4px dashed rgba(0,0,0,0.4);
+  border-radius: $recipe-border-radius;
   display: table;
 
   .inner {
@@ -126,11 +139,11 @@ main {
     font-size: 2rem;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.75;
   }
   }
   &:hover {
-    border-color: rgba(0,0,0,0.8);
+    border-color: rgba(0,0,0,0.5);
     background-color: rgba(20,20,20,0.1);
   }
 }
