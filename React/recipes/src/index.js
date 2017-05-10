@@ -51,6 +51,27 @@ class App extends React.Component {
 }
 
 
+class NewRecipeButton extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+
+
+  render() {
+    return (
+      <div className="col-sm-6 col-md-4">
+        <div className='newRecipeButton'>
+          <div className="inner">{'Add New Recipe'}<br /><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
+          
+        </div>
+      </div>
+    )
+  }
+}
+
+
 class RecipeBox extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
@@ -71,6 +92,7 @@ class RecipeBox extends React.Component {
                 recipe={recipe}
             /> 
           )}
+          <NewRecipeButton />
         </div>
       </div>
     )
@@ -95,7 +117,7 @@ class Recipe extends React.Component {
   render() {
     return (
       
-      <div className="col-xs-6">
+      <div className="col-sm-6 col-lg-4">
         <div className="container recipe">
 
           <div className="row recipe-title">

@@ -53,8 +53,6 @@ main {
 // Recipe Section
 .recipe {
     font-size: 12px;
-    // font-weight: 200;
-    width: 300px;
     border: 1px solid black;
     border-radius: 10px;
     background-color: rgba(200,200,20,0.1);
@@ -86,6 +84,7 @@ main {
       height: 115px;
       padding: 5px;
       overflow-y: scroll;
+      box-shadow: inset 0px 1px 2px rgba(0,0,0,0.5);
     }
 
     .btn-group {
@@ -110,6 +109,33 @@ main {
     }
 
 }
+
+.newRecipeButton {
+  // background-color: rgba(0,200,0,0.3);
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  border: 4px dashed rgba(0,0,0,0.5);
+  border-radius: 010px;
+  display: table;
+
+  .inner {
+    opacity: 0.5;
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 2rem;
+
+    &:hover {
+      opacity: 0.8;
+  }
+  }
+  &:hover {
+    border-color: rgba(0,0,0,0.8);
+    background-color: rgba(20,20,20,0.1);
+  }
+}
+
+
 // End Recipe Section
 
 
