@@ -45,7 +45,9 @@ main {
   border: 1px solid black;
   border-radius: 6px;
   background-color: #fcffe1;
-  background-color: rgba(252, 255, 225, 0.8); }
+  background-color: rgba(252, 255, 225, 0.8);
+  min-height: 396px;
+  margin-bottom: 20px; }
   .recipe .recipe-title {
     text-align: center;
     font-size: 1.4rem;
@@ -82,12 +84,13 @@ main {
 .newRecipeButton {
   width: 100%;
   height: 100%;
+  min-height: 396px;
   text-align: center;
   border: 4px dashed rgba(0, 0, 0, 0.4);
   border-radius: 6px;
   display: table; }
   .newRecipeButton .inner {
-    opacity: 0.5;
+    opacity: 0.6;
     display: table-cell;
     vertical-align: middle;
     font-size: 2rem; }

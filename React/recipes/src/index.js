@@ -126,7 +126,7 @@ class Recipe extends React.Component {
   render() {
     return (
       
-      <div className='col-sm-6 col-lg-4'>
+      <div className='col-xs-8 offset-xs-2 col-sm-6 col-lg-4'>
         <div className='container recipe'>
 
           <div className='row recipe-title'>
@@ -241,12 +241,12 @@ class NewRecipeButton extends React.Component {
 
   render() {
     return (
-      <div className='col-sm-6 col-md-4'>
+      <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
         <div className='newRecipeButton'>
           <div className='inner'
+              data-target='#recipeModal' // Need to add
               data-toggle='modal'
-          >{'Add New Recipe'}<br /><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
-          
+          ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
         </div>
       </div>
     )

@@ -69,6 +69,8 @@ main {
     border-radius: $recipe-border-radius;
     background-color: $recipe-bg;
     background-color: $recipe-bga;
+    min-height: 396px;
+    margin-bottom: 20px;
 
     .recipe-title {
       text-align: center;
@@ -127,13 +129,14 @@ main {
   // background-color: rgba(0,200,0,0.3);
   width: 100%;
   height: 100%;
+  min-height: 396px;
   text-align: center;
   border: 4px dashed rgba(0,0,0,0.4);
   border-radius: $recipe-border-radius;
   display: table;
 
   .inner {
-    opacity: 0.5;
+    opacity: 0.6;
     display: table-cell;
     vertical-align: middle;
     font-size: 2rem;
