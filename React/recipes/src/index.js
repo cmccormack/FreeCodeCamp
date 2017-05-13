@@ -233,6 +233,7 @@ class RecipeIngredient extends React.Component {
 }
 
 
+
 class NewRecipeButton extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
@@ -244,14 +245,73 @@ class NewRecipeButton extends React.Component {
       <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
         <div className='newRecipeButton'>
           <div className='inner'
-              data-target='#recipeModal' // Need to add
+              data-target='#recipeModal'
               data-toggle='modal'
           ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
+          <RecipeModal />
         </div>
       </div>
     )
   }
 }
+
+
+
+class RecipeModal extends React.Component {
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  render() {
+    return (
+      <div 
+          className='modal fade' 
+          id='recipeModal'
+          role='dialog'
+          tabIndex='-1' 
+      >
+        <div 
+            className='modal-dialog'
+            role='document'
+        >
+          <div className='modal-content'>
+            <div className='modal-header'>
+              <h5 className='modal-title' 
+                  id='exampleModalLabel'
+              >{'Modal title'}</h5>
+              <button 
+                  className='close'
+                  data-dismiss='modal'
+                  type='button' 
+              >
+                <span aria-hidden='true'>{'&times;'}</span>
+              </button>
+            </div>
+            <div className='modal-body'>
+              {'Modal Body'}
+            </div>
+            <div className='modal-footer'>
+              <button 
+                  className='btn btn-secondary'
+                  data-dismiss='modal'
+                  type='button' 
+              >{'Close'}</button>
+              <button 
+                  className='btn btn-primary'
+                  type='button'
+              >{'Save changes'}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+}
+
+
+
+
 
 
 ReactDOM.render(

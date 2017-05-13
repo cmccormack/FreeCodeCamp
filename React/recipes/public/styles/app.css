@@ -103,7 +103,7 @@ a:hover {
   text-decoration: none; }
 
 .text-shadow {
-  text-shadow: -3px 3px 8px #88B; }
+  text-shadow: -3px 3px 8px #444; }
 
 .white-shadow:hover {
   text-shadow: 0 0 8px #EEE; }
