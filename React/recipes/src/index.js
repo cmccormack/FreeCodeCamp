@@ -127,10 +127,10 @@ class Recipe extends React.Component {
     return (
       
       <div className='col-xs-8 offset-xs-2 col-sm-6 col-lg-4'>
-        <div className='container recipe'>
+        <div className='container recipe text-ellipsis'>
 
-          <div className='row recipe-title'>
-            <div className='col'>
+          <div className='row'>
+            <div className='col recipe-title text-ellipsis'>
               {this.r.recipeName}
             </div>
           </div>
