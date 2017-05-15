@@ -1,5 +1,6 @@
 /*eslint no-console: "off"*/
 
+import Modal from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
 // import $ from 'jquery'
@@ -235,30 +236,59 @@ class RecipeIngredient extends React.Component {
 
 
 class NewRecipeButton extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      recipe: {
+        recipeName: 'Untitled',
+        time: {
+          prep: '',
+          cook: ''
+        },
+        ingredients: [],
+        directions: []
+      }
+    }
+
+    this.r = this.props.recipe
+  }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
+  onClick(event){
+    // $('#recipeModal').modal({
+    //   show: true
+    // })
+  }
   render() {
     return (
       <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
         <div className='newRecipeButton'>
           <div className='inner'
-              data-backdrop='static'
-              data-target='#recipeModal'
-              data-toggle='modal'
+              onClick={this.onClick}
           ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
-          <EditRecipeModal />
+          <EditRecipeModal recipe={this.state.recipe} />
         </div>
       </div>
     )
   }
 }
-
+              // data-backdrop='static'
+              // data-target='#recipeModal'
+              // data-toggle='modal'
 
 
 class EditRecipeModal extends React.Component {
+
+  constructor(props) {
+    super(props)
+    this.state = {
+    }
+
+    this.r = this.props.recipe
+  }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
@@ -285,7 +315,7 @@ class EditRecipeModal extends React.Component {
                 <span className='input-group-addon'>{'Recipe Title'}</span>
                 <input
                     className='form-control'
-                    placeholder={'Untitled'}
+                    placeholder={this.r.title}
                     type='text' 
                 />
               </div>
@@ -304,15 +334,21 @@ class EditRecipeModal extends React.Component {
                 
                 <div className='row'>
                   {['Prep Time', 'Cook Time'].map((item,i) => {
-                    return <div className="col-sm-6 input-group">
-                      <span className="input-group-addon">{item}</span>
-                      <input
-                          className='form-control'
-                          placeholder={i*10+10}
-                          type='text'
-                      />
-                      <span className="input-group-addon">{'minutes'}</span>
-                    </div>
+                    return (
+                      <div 
+                          className="col-sm-6 input-group" 
+                          key={item}
+                      >
+                        <span className="input-group-addon">{item}</span>
+                        <input
+                            className='form-control'
+                            defaultValue={this.r.time[item.split(' ')[0].toLowerCase()]}
+                            placeholder={i*10+10}
+                            type='text'
+                        />
+                        <span className="input-group-addon">{'minutes'}</span>
+                      </div>
+                    )
                   })}
                 </div>
 
@@ -321,7 +357,8 @@ class EditRecipeModal extends React.Component {
                     <span className='input-group-addon'>{'Ingredients'}</span>
                     <input
                         className='form-control'
-                        placeholder='salt, pepper, pickles'
+                        defaultValue={this.r.ingredients.map(item => item[0]).join('; ')}
+                        placeholder='salt; black pepper, ground; pickles'
                         type='text'
                     />
                   </div>
@@ -332,6 +369,7 @@ class EditRecipeModal extends React.Component {
                     <span className='input-group-addon'>{'Directions'}</span>
                     <textarea
                         className='form-control'
+                        defaultValue={this.r.directions.join('\n')}
                         rows='8'
                     />
                   </div>
