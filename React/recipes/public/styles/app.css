@@ -99,6 +99,11 @@ main {
     border-color: rgba(0, 0, 0, 0.5);
     background-color: rgba(20, 20, 20, 0.1); }
 
+.modal-content .modal-header .input-group {
+  padding-left: 15px; }
+.modal-content .modal-body .input-group {
+  margin-bottom: 20px; }
+
 a:hover {
   text-decoration: none; }
 

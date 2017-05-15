@@ -245,6 +245,7 @@ class NewRecipeButton extends React.Component {
       <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
         <div className='newRecipeButton'>
           <div className='inner'
+              data-backdrop='static'
               data-target='#recipeModal'
               data-toggle='modal'
           ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
@@ -278,11 +279,13 @@ class EditRecipeModal extends React.Component {
           <div className='modal-content'>
 
             <div className='modal-header'>
-              <div className='input-group'>
+              <div className='input-group'
+                  style={{width: '90%'}}
+              >
                 <span className='input-group-addon'>{'Recipe Title'}</span>
-                <input 
+                <input
+                    className='form-control'
                     placeholder={'Untitled'}
-                    style={{width: '75%'}}
                     type='text' 
                 />
               </div>
@@ -296,29 +299,46 @@ class EditRecipeModal extends React.Component {
             </div>
 
             <div className='modal-body'>
+
               <div className='container-fluid'>
+                
                 <div className='row'>
+                  {['Prep Time', 'Cook Time'].map((item,i) => {
+                    return <div className="col-sm-6 input-group">
+                      <span className="input-group-addon">{item}</span>
+                      <input
+                          className='form-control'
+                          placeholder={i*10+10}
+                          type='text'
+                      />
+                      <span className="input-group-addon">{'minutes'}</span>
+                    </div>
+                  })}
+                </div>
 
-                  <div className="col-sm-6 input-group">
-                    <span className="input-group-addon">{'Prep Time (min)'}</span>
-                    <input 
-                        className='form-control'
-                        placeholder='15'
-                        type='text'
-                    />
-                  </div>
-
-                  <div className="col-sm-6 input-group">
-                    <span className="input-group-addon">{'Cook Time (min)'}</span>
+                <div className='row'>
+                  <div className='col input-group'>
+                    <span className='input-group-addon'>{'Ingredients'}</span>
                     <input
                         className='form-control'
-                        placeholder='20'
+                        placeholder='salt, pepper, pickles'
                         type='text'
                     />
                   </div>
-
                 </div>
+
+                <div className='row'>
+                  <div className='col input-group'>
+                    <span className='input-group-addon'>{'Directions'}</span>
+                    <textarea
+                        className='form-control'
+                        rows='8'
+                    />
+                  </div>
+                </div>
+
               </div>
+
             </div>
 
             <div className='modal-footer'>

@@ -150,9 +150,30 @@ main {
   }
 }
 
-
 // End Recipe Section
 
+
+
+// Start Modal Section
+
+
+.modal-content {
+  .modal-header {
+    .input-group {
+      padding-left: 15px;
+    }
+  }
+
+  .modal-body {
+    .input-group {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+
+
+// End Modal Section
 
 
 a {
