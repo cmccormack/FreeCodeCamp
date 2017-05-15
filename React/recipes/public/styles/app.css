@@ -130,5 +130,8 @@ a:hover {
 @media screen and (max-width: 720px) {
   .title {
     font-size: 2.4rem; } }
+@media screen and (min-width: 576px) {
+  .modal-dialog {
+    max-width: 800px; } }
 
 /*# sourceMappingURL=app.css.map */

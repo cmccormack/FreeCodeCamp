@@ -9,8 +9,8 @@ var recipes = [
   {
     recipeName: 'Duck-shaped Pickles',
     time: {
-      prep: '2',
-      cook: '0'
+      prep: '10',
+      cook: '10'
     },
     ingredients: [
       ['pickles', true],
@@ -136,11 +136,11 @@ class Recipe extends React.Component {
           </div>
 
           <div className='row'>
-            <div className='col prep-time recipe-time'>
-              {'Prep Time: '+ this.r.time.prep + 'm'}
+            <div className='col-6 prep-time recipe-time text-ellipsis'><i className='fa fa-clock-o' />
+              {' Prep: '+ this.r.time.prep + 'm'}
             </div>
-            <div className='col cook-time recipe-time'>
-              {'Cook Time: ' + this.r.time.cook + 'm'}
+            <div className='col-6 cook-time recipe-time text-ellipsis'><i className='fa fa-clock-o' />
+              {' Cook: ' + this.r.time.cook + 'm'}
             </div>
           </div>
 
@@ -248,7 +248,7 @@ class NewRecipeButton extends React.Component {
               data-target='#recipeModal'
               data-toggle='modal'
           ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
-          <RecipeModal />
+          <EditRecipeModal />
         </div>
       </div>
     )
@@ -257,7 +257,7 @@ class NewRecipeButton extends React.Component {
 
 
 
-class RecipeModal extends React.Component {
+class EditRecipeModal extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
@@ -276,21 +276,51 @@ class RecipeModal extends React.Component {
             role='document'
         >
           <div className='modal-content'>
+
             <div className='modal-header'>
-              <h5 className='modal-title' 
-                  id='exampleModalLabel'
-              >{'Modal title'}</h5>
+              <div className='input-group'>
+                <span className='input-group-addon'>{'Recipe Title'}</span>
+                <input 
+                    placeholder={'Untitled'}
+                    style={{width: '75%'}}
+                    type='text' 
+                />
+              </div>
               <button 
                   className='close'
                   data-dismiss='modal'
                   type='button' 
               >
-                <span aria-hidden='true'>{'&times;'}</span>
+                <i className='fa fa-close' />
               </button>
             </div>
+
             <div className='modal-body'>
-              {'Modal Body'}
+              <div className='container-fluid'>
+                <div className='row'>
+
+                  <div className="col-sm-6 input-group">
+                    <span className="input-group-addon">{'Prep Time (min)'}</span>
+                    <input 
+                        className='form-control'
+                        placeholder='15'
+                        type='text'
+                    />
+                  </div>
+
+                  <div className="col-sm-6 input-group">
+                    <span className="input-group-addon">{'Cook Time (min)'}</span>
+                    <input
+                        className='form-control'
+                        placeholder='20'
+                        type='text'
+                    />
+                  </div>
+
+                </div>
+              </div>
             </div>
+
             <div className='modal-footer'>
               <button 
                   className='btn btn-secondary'
