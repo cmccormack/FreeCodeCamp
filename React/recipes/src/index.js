@@ -320,10 +320,7 @@ class EditRecipeModal extends React.Component {
 
   render() {
     return (
-      <Modal 
-          onHide={this.props.handleClose}
-          show={this.props.showModal}
-      >
+      <Modal show={this.props.showModal}>
 
         <Modal.Header closeButton>
           <Modal.Title>{this.r.recipeName}</Modal.Title>
