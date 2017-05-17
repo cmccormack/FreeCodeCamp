@@ -100,7 +100,8 @@ class RecipeBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showModal: false
+      showModal: false,
+      currentRecipe: recipeTemplate
     }
     this.handleClose = this.handleClose.bind(this)
     this.handleOpen = this.handleOpen.bind(this)
@@ -114,8 +115,9 @@ class RecipeBox extends React.Component {
     this.setState({ showModal: false })
   }
 
-  handleOpen() {
-    this.setState({ showModal: true })
+  handleOpen(recipe) {
+    console.log(recipe)
+    this.setState({ showModal: true, currentRecipe: recipe})
   }
 
   render() {
@@ -128,15 +130,24 @@ class RecipeBox extends React.Component {
         <div className='row'>
           {this.props.recipes.map( (recipe) => 
             <Recipe 
+                handleOpen={this.handleOpen}
                 key={recipe.recipeName} 
                 recipe={recipe}
             /> 
           )}
-          <NewRecipeButton 
-              handleClose={this.handleClose}
+          <NewRecipeButton
               handleOpen={this.handleOpen}
-              showModal={this.state.showModal}
           />
+
+          { this.state.showModal?
+            <EditRecipeModal 
+                handleClose={this.handleClose}
+                recipe={this.state.currentRecipe}
+                save={this.state.handleSave}
+                showModal={this.state.showModal}
+            /> : false
+          }
+          
         </div>
       </div>
     )
@@ -149,13 +160,17 @@ class Recipe extends React.Component {
     super(props)
     this.state = {
     }
-
+    this._onClick = this._onClick.bind(this)
     this.r = this.props.recipe
   }
 
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  _onClick(){
+    this.props.handleOpen(this.props.recipe)
   }
 
   render() {
@@ -211,7 +226,9 @@ class Recipe extends React.Component {
               <button className='btn btn-outline-primary'
                   type='button'
               >{'View'}</button>
-              <button className='btn btn-outline-primary'
+              <button 
+                  className='btn btn-outline-primary'
+                  onClick={this._onClick}
                   type='button'
               >{'Edit'}</button>
               <button className='btn btn-outline-danger'
@@ -272,6 +289,7 @@ class NewRecipeButton extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      recipe: recipeTemplate
     }
     this._onClick = this._onClick.bind(this)
     this.r = this.props.recipe
@@ -281,24 +299,17 @@ class NewRecipeButton extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  _onClick(event){
-    this.setState({showModal: true})
-    console.log(event.currentTarget)
+  _onClick(){
+    this.props.handleOpen(this.state.recipe)
   }
   render() {
     return (
       <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
         <div className='newRecipeButton'>
           <div className='inner'
-              onClick={this.props.handleOpen}
+              onClick={this._onClick}
           ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
         </div>
-        <EditRecipeModal 
-            handleClose={this.props.handleClose}
-            recipe={recipeTemplate}
-            save={this.props.handleSave}
-            showModal={this.props.showModal}
-        />
       </div>
     )
   }
@@ -322,8 +333,9 @@ class EditRecipeModal extends React.Component {
     return (
       <Modal show={this.props.showModal}>
 
-        <Modal.Header closeButton>
+        <Modal.Header>
           <Modal.Title>{this.r.recipeName}</Modal.Title>
+          <div onClick={this.props.handleClose}><i className='fa fa-fw fa-lg fa-close' /></div>
         </Modal.Header>
 
         <Modal.Body>
