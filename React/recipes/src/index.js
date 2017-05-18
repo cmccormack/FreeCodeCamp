@@ -4,7 +4,8 @@ import {
   InputGroup,
   FormControl,
   Modal,
-  Button
+  Button,
+  Col
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -103,6 +104,7 @@ class RecipeBox extends React.Component {
       showModal: false,
       currentRecipe: recipeTemplate
     }
+    
     this.handleClose = this.handleClose.bind(this)
     this.handleOpen = this.handleOpen.bind(this)
   }
@@ -116,7 +118,6 @@ class RecipeBox extends React.Component {
   }
 
   handleOpen(recipe) {
-    console.log(recipe)
     this.setState({ showModal: true, currentRecipe: recipe})
   }
 
@@ -135,6 +136,7 @@ class RecipeBox extends React.Component {
                 recipe={recipe}
             /> 
           )}
+
           <NewRecipeButton
               handleOpen={this.handleOpen}
           />
@@ -143,7 +145,6 @@ class RecipeBox extends React.Component {
             <EditRecipeModal 
                 handleClose={this.handleClose}
                 recipe={this.state.currentRecipe}
-                save={this.state.handleSave}
                 showModal={this.state.showModal}
             /> : false
           }
@@ -292,28 +293,35 @@ class NewRecipeButton extends React.Component {
       recipe: recipeTemplate
     }
     this._onClick = this._onClick.bind(this)
-    this.r = this.props.recipe
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  _onClick(){
-    this.props.handleOpen(this.state.recipe)
-  }
+  _onClick() { this.props.handleOpen(this.state.recipe) }
+  
   render() {
     return (
-      <div className='col-xs-10 col-xs-offset-2 col-sm-6 col-lg-4'>
+      <Col
+          lg={4} 
+          sm={6} 
+          xs={10} 
+          xsOffset={2}
+      >
         <div className='newRecipeButton'>
           <div className='inner'
               onClick={this._onClick}
-          ><p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' /></div>
+          >
+            <p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' />
+          </div>
         </div>
-      </div>
+      </Col>
     )
   }
 }
+
+
 
 class EditRecipeModal extends React.Component {
 
@@ -327,6 +335,14 @@ class EditRecipeModal extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  saveRecipe(){
+    var title = document.getElementById('recipe-title').value,
+      prep = document.getElementById('prep').value,
+      cook = document.getElementById('cook').value,
+      ingredients = document.getElementById('ingredients').value.split(/\s*;\s*/)
+    console.log(title, prep, cook, ingredients)
   }
 
   render() {
@@ -343,7 +359,8 @@ class EditRecipeModal extends React.Component {
           <div className='container-fluid'>
             <InputGroup>
               <InputGroup.Addon>{'Recipe Name'}</InputGroup.Addon>
-              <FormControl 
+              <FormControl
+                  id='recipe-title'
                   placeholder={this.r.title}
                   type='text'
               />
@@ -351,6 +368,8 @@ class EditRecipeModal extends React.Component {
 
             <div className='row'>
               {['Prep Time', 'Cook Time'].map((item,i) => {
+                var timetype = item.split(' ')[0].toLowerCase()
+
                 return (
                   <div 
                       className="col-sm-6 input-group" 
@@ -359,7 +378,8 @@ class EditRecipeModal extends React.Component {
                     <span className="input-group-addon">{item}</span>
                     <input
                         className='form-control'
-                        defaultValue={this.r.time[item.split(' ')[0].toLowerCase()]}
+                        defaultValue={this.r.time[timetype]}
+                        id={timetype}
                         placeholder={i*10+10}
                         type='text'
                     />
@@ -375,6 +395,7 @@ class EditRecipeModal extends React.Component {
                 <input
                     className='form-control'
                     defaultValue={this.r.ingredients.map(item => item[0]).join('; ')}
+                    id={'ingredients'}
                     placeholder='salt; black pepper, ground; pickles'
                     type='text'
                 />
@@ -387,6 +408,7 @@ class EditRecipeModal extends React.Component {
                 <textarea
                     className='form-control'
                     defaultValue={this.r.directions.join('\n')}
+                    id={'directions'}
                     rows='8'
                 />
               </div>
@@ -398,7 +420,11 @@ class EditRecipeModal extends React.Component {
 
         <Modal.Footer>
           <Button onClick={this.props.handleClose}>{'Close'}</Button>
-          <Button bsStyle='primary'>{'Save changes'}</Button>
+          <Button 
+              bsStyle='primary'
+              onClick={this.saveRecipe} 
+          >{'Save changes'}
+          </Button>
         </Modal.Footer>
       </Modal>
     )
