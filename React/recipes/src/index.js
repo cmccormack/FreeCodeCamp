@@ -5,7 +5,7 @@ import {
   FormControl,
   Modal,
   Button,
-  Col
+  Col, Row, Grid
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -101,13 +101,15 @@ class RecipeBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showModal: false,
+      showEditModal: false,
+      showViewModal: false,
       currentRecipe: recipeTemplate,
       index: 0
     }
     
     this.handleClose = this.handleClose.bind(this)
-    this.handleOpen = this.handleOpen.bind(this)
+    this.handleEdit = this.handleEdit.bind(this)
+    this.handleView = this.handleView.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -115,11 +117,15 @@ class RecipeBox extends React.Component {
   }
 
   handleClose() {
-    this.setState({ showModal: false })
+    this.setState({ showEditModal: false, showViewModal: false })
   }
 
-  handleOpen(recipe, index) {
-    this.setState({ showModal: true, currentRecipe: recipe, currIndex: index})
+  handleEdit(recipe, index) {
+    this.setState({ showEditModal: true, currentRecipe: recipe, currIndex: index})
+  }
+
+  handleView(recipe, index) {
+    this.setState({ showViewModal: true, currentRecipe: recipe, currIndex: index})
   }
 
   render() {
@@ -131,8 +137,9 @@ class RecipeBox extends React.Component {
         </div>
         <div className='row'>
           {this.props.recipes.map( (recipe, i) => 
-            <Recipe 
-                handleOpen={this.handleOpen}
+            <Recipe
+                handleEdit={this.handleEdit}
+                handleView={this.handleView}
                 index={i}
                 key={recipe.recipeName} 
                 recipe={recipe}
@@ -140,18 +147,26 @@ class RecipeBox extends React.Component {
           )}
 
           <NewRecipeButton
-              handleOpen={this.handleOpen}
+              handleEdit={this.handleEdit}
           />
 
-          { this.state.showModal?
-            <EditRecipeModal 
+          { this.state.showEditModal?
+            <EditRecipeModal
                 handleClose={this.handleClose}
                 index={this.state.currIndex}
                 recipe={this.state.currentRecipe}
-                showModal={this.state.showModal}
+                showModal={this.state.showEditModal}
                 title={this.state.currentRecipe.recipeName || 'Add New Recipe'}
-            /> : false
-          }
+            /> : false }
+
+          { this.state.showViewModal?
+            <ViewRecipeModal 
+                handleClose={this.handleClose}
+                recipe={this.state.currentRecipe}
+                showModal={this.state.showViewModal}
+                title={this.state.currentRecipe.recipeName}
+            /> : false }
+
           
         </div>
       </div>
@@ -165,6 +180,7 @@ class Recipe extends React.Component {
     super(props)
     this.state = {
     }
+    this.onViewClick = this.onViewClick.bind(this)
     this.onEditClick = this.onEditClick.bind(this)
     this.onDeleteClick = this.onDeleteClick.bind(this)
     this.r = this.props.recipe
@@ -175,8 +191,12 @@ class Recipe extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
+  onViewClick(){
+    this.props.handleView(this.props.recipe, this.props.index)
+  }
+
   onEditClick(){
-    this.props.handleOpen(this.props.recipe, this.props.index)
+    this.props.handleEdit(this.props.recipe, this.props.index)
   }
 
   onDeleteClick(){
@@ -235,7 +255,9 @@ class Recipe extends React.Component {
             <div className='col btn-group'
                 role='group'
             >
-              <button className='btn btn-outline-primary'
+              <button 
+                  className='btn btn-outline-primary'
+                  onClick={this.onViewClick}
                   type='button'
               >{'View'}</button>
               <button 
@@ -312,7 +334,7 @@ class NewRecipeButton extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  _onClick() { this.props.handleOpen(this.state.recipe, recipes.length) }
+  _onClick() { this.props.handleEdit(this.state.recipe, recipes.length) }
   
   render() {
     return (
@@ -469,8 +491,80 @@ class EditRecipeModal extends React.Component {
 }
 
 
+class ViewRecipeModal extends React.Component {
 
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
 
+  render() {
+    return (
+      <Modal show={this.props.showModal}>
+
+        <Modal.Header>
+          <Modal.Title>{this.props.title}</Modal.Title>
+          <div onClick={this.props.handleClose}><i className='fa fa-fw fa-lg fa-close' /></div>
+        </Modal.Header>
+
+        <Modal.Body>
+
+          <Grid>
+            <Row>
+              {['Prep Time', 'Cook Time'].map((item,i) => {
+                var timetype = item.split(' ')[0].toLowerCase()
+
+                return (
+                  <Col 
+                      key={item}
+                      sm={6}
+                  >
+                    <span>{item + ': '}{this.props.recipe.time[timetype] + ' minutes'}</span>
+                  </Col>
+                )
+              })}
+            </Row>
+
+            <div className='row'>
+              <div className='col input-group'>
+                <span className='input-group-addon'>{'Ingredients'}</span>
+                <input
+                    className='form-control'
+                    defaultValue={this.props.recipe.ingredients.map(item => item[0]).join('; ')}
+                    id={'ingredients'}
+                    placeholder='salt; black pepper, ground; pickles'
+                    type='text'
+                />
+              </div>
+            </div>
+
+            <div className='row'>
+              <div className='col input-group'>
+                <span className='input-group-addon'>{'Directions'}</span>
+                <textarea
+                    className='form-control'
+                    defaultValue={this.props.recipe.directions.join('\n')}
+                    id={'directions'}
+                    rows='8'
+                />
+              </div>
+            </div>
+
+          </Grid>
+
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={this.props.handleClose}>{'Close'}</Button>
+          <Button 
+              bsStyle='primary'
+              onClick={this.saveRecipe} 
+          >{'Save changes'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    )
+  }
+}
 
 
 ReactDOM.render(
