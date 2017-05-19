@@ -360,8 +360,9 @@ class EditRecipeModal extends React.Component {
             <InputGroup>
               <InputGroup.Addon>{'Recipe Name'}</InputGroup.Addon>
               <FormControl
+                  defaultValue={this.r.recipeName}
                   id='recipe-title'
-                  placeholder={this.r.title}
+                  placeholder={'Untitled'}
                   type='text'
               />
             </InputGroup>
