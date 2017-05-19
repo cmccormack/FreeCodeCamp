@@ -12,7 +12,7 @@ import ReactDOM from 'react-dom'
 // import $ from 'jquery'
 
 var recipeTemplate = {
-    recipeName: 'Add New Recipe',
+    recipeName: '',
     time: {
       prep: '',
       cook: ''
@@ -59,12 +59,12 @@ var recipeTemplate = {
         ['1/2 teaspoon red pepper', true]
       ],
       directions: [
-        ['Mix soy sauce with sesame oil and lightly rub into chicken.'],
-        ['In a food processor, combine garlic cloves, scallions, thyme, allspice, pepper, cinnamon, and red pepper until smooth. Rub onto and underneath skin of chicken thighs.'],
-        ['Seal chicken in a plastic bag, place in fridge, and let marinate for at least 4 hours.'],
-        ['Preheat smoker to 225 degrees Fahrenheit and add cherry wood chips.'],
-        ['Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.'],
-        ['Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.']
+        'Mix soy sauce with sesame oil and lightly rub into chicken.',
+        'In a food processor, combine garlic cloves, scallions, thyme, allspice, pepper, cinnamon, and red pepper until smooth. Rub onto and underneath skin of chicken thighs.',
+        'Seal chicken in a plastic bag, place in fridge, and let marinate for at least 4 hours.',
+        'Preheat smoker to 225 degrees Fahrenheit and add cherry wood chips.',
+        'Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.',
+        'Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.'
       ]
     }
   ]
@@ -102,7 +102,8 @@ class RecipeBox extends React.Component {
     super(props)
     this.state = {
       showModal: false,
-      currentRecipe: recipeTemplate
+      currentRecipe: recipeTemplate,
+      index: 0
     }
     
     this.handleClose = this.handleClose.bind(this)
@@ -117,8 +118,8 @@ class RecipeBox extends React.Component {
     this.setState({ showModal: false })
   }
 
-  handleOpen(recipe) {
-    this.setState({ showModal: true, currentRecipe: recipe})
+  handleOpen(recipe, index) {
+    this.setState({ showModal: true, currentRecipe: recipe, currIndex: index})
   }
 
   render() {
@@ -129,9 +130,10 @@ class RecipeBox extends React.Component {
           <span className='title display-3 text-center text-shadow'>{'Recipe Box'}</span>
         </div>
         <div className='row'>
-          {this.props.recipes.map( (recipe) => 
+          {this.props.recipes.map( (recipe, i) => 
             <Recipe 
                 handleOpen={this.handleOpen}
+                index={i}
                 key={recipe.recipeName} 
                 recipe={recipe}
             /> 
@@ -144,8 +146,10 @@ class RecipeBox extends React.Component {
           { this.state.showModal?
             <EditRecipeModal 
                 handleClose={this.handleClose}
+                index={this.state.currIndex}
                 recipe={this.state.currentRecipe}
                 showModal={this.state.showModal}
+                title={this.state.currentRecipe.recipeName || 'Add New Recipe'}
             /> : false
           }
           
@@ -171,7 +175,7 @@ class Recipe extends React.Component {
   }
 
   _onClick(){
-    this.props.handleOpen(this.props.recipe)
+    this.props.handleOpen(this.props.recipe, this.props.index)
   }
 
   render() {
@@ -329,7 +333,7 @@ class EditRecipeModal extends React.Component {
     super(props)
     this.state = {
     }
-
+    this.saveRecipe = this.saveRecipe.bind(this)
     this.r = this.props.recipe
   }
 
@@ -338,11 +342,18 @@ class EditRecipeModal extends React.Component {
   }
 
   saveRecipe(){
-    var title = document.getElementById('recipe-title').value,
-      prep = document.getElementById('prep').value,
-      cook = document.getElementById('cook').value,
-      ingredients = document.getElementById('ingredients').value.split(/\s*;\s*/)
-    console.log(title, prep, cook, ingredients)
+    var newRecipe = {
+      recipeName: document.getElementById('recipe-title').value,
+      time: {
+        prep: document.getElementById('prep').value,
+        cook: document.getElementById('cook').value
+      },
+      ingredients: document.getElementById('ingredients').value.split(/\s*;\s*/).map( ing => [ing, false] ),
+      directions: document.getElementById('directions').value.split(/\s*\n+\s*/)
+    }
+    recipes[this.props.index] = newRecipe
+    this.props.handleClose()
+
   }
 
   render() {
@@ -350,7 +361,7 @@ class EditRecipeModal extends React.Component {
       <Modal show={this.props.showModal}>
 
         <Modal.Header>
-          <Modal.Title>{this.r.recipeName}</Modal.Title>
+          <Modal.Title>{this.props.title}</Modal.Title>
           <div onClick={this.props.handleClose}><i className='fa fa-fw fa-lg fa-close' /></div>
         </Modal.Header>
 
