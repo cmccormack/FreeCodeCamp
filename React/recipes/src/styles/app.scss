@@ -113,18 +113,21 @@ main {
           font-size: 0.8rem;
         }
     }
-
-    .form-check{
-
-      margin-bottom: 0;
-
-      .form-check-input {
-        margin-right: 5px;
-        vertical-align: text-bottom;
-      }
-    }
-
 }
+// End Recipe Section
+
+
+// Global Form Styles
+.form-check{
+  margin-bottom: 0;
+
+  .form-check-input {
+    margin-right: 5px;
+    vertical-align: text-bottom;
+  }
+}
+// End Global Form Styles
+
 
 .newRecipeButton {
   width: 100%;
@@ -150,23 +153,28 @@ main {
   }
 }
 
-// End Recipe Section
+
 
 
 
 // Start Modal Section
-
-
 .modal-content {
-  .modal-header {
-    .input-group {
-      padding-left: 15px;
-    }
-  }
 
   .modal-body {
     .input-group {
       margin-bottom: 20px;
+    }
+  }
+
+  .modal-recipe-section {
+    border: 1px solid gray;
+    max-height: 400px;
+    padding: 5px;
+    overflow-y: auto;
+    box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5);
+
+    ol {
+      padding-left: 16px;
     }
   }
 }
@@ -174,6 +182,7 @@ main {
 .fade.in {
   opacity: 1;
 }
+
 .modal.in .modal-dialog {
   -webkit-transform: translate(0, 0);
   -o-transform: translate(0, 0);
@@ -182,8 +191,6 @@ main {
 .modal-backdrop.in {
   opacity: 0.5;
 }
-
-
 // End Modal Section
 
 
@@ -192,8 +199,6 @@ a {
     text-decoration: none;
   }
 }
-
-
 
 .text-shadow {
   text-shadow: -3px 3px 8px $text-shadow;

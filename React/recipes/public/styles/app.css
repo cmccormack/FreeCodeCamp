@@ -75,11 +75,12 @@ main {
     .recipe .btn-group button {
       width: 33.3333%;
       font-size: 0.8rem; }
-  .recipe .form-check {
-    margin-bottom: 0; }
-    .recipe .form-check .form-check-input {
-      margin-right: 5px;
-      vertical-align: text-bottom; }
+
+.form-check {
+  margin-bottom: 0; }
+  .form-check .form-check-input {
+    margin-right: 5px;
+    vertical-align: text-bottom; }
 
 .newRecipeButton {
   width: 100%;
@@ -99,10 +100,16 @@ main {
     border-color: rgba(0, 0, 0, 0.5);
     background-color: rgba(20, 20, 20, 0.1); }
 
-.modal-content .modal-header .input-group {
-  padding-left: 15px; }
 .modal-content .modal-body .input-group {
   margin-bottom: 20px; }
+.modal-content .modal-recipe-section {
+  border: 1px solid gray;
+  max-height: 400px;
+  padding: 5px;
+  overflow-y: auto;
+  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.5); }
+  .modal-content .modal-recipe-section ol {
+    padding-left: 16px; }
 
 .fade.in {
   opacity: 1; }

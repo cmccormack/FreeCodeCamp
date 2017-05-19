@@ -118,6 +118,7 @@ class RecipeBox extends React.Component {
 
   handleClose() {
     this.setState({ showEditModal: false, showViewModal: false })
+    ReactDOM.render( <App />, document.getElementById('root') )
   }
 
   handleEdit(recipe, index) {
@@ -286,9 +287,6 @@ class RecipeIngredient extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      ingredient: this.props.ingredient,
-      ing: this.props.ingredient[0],
-      check: this.props.ingredient[1]
     }
     this.handleCheckboxClick = this.handleCheckboxClick.bind(this)
   }
@@ -299,6 +297,7 @@ class RecipeIngredient extends React.Component {
 
   handleCheckboxClick(event){
     this.props.ingredient[1] = event.currentTarget.checked ? true : false
+    console.log(recipes)
   }
 
   render() {
@@ -307,12 +306,12 @@ class RecipeIngredient extends React.Component {
         <label className='form-check-label'>
           <input 
               className='form-check-input' 
-              defaultChecked={this.state.check}
+              defaultChecked={this.props.ingredient[1]}
               onClick={this.handleCheckboxClick}
               type='checkbox' 
-              value={this.state.ing}
+              value={this.props.ingredient[0]}
           />
-          {this.state.ing}
+          {this.props.ingredient[0]}
         </label>
       </div>
     )
@@ -499,7 +498,10 @@ class ViewRecipeModal extends React.Component {
 
   render() {
     return (
-      <Modal show={this.props.showModal}>
+      <Modal 
+          onHide={this.props.handleClose}
+          show={this.props.showModal}
+      >
 
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
@@ -510,32 +512,33 @@ class ViewRecipeModal extends React.Component {
 
           <Grid>
             <Row>
-              {['Prep Time', 'Cook Time'].map((item,i) => {
+              {['Prep Time', 'Cook Time'].map((item) => {
                 var timetype = item.split(' ')[0].toLowerCase()
 
                 return (
                   <Col 
-                      key={item}
+                      key={timetype}
                       sm={6}
                   >
-                    <span>{item + ': '}{this.props.recipe.time[timetype] + ' minutes'}</span>
+                    <h4>{item + ': '}<small>{this.props.recipe.time[timetype] + ' minutes'}</small></h4>
                   </Col>
                 )
               })}
             </Row>
 
-            <div className='row'>
-              <div className='col input-group'>
-                <span className='input-group-addon'>{'Ingredients'}</span>
-                <input
-                    className='form-control'
-                    defaultValue={this.props.recipe.ingredients.map(item => item[0]).join('; ')}
-                    id={'ingredients'}
-                    placeholder='salt; black pepper, ground; pickles'
-                    type='text'
-                />
-              </div>
-            </div>
+            <Row>
+              <Col sm={12}>
+                <h4>{'Ingredients:'}</h4>
+                <div className='recipe-ingredients modal-recipe-section'>
+                  { this.props.recipe.ingredients.map( (ingredient) => 
+                    <RecipeIngredient 
+                        ingredient={ingredient} 
+                        key={ingredient[0]}
+                    /> 
+                  )}
+                </div>
+              </Col>
+            </Row>
 
             <div className='row'>
               <div className='col input-group'>
@@ -555,11 +558,6 @@ class ViewRecipeModal extends React.Component {
 
         <Modal.Footer>
           <Button onClick={this.props.handleClose}>{'Close'}</Button>
-          <Button 
-              bsStyle='primary'
-              onClick={this.saveRecipe} 
-          >{'Save changes'}
-          </Button>
         </Modal.Footer>
       </Modal>
     )
