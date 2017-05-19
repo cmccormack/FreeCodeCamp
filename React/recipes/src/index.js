@@ -364,14 +364,21 @@ class EditRecipeModal extends React.Component {
 
     if (newRecipe.recipeName === ''){
       alert('Recipe Name cannot be blank.')
-    } else if (recipes.map( recipe => recipe.recipeName.toLowerCase()).indexOf(newRecipe.recipeName.toLowerCase()) !== -1) {
-      alert('Recipe Names cannot be duplicates.')
-    } else {
-      recipes[this.props.index] = newRecipe
-      ReactDOM.render( <App />, document.getElementById('root') )
-      this.props.handleClose()
-      console.log(this.props.index)
+      return
     }
+
+
+    if (recipes.map( recipe => recipe.recipeName.toLowerCase()).indexOf(newRecipe.recipeName.toLowerCase()) !== -1) {
+      if (this.props.index === recipes.length || recipes[this.props.index].recipeName.toLowerCase() !== newRecipe.recipeName.toLowerCase()) {
+        alert('Recipe Names cannot be duplicates.')
+        return
+      }
+
+    }
+    recipes[this.props.index] = newRecipe
+    ReactDOM.render( <App />, document.getElementById('root') )
+    this.props.handleClose()
+    console.log(this.props.index)
   }
 
   render() {
