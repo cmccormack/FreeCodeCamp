@@ -102,12 +102,19 @@ class RecipeBox extends React.Component {
     super(props)
     this.state = {
       currentRecipe: recipeTemplate,
+      showEditModal: false,
       index: 0
     }
+    this.handleEditClick = this.handleEditClick.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+
+  handleEditClick() {
+    this.setState({ showEditModal: true})
   }
 
   render() {
@@ -128,7 +135,7 @@ class RecipeBox extends React.Component {
           )}
 
           <NewRecipeButton
-              handleEdit={this.handleEdit}
+              handleEdit={this.handleEditClick}
           />
 
         </div>
@@ -149,6 +156,7 @@ class Recipe extends React.Component {
     this.handleViewClick = this.handleViewClick.bind(this)
     this.handleEditClick = this.handleEditClick.bind(this)
     this.handleCloseClick = this.handleCloseClick.bind(this)
+    this.handleDeleteClick = this.handleDeleteClick.bind(this)
   }
 
 
@@ -156,8 +164,8 @@ class Recipe extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleCloseClick() {
-    this.setState({showViewModal: false, showEditModal: false})
+  handleCloseClick(recipe) {
+    this.setState({showViewModal: false, showEditModal: false, recipe: recipe||this.state.recipe})
   }
 
   handleViewClick() {
@@ -168,10 +176,9 @@ class Recipe extends React.Component {
     this.setState({ showEditModal: true})
   }
 
-  onDeleteClick(){
+  handleDeleteClick(){
     recipes.splice(this.props.index, 1)
     ReactDOM.render( <App />, document.getElementById('root'))
-    console.log(recipes)
   }
 
   render() {
@@ -237,7 +244,7 @@ class Recipe extends React.Component {
               >{'Edit'}</button>
               <button 
                   className='btn btn-outline-danger'
-                  onClick={this.onDeleteClick}
+                  onClick={this.handleDeleteClick}
                   type='button'
               >{'Delete'}</button>
             </div>
@@ -352,11 +359,16 @@ class EditRecipeModal extends React.Component {
     super(props)
     this.state = {
     }
+    this.onClose = this.onClose.bind(this)
     this.saveRecipe = this.saveRecipe.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  onClose() {
+    this.props.handleCloseClick()
   }
 
   saveRecipe(){
@@ -385,9 +397,8 @@ class EditRecipeModal extends React.Component {
 
     }
     recipes[this.props.index] = newRecipe
-    this.props.handleCloseClick()
-    console.log(newRecipe)
-    console.log(recipes[this.props.index])
+    this.props.handleCloseClick(recipes[this.props.index])
+    ReactDOM.render(<App />, document.getElementById('root'))
   }
 
   render() {
@@ -465,7 +476,7 @@ class EditRecipeModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.props.handleCloseClick}>{'Close'}</Button>
+          <Button onClick={this.onClose}>{'Close'}</Button>
           <Button 
               bsStyle='primary'
               onClick={this.saveRecipe} 
