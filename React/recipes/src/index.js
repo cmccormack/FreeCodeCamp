@@ -134,12 +134,6 @@ class RecipeBox extends React.Component {
             /> 
           )}
 
-          <Recipe
-              index={recipes.length}
-              recipe={recipeTemplate}
-              title={'Add New Recipe'}
-          />
-
           <NewRecipeButton
               handleEdit={this.handleEditClick}
           />
