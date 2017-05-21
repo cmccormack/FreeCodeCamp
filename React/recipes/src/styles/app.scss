@@ -95,6 +95,7 @@ main {
       border: 1px solid gray;
       height: 115px;
       padding: 5px;
+      // white-space: normal;
       overflow-y: auto;
       box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5);
 
@@ -170,16 +171,26 @@ main {
     }
   }
 
+  .modal-recipe-section-header {
+    margin-top: 20px;
+  }
+
   .modal-recipe-section {
     border: 1px solid gray;
+    min-height: 100px;
     max-height: 400px;
     padding: 5px;
     overflow-y: auto;
+    overflow-x: wrap;
     box-shadow: inset 0px 0px 2px rgba(0,0,0,0.5);
 
     ol {
       padding-left: 16px;
     }
+  }
+
+  .recipe-directions {
+    padding-left: 10px;
   }
 }
 

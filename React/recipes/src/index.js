@@ -101,25 +101,13 @@ class RecipeBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      showEditModal: false,
       currentRecipe: recipeTemplate,
       index: 0
     }
-    
-    this.handleClose = this.handleClose.bind(this)
-    this.handleEdit = this.handleEdit.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
-  }
-
-  handleClose() {
-    this.setState({ showEditModal: false})
-  }
-
-  handleEdit(recipe, index) {
-    this.setState({ showEditModal: true, currentRecipe: recipe, currIndex: index})
   }
 
   render() {
@@ -132,9 +120,6 @@ class RecipeBox extends React.Component {
         <div className='row'>
           {this.props.recipes.map( (recipe, i) => 
             <Recipe
-                handleClose={this.handleClose}
-                handleEdit={this.handleEdit}
-                handleView={this.handleView}
                 index={i}
                 key={recipe.recipeName} 
                 recipe={recipe}
@@ -146,24 +131,6 @@ class RecipeBox extends React.Component {
               handleEdit={this.handleEdit}
           />
 
-          { this.state.showEditModal?
-            <EditRecipeModal
-                handleClose={this.handleClose}
-                index={this.state.currIndex}
-                recipe={this.state.currentRecipe}
-                showModal={this.state.showEditModal}
-                title={this.state.currentRecipe.recipeName || 'Add New Recipe'}
-            /> : false }
-
-          {/*{ this.state.showViewModal?
-            <ViewRecipeModal 
-                handleClose={this.handleClose}
-                recipe={this.state.currentRecipe}
-                showModal={this.state.showViewModal}
-                title={this.state.currentRecipe.recipeName}
-            /> : false }*/}
-
-          
         </div>
       </div>
     )
@@ -177,10 +144,10 @@ class Recipe extends React.Component {
     this.state = {
       recipe: this.props.recipe,
       showViewModal: false,
+      showEditModal: false
     }
     this.handleViewClick = this.handleViewClick.bind(this)
-    this.onEditClick = this.onEditClick.bind(this)
-    this.onDeleteClick = this.onDeleteClick.bind(this)
+    this.handleEditClick = this.handleEditClick.bind(this)
     this.handleCloseClick = this.handleCloseClick.bind(this)
   }
 
@@ -190,19 +157,15 @@ class Recipe extends React.Component {
   }
 
   handleCloseClick() {
-    this.setState({showViewModal: false})
+    this.setState({showViewModal: false, showEditModal: false})
   }
 
   handleViewClick() {
     this.setState({ showViewModal: true})
   }
 
-  onViewClick(){
-    this.props.handleView(this.props.recipe, this.props.index)
-  }
-
-  onEditClick(){
-    this.props.handleEdit(this.props.recipe, this.props.index)
+  handleEditClick() {
+    this.setState({ showEditModal: true})
   }
 
   onDeleteClick(){
@@ -215,7 +178,7 @@ class Recipe extends React.Component {
     return (
       
       <div className='col-xs-8 offset-xs-2 col-sm-6 col-lg-4'>
-        <div className='container recipe text-ellipsis'>
+        <div className='container recipe'>
 
           <div className='row'>
             <div className='col recipe-title text-ellipsis'>
@@ -239,7 +202,7 @@ class Recipe extends React.Component {
                 { this.props.recipe.ingredients.map( (ingredient) => 
                   <RecipeIngredient 
                       ingredient={ingredient} 
-                      key={ingredient[0]}
+                      key={ingredient[1]+ingredient[0]}
                       recipe={this.props.recipe}
                   /> 
                 )}
@@ -269,7 +232,7 @@ class Recipe extends React.Component {
               >{'View'}</button>
               <button 
                   className='btn btn-outline-primary'
-                  onClick={this.onEditClick}
+                  onClick={this.handleEditClick}
                   type='button'
               >{'Edit'}</button>
               <button 
@@ -285,10 +248,20 @@ class Recipe extends React.Component {
 
         { this.state.showViewModal ?
           <ViewRecipeModal 
-              handleCloseClick={this.state.handleCloseClick}
+              handleCloseClick={this.handleCloseClick}
+              index={this.props.index}
               recipe={this.state.recipe}
               showModal={this.state.showViewModal}
-              title={this.props.recipe.recipeName}
+              title={this.state.recipe.recipeName}
+          /> : false }
+
+        { this.state.showEditModal?
+          <EditRecipeModal
+              handleCloseClick={this.handleCloseClick}
+              index={this.props.index}
+              recipe={this.state.recipe}
+              showModal={this.state.showEditModal}
+              title={this.state.recipe.recipeName || 'Add New Recipe'}
           /> : false }
 
       </div>
@@ -404,7 +377,6 @@ class EditRecipeModal extends React.Component {
       return
     }
 
-
     if (recipes.map( recipe => recipe.recipeName.toLowerCase()).indexOf(newRecipe.recipeName.toLowerCase()) !== -1) {
       if (this.props.index === recipes.length || recipes[this.props.index].recipeName.toLowerCase() !== newRecipe.recipeName.toLowerCase()) {
         alert('Recipe Names cannot be duplicates.')
@@ -413,9 +385,9 @@ class EditRecipeModal extends React.Component {
 
     }
     recipes[this.props.index] = newRecipe
-    ReactDOM.render( <App />, document.getElementById('root') )
-    this.props.handleClose()
-    console.log(this.props.index)
+    this.props.handleCloseClick()
+    console.log(newRecipe)
+    console.log(recipes[this.props.index])
   }
 
   render() {
@@ -424,7 +396,7 @@ class EditRecipeModal extends React.Component {
 
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
-          <div onClick={this.props.handleClose}><i className='fa fa-fw fa-lg fa-close' /></div>
+          <div onClick={this.props.handleCloseClick}><i className='fa fa-fw fa-lg fa-close' /></div>
         </Modal.Header>
 
         <Modal.Body>
@@ -493,7 +465,7 @@ class EditRecipeModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.props.handleClose}>{'Close'}</Button>
+          <Button onClick={this.props.handleCloseClick}>{'Close'}</Button>
           <Button 
               bsStyle='primary'
               onClick={this.saveRecipe} 
@@ -519,7 +491,7 @@ class ViewRecipeModal extends React.Component {
   }
 
   onClose() {
-    this.props.handleCloseClick(this.props.recipe)
+    this.props.handleCloseClick()
   }
 
   render() {
@@ -554,29 +526,34 @@ class ViewRecipeModal extends React.Component {
 
             <Row>
               <Col sm={12}>
-                <h4>{'Ingredients:'}</h4>
+                <h4 className='modal-recipe-section-header'>{'Ingredients:'}</h4>
                 <div className='recipe-ingredients modal-recipe-section'>
                   { this.props.recipe.ingredients.map( (ingredient) => 
                     <RecipeIngredient 
                         ingredient={ingredient} 
-                        key={ingredient[0]}
+                        key={ingredient[1]+ingredient[0]}
                     /> 
                   )}
                 </div>
               </Col>
             </Row>
 
-            <div className='row'>
-              <div className='col input-group'>
-                <span className='input-group-addon'>{'Directions'}</span>
-                <textarea
-                    className='form-control'
-                    defaultValue={this.props.recipe.directions.join('\n')}
+            <Row>
+              <Col sm={12}>
+                <h4 className='modal-recipe-section-header'>{'Directions:'}</h4>
+                <div 
+                    className='recipe-directions modal-recipe-section'
                     id={'directions'}
                     rows='8'
-                />
-              </div>
-            </div>
+                >
+                  <ol>
+                    {this.props.recipe.directions.map( (item,i) => 
+                      <li key={i+item.slice(10)}>{item}</li> 
+                    )}
+                  </ol>
+                </div>
+              </Col>
+            </Row>
 
           </Grid>
 
@@ -591,7 +568,4 @@ class ViewRecipeModal extends React.Component {
 }
 
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-)
+ReactDOM.render(<App />, document.getElementById('root'))
