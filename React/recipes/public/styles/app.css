@@ -164,6 +164,18 @@ a:hover {
   user-select: none;
   cursor: default; }
 
+.form-control::-webkit-input-placeholder {
+  color: lightgray; }
+
+.form-control:-moz-placeholder {
+  color: lightgray; }
+
+.form-control::-moz-placeholder {
+  color: lightgray; }
+
+.form-control:-ms-input-placeholder {
+  color: lightgray; }
+
 @media screen and (max-width: 720px) {
   .title {
     font-size: 3rem; } }

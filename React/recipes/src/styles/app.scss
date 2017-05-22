@@ -164,9 +164,6 @@ main {
 }
 
 
-
-
-
 // Start Modal Section
 .modal-content {
 
@@ -250,6 +247,11 @@ a {
     user-select: none;
     cursor: default;
 }
+
+.form-control::-webkit-input-placeholder { color: lightgray; }
+.form-control:-moz-placeholder { color: lightgray; }
+.form-control::-moz-placeholder { color: lightgray; }
+.form-control:-ms-input-placeholder { color: lightgray; }
 
 
 

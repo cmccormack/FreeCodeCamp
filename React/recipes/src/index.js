@@ -5,7 +5,8 @@ import {
   FormControl,
   Modal,
   Button,
-  Col, Row, Grid
+  Col, Row, Grid,
+  OverlayTrigger, Tooltip
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -359,6 +360,10 @@ class EditRecipeModal extends React.Component {
   }
 
   render() {
+
+    const tooltip = (
+      <Tooltip id="tooltip">{'Separate ingredients using semicolon `;`'}</Tooltip>
+    )
     return (
       <Modal show={this.props.showModal}>
 
@@ -406,12 +411,17 @@ class EditRecipeModal extends React.Component {
 
             <div className='row'>
               <div className='col input-group'>
-                <span className='input-group-addon'>{'Ingredients'}</span>
+                <OverlayTrigger 
+                    overlay={tooltip}
+                    placement="left" 
+                >
+                  <span className='input-group-addon'>{'Ingredients'}</span>
+                </OverlayTrigger>
                 <input
                     className='form-control'
                     defaultValue={this.props.recipe.ingredients.map(item => item[0]).join('; ')}
                     id={'ingredients'}
-                    placeholder='salt; black pepper, ground; pickles'
+                    placeholder='e.g. salt; black pepper, ground; pickles'
                     type='text'
                 />
               </div>
