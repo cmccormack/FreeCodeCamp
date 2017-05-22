@@ -74,9 +74,6 @@ var recipeTemplate = {
 
 
 
-
-
-
 class RecipeBox extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
@@ -93,16 +90,31 @@ class RecipeBox extends React.Component {
 
         <Row>
           {recipes.map( (recipe, i) => 
-            <Recipe
-                index={i}
+            <Col
                 key={recipe.recipeName}
-                recipe={recipe}
-            /> 
-          )}
-          <NewRecipeButton
-              index={recipes.length}
-              recipe={recipeTemplate}
-          />
+                lg={4}
+                sm={6} 
+                xs={8} 
+                xsOffset={2}
+            >
+              <Recipe
+                  index={i}
+                  key={recipe.recipeName}
+                  recipe={recipe}
+              /> 
+            </Col>
+            )}
+          <Col
+              lg={4} 
+              sm={6} 
+              xs={8} 
+              xsOffset={2}
+          >
+            <NewRecipeButton
+                index={recipes.length}
+                recipe={recipeTemplate}
+            />
+          </Col>
         </Row>
       </Grid>
     )
@@ -145,73 +157,79 @@ class Recipe extends React.Component {
   render() {
     return (
       
-      <div className='col-xs-8 offset-xs-2 col-sm-6 col-lg-4'>
-        <div className='container recipe'>
+      <Grid className='recipe'>
 
-          <div className='row'>
-            <div className='col recipe-title text-ellipsis'>
-              {this.props.recipe.recipeName}
-            </div>
-          </div>
+        <Row>
+          <Col 
+              className='recipe-title text-ellipsis'
+              sm={12} 
+          >
+            {this.props.recipe.recipeName}
+          </Col>
+        </Row>
 
-          <div className='row'>
-            <div className='col-6 prep-time recipe-time text-ellipsis'><i className='fa fa-clock-o' />
-              {' Prep: '+ this.props.recipe.time.prep + 'm'}
-            </div>
-            <div className='col-6 cook-time recipe-time text-ellipsis'><i className='fa fa-clock-o' />
-              {' Cook: ' + this.props.recipe.time.cook + 'm'}
-            </div>
-          </div>
+        <Row>
+          {['Prep', 'Cook'].map( item => 
+            <Col 
+                className='prep-time recipe-time text-ellipsis'
+                key={item}
+                sm={6}
+            ><i className='fa fa-clock-o' />{' '+ item +': ' + this.props.recipe.time[item.toLowerCase()] + 'm'}
+            </Col>
+          )}
+        </Row>
 
-          <div className='row'><div className='col section-title'>{'Ingredients'}</div></div>
-          <div className='row'>
-            <div className='col'>
-              <div className='recipe-ingredients recipe-section'>
-                { this.props.recipe.ingredients.map( (ingredient) => 
-                  <RecipeIngredient 
-                      ingredient={ingredient} 
-                      key={ingredient[1]+ingredient[0]}
-                      recipe={this.props.recipe}
-                  /> 
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className='row'><div className='col section-title'>{'Directions'}</div></div>
-          <div className='row'>
-            <div className='col'>
-              <div className='recipe-directions recipe-section'>
-                <ol>
-                  {this.props.recipe.directions.map( dir => <li key={dir}>{dir}</li>)}
-                </ol>
-              </div>
-            </div>
-          </div>
-
-          <div className='row'>
-            <div className='col btn-group'
-                role='group'
-            >
-              <button 
-                  className='btn btn-outline-primary'
-                  onClick={this.handleViewModalVisibleState}
-                  type='button'
-              >{'View'}</button>
-              <button 
-                  className='btn btn-outline-primary'
-                  onClick={this.handleEditModalVisibleState}
-                  type='button'
-              >{'Edit'}</button>
-              <button 
-                  className='btn btn-outline-danger'
-                  onClick={this.handleDeleteClick}
-                  type='button'
-              >{'Delete'}</button>
+        <Row>
+          <Col>
+            <div className='section-title'>{'Ingredients'}</div>
+          </Col>
+        </Row>
+        <div className='row'>
+          <div className='col'>
+            <div className='recipe-ingredients recipe-section'>
+              { this.props.recipe.ingredients.map( (ingredient) => 
+                <RecipeIngredient 
+                    ingredient={ingredient} 
+                    key={ingredient[1]+ingredient[0]}
+                    recipe={this.props.recipe}
+                /> 
+              )}
             </div>
           </div>
         </div>
 
+        <div className='row'><div className='col section-title'>{'Directions'}</div></div>
+        <div className='row'>
+          <div className='col'>
+            <div className='recipe-directions recipe-section'>
+              <ol>
+                {this.props.recipe.directions.map( dir => <li key={dir}>{dir}</li>)}
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div className='row'>
+          <div className='col btn-group'
+              role='group'
+          >
+            <button 
+                className='btn btn-outline-primary'
+                onClick={this.handleViewModalVisibleState}
+                type='button'
+            >{'View'}</button>
+            <button 
+                className='btn btn-outline-primary'
+                onClick={this.handleEditModalVisibleState}
+                type='button'
+            >{'Edit'}</button>
+            <button 
+                className='btn btn-outline-danger'
+                onClick={this.handleDeleteClick}
+                type='button'
+            >{'Delete'}</button>
+          </div>
+        </div>
         <ViewRecipeModal 
             index={this.props.index}
             recipe={this.state.recipe}
@@ -227,8 +245,8 @@ class Recipe extends React.Component {
             title={this.state.recipe.recipeName}
             toggleModal={this.handleEditModalVisibleState}
         />
+      </Grid>
 
-      </div>
     )
   }
 }
@@ -291,18 +309,11 @@ class NewRecipeButton extends React.Component {
   
   render() {
     return (
-      <Col
-          lg={4} 
-          sm={6} 
-          xs={8} 
-          xsOffset={2}
-      >
-        <div className='newRecipeButton'>
-          <div className='inner'
-              onClick={this.handleModalVisibleState}
-          >
-            <p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' />
-          </div>
+      <div className='newRecipeButton'>
+        <div className='inner'
+            onClick={this.handleModalVisibleState}
+        >
+          <p>{'Add New Recipe'}</p><i className='fa fa-fw fa-2x fa-plus-square-o' />
         </div>
         <EditRecipeModal
             index={this.props.index}
@@ -311,7 +322,7 @@ class NewRecipeButton extends React.Component {
             title={'Add New Recipe'}
             toggleModal={this.handleModalVisibleState}
         />
-      </Col>
+      </div>
     )
   }
 }
