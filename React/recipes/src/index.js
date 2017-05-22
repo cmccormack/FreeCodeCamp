@@ -111,10 +111,11 @@ class RecipeBox extends React.Component {
     return (
  
       <Grid>
-        <div className='row text-center'>
+        <Row>
           <span className='title display-3 text-center text-shadow'>{'Recipe Box'}</span>
-        </div>
-        <div className='row'>
+        </Row>
+
+        <Row>
           {this.props.recipes.map( (recipe, i) => 
             <Recipe
                 handleCloseClick={this.handleEditCloseClick}
@@ -125,7 +126,6 @@ class RecipeBox extends React.Component {
                 showEditModal={this.state.showEditModal}
             /> 
           )}
-
           <NewRecipeButton
               handleCloseClick={this.handleCloseClick}
               handleEditClick={this.handleEditClick}
@@ -134,8 +134,7 @@ class RecipeBox extends React.Component {
               recipe={recipeTemplate}
               showEditModal={this.state.showEditModal}
           />
-
-        </div>
+        </Row>
       </Grid>
     )
   }
