@@ -9,7 +9,6 @@ import {
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import $ from 'jquery'
 
 var recipeTemplate = {
     recipeName: '',
@@ -37,7 +36,10 @@ var recipeTemplate = {
         ['knife', true]
       ],
       directions: [
-        ['Cut pickles into duck-shaped pieces']
+        ['Cut pickles into duck-shaped pieces'],
+        ['Place pieces in a large bowl and add 1 tsp of each seasoning'],
+        ['Toss until well coated'],
+        ['Enjoy!']
       ]
     },
     {
@@ -69,39 +71,12 @@ var recipeTemplate = {
     }
   ]
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      recipes: recipes
-    }
-  }
-
-  componentDidMount(){
-    console.log('DidMount')
-  }
-
-  shouldComponentUpdate(nextProps, nextState){
-    return this.props === nextProps && this.state===nextState ? false : true
-  }
 
 
-
-  render() {
-    return (
-      <RecipeBox recipes={this.state.recipes} />
-    )
-  }
-}
 
 
 
 class RecipeBox extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.state = {}
-  }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
@@ -116,23 +91,16 @@ class RecipeBox extends React.Component {
         </Row>
 
         <Row>
-          {this.props.recipes.map( (recipe, i) => 
+          {recipes.map( (recipe, i) => 
             <Recipe
-                handleCloseClick={this.handleEditCloseClick}
-                handleEditClick={this.handleEditClick}
                 index={i}
                 key={recipe.recipeName}
                 recipe={recipe}
-                showEditModal={this.state.showEditModal}
             /> 
           )}
           <NewRecipeButton
-              handleCloseClick={this.handleCloseClick}
-              handleEditClick={this.handleEditClick}
-              handleSaveClick={this.handleSaveClick}
               index={recipes.length}
               recipe={recipeTemplate}
-              showEditModal={this.state.showEditModal}
           />
         </Row>
       </Grid>
@@ -170,7 +138,7 @@ class Recipe extends React.Component {
 
   handleDeleteClick(){
     recipes.splice(this.props.index, 1)
-    ReactDOM.render( <App />, document.getElementById('root'))
+    updateDom()
   }
 
   render() {
@@ -281,6 +249,7 @@ class RecipeIngredient extends React.Component {
   handleCheckboxClick(event){
     this.props.ingredient[1] = event.currentTarget.checked ? true : false
     this.setState({ ingredient: this.props.ingredient })
+    updateDom()
   }
 
   render() {
@@ -352,17 +321,11 @@ class EditRecipeModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this._onClose = this._onClose.bind(this)
     this.saveRecipe = this.saveRecipe.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
-  }
-
-  _onClose() {
-    console.log('EditRecipeModal onClose Clicked')
-    this.props.toggleModal()
   }
 
   saveRecipe(){
@@ -391,8 +354,8 @@ class EditRecipeModal extends React.Component {
 
     }
     recipes[this.props.index] = newRecipe
-    this._onClose()
-    ReactDOM.render(<App />, document.getElementById('root'))
+    this.props.toggleModal()
+    updateDom()
   }
 
   render() {
@@ -401,7 +364,7 @@ class EditRecipeModal extends React.Component {
 
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
-          <div onClick={this._onClose}><i className='fa fa-fw fa-lg fa-close' /></div>
+          <div onClick={this.props.toggleModal}><i className='fa fa-fw fa-lg fa-close' /></div>
         </Modal.Header>
 
         <Modal.Body>
@@ -431,6 +394,7 @@ class EditRecipeModal extends React.Component {
                         className='form-control'
                         defaultValue={this.props.recipe.time[timetype]}
                         id={timetype}
+                        min={0}
                         placeholder={i*10+10}
                         type='number'
                     />
@@ -470,7 +434,7 @@ class EditRecipeModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this._onClose}>{'Close'}</Button>
+          <Button onClick={this.props.toggleModal}>{'Close'}</Button>
           <Button 
               bsStyle='primary'
               onClick={this.saveRecipe} 
@@ -488,17 +452,12 @@ class ViewRecipeModal extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
-    this.onClose = this.onClose.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  onClose() {
-    console.log('ViewRecipeModal onClose Clicked')
-    this.props.handleCloseClick()
-  }
 
   render() {
     return (
@@ -574,4 +533,24 @@ class ViewRecipeModal extends React.Component {
 }
 
 
-ReactDOM.render(<App />, document.getElementById('root'))
+
+function writeLocalStorage(){
+  window.localStorage.setItem('recipes', JSON.stringify(recipes))
+}
+
+function updateDom() {
+  ReactDOM.render( <RecipeBox />, document.getElementById('root'))
+  writeLocalStorage()
+}
+
+(function readLocalStorage(){
+  if (window.localStorage.hasOwnProperty('recipes')) {
+    if (window.localStorage.recipes !== '[]') {
+      recipes = JSON.parse(window.localStorage.recipes)
+    }
+  }
+})()
+
+
+
+ReactDOM.render(<RecipeBox />, document.getElementById('root'))
