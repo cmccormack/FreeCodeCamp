@@ -171,7 +171,7 @@ class Recipe extends React.Component {
         <Row>
           {['Prep', 'Cook'].map( item => 
             <Col
-                className='prep-time recipe-time text-ellipsis'
+                className={item.toLowerCase() + '-time recipe-time text-ellipsis'}
                 key={item} 
                 sm={6}
             >
