@@ -170,22 +170,24 @@ class Recipe extends React.Component {
 
         <Row>
           {['Prep', 'Cook'].map( item => 
-            <Col 
+            <Col
                 className='prep-time recipe-time text-ellipsis'
-                key={item}
+                key={item} 
                 sm={6}
-            ><i className='fa fa-clock-o' />{' '+ item +': ' + this.props.recipe.time[item.toLowerCase()] + 'm'}
+            >
+              <i className='fa fa-clock-o' />
+              {' '+ item +': ' + this.props.recipe.time[item.toLowerCase()] + 'm'}
             </Col>
           )}
         </Row>
 
         <Row>
-          <Col>
+          <Col sm={12}>
             <div className='section-title'>{'Ingredients'}</div>
           </Col>
         </Row>
-        <div className='row'>
-          <div className='col'>
+        <Row>
+          <Col sm={12}>
             <div className='recipe-ingredients recipe-section'>
               { this.props.recipe.ingredients.map( (ingredient) => 
                 <RecipeIngredient 
@@ -195,23 +197,29 @@ class Recipe extends React.Component {
                 /> 
               )}
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
 
-        <div className='row'><div className='col section-title'>{'Directions'}</div></div>
-        <div className='row'>
-          <div className='col'>
+        <Row>
+          <Col sm={12}>
+            <div className='section-title'>{'Directions'}</div>
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={12}>
             <div className='recipe-directions recipe-section'>
               <ol>
                 {this.props.recipe.directions.map( dir => <li key={dir}>{dir}</li>)}
               </ol>
             </div>
-          </div>
-        </div>
+          </Col>
+        </Row>
 
-        <div className='row'>
-          <div className='col btn-group'
+        <Row>
+          <Col 
+              className='btn-group'
               role='group'
+              sm={12}
           >
             <button 
                 className='btn btn-outline-primary'
@@ -228,8 +236,8 @@ class Recipe extends React.Component {
                 onClick={this.handleDeleteClick}
                 type='button'
             >{'Delete'}</button>
-          </div>
-        </div>
+          </Col>
+        </Row>
         <ViewRecipeModal 
             index={this.props.index}
             recipe={this.state.recipe}
@@ -385,7 +393,7 @@ class EditRecipeModal extends React.Component {
 
         <Modal.Body>
 
-          <div className='container-fluid'>
+          <Grid>
             <InputGroup>
               <InputGroup.Addon>{'Recipe Name'}</InputGroup.Addon>
               <FormControl
@@ -396,14 +404,15 @@ class EditRecipeModal extends React.Component {
               />
             </InputGroup>
 
-            <div className='row'>
+            <Row>
               {['Prep Time', 'Cook Time'].map((item,i) => {
                 var timetype = item.split(' ')[0].toLowerCase()
 
                 return (
-                  <div 
-                      className="col-sm-6 input-group" 
+                  <Col 
+                      className="input-group" 
                       key={item}
+                      sm={6}
                   >
                     <span className="input-group-addon">{item}</span>
                     <input
@@ -415,13 +424,16 @@ class EditRecipeModal extends React.Component {
                         type='number'
                     />
                     <span className="input-group-addon">{'minutes'}</span>
-                  </div>
+                  </Col>
                 )
               })}
-            </div>
+            </Row>
 
-            <div className='row'>
-              <div className='col input-group'>
+            <Row>
+              <Col 
+                  className='input-group'
+                  sm={12}
+              >
                 <OverlayTrigger 
                     overlay={tooltip}
                     placement="left" 
@@ -435,11 +447,14 @@ class EditRecipeModal extends React.Component {
                     placeholder='e.g. salt; black pepper, ground; pickles'
                     type='text'
                 />
-              </div>
-            </div>
+              </Col>
+            </Row>
 
-            <div className='row'>
-              <div className='col input-group'>
+            <Row>
+              <Col 
+                  className='input-group'
+                  sm={12}
+              >
                 <span className='input-group-addon'>{'Directions'}</span>
                 <textarea
                     className='form-control'
@@ -447,10 +462,10 @@ class EditRecipeModal extends React.Component {
                     id={'directions'}
                     rows='8'
                 />
-              </div>
-            </div>
+              </Col>
+            </Row>
 
-          </div>
+          </Grid>
 
         </Modal.Body>
 
@@ -530,7 +545,6 @@ class ViewRecipeModal extends React.Component {
                 <div 
                     className='recipe-directions modal-recipe-section'
                     id={'directions'}
-                    rows='8'
                 >
                   <ol>
                     {this.props.recipe.directions.map( (item,i) => 
