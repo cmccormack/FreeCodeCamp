@@ -75,7 +75,7 @@ function animate() {
 
 
 var circleArray = []
-function init (numCircles, speedRange, radiusRange) {
+function init (numCircles, minSpeed, maxSpeed, maxRadius) {
 
     console.log('Inside init')
 
@@ -90,11 +90,13 @@ function init (numCircles, speedRange, radiusRange) {
 
     for(let i=0; i < numCircles; i++){
 
-        radius = Math.floor(Math.random() * radiusRange)
+        radius = Math.floor(Math.random() * maxRadius)
         x = radius + Math.floor(Math.random() * (window.innerWidth - 2 * radius))
         y = radius + Math.floor(Math.random() * (window.innerHeight - 2 * radius))
-        dx = (Math.random() -0.5) * speedRange * 2
-        dy = (Math.random() -0.5) * speedRange * 2
+        // dx = (Math.random() -0.5) * 2 * speedRange
+        // dy = (Math.random() -0.5) * 2 * speedRange
+        dx = ((1 - (radius/maxRadius)) - 0.5) * 2 
+        dy = ((1 - (radius/maxRadius)) - 0.5) * 2 
         color = 'hsla(' + Math.floor(Math.random() * 255) + ',60%,60%,0.9)'
 
         circle = new Circle(x, y, dx, dy, radius, color)
@@ -105,4 +107,7 @@ function init (numCircles, speedRange, radiusRange) {
     animate()
 }
 
-init(numCircles = 50, speedRange = 10, radiusRange = 60)
+init(numCircles = 50, minSpeed = 5, maxSpeed=10, radiusRange = 60)
+
+
+// 30/5 6, x = 30.  10/x = 2
