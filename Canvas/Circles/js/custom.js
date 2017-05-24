@@ -6,8 +6,12 @@ canvas.width = window.innerWidth
 canvas.height = window.innerHeight
 
 function windowResize() {
-    canvas.width = window.innerWidth
-    canvas.height = window.innerHeight
+    canvas.width = window.innerWidth - 4
+    canvas.height = window.innerHeight - 4 
+
+    for(let i=0; i < circleArray.length; i++){
+        console.log(circleArray[i])
+    }
 } 
 
 
@@ -21,6 +25,13 @@ function Circle(x, y, dx, dy, radius, color) {
 
     this.update = function() {
 
+        if (this.x + this.radius >= innerWidth || this.x - this.radius <= 0) {
+            dx = -dx
+        } 
+        
+        if (this.y + this.radius >= innerHeight || this.y - this.radius <= 0) {
+            dy = -dy
+        }
         this.x += dx
         this.y += dy
 
@@ -35,7 +46,6 @@ function Circle(x, y, dx, dy, radius, color) {
         ctx.fill()
 
     }
-
 }
 
 
@@ -67,12 +77,13 @@ function init (numCircles, speedRange, radiusRange) {
         circle
 
     for(let i=0; i < numCircles; i++){
-        x = Math.floor(Math.random() * innerWidth)
-        y = Math.floor(Math.random() * innerHeight)
-        dx = Math.random() * speedRange
-        dy = Math.random() * speedRange
+
         radius = Math.floor(Math.random() * radiusRange)
-        color = 'hsl(' + Math.floor(Math.random() * 256) + ',60%,60%)'
+        x = radius + Math.floor(Math.random() * (window.innerWidth - 2 * radius))
+        y = radius + Math.floor(Math.random() * (window.innerHeight - 2 * radius))
+        dx = (Math.random() -0.5) * speedRange * 2
+        dy = (Math.random() -0.5) * speedRange * 2
+        color = 'hsla(' + Math.floor(Math.random() * 255) + ',60%,60%,0.9)'
 
         circle = new Circle(x, y, dx, dy, radius, color)
         circleArray.push(circle)
@@ -82,4 +93,4 @@ function init (numCircles, speedRange, radiusRange) {
     animate()
 }
 
-init(100, 6, 60)
+init(numCircles = 50, speedRange = 10, radiusRange = 60)
