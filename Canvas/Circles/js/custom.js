@@ -9,8 +9,20 @@ function windowResize() {
     canvas.width = window.innerWidth - 4
     canvas.height = window.innerHeight - 4 
 
-    for(let i=0; i < circleArray.length; i++){
-        console.log(circleArray[i])
+    for(let i=0, c; i < circleArray.length; i++){
+        c = circleArray[i]
+        if(c.x - c.radius < 0){
+            c.x = c.radius
+        }
+        if(c.y - c.radius < 0){
+            c.y = c.radius
+        }
+        if(c.x + c.radius > window.innerWidth){
+            c.x = window.innerWidth - c.radius
+        }
+        if(c.y + c.radius > window.innerHeight){
+            c.y = window.innerHeight - c.radius
+        }
     }
 } 
 
