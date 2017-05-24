@@ -2,14 +2,13 @@
 
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
+canvas.width = window.innerWidth
+canvas.height = window.innerHeight
+
 function windowResize() {
-    ['Width', 'Height'].map(i=>canvas[i.toLowerCase()]=window['inner'+i])
-    init(100, 6, 60)
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
 } 
-
-windowResize()
-
-
 
 
 function Circle(x, y, dx, dy, radius, color) {
@@ -20,30 +19,46 @@ function Circle(x, y, dx, dy, radius, color) {
     this.radius = radius
     this.color = color
 
-    this.update = () => {
+    this.update = function() {
 
-
-    }
-
-    this.update = () => {
+        this.x += dx
+        this.y += dy
 
         this.draw()
+        
     }
 
-    this.draw = () => {
+    this.draw = function() {
         ctx.beginPath()
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false)
-        ctx.fillStyle = color
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
+        ctx.fillStyle = this.color
         ctx.fill()
+
     }
 
 }
 
 
+function animate() {
+
+    ctx.clearRect(0,0, canvas.width, canvas.height)
+    
+
+    for (let i = 0; i < circleArray.length; i++){
+        circleArray[i].update()
+    }
+
+    window.requestAnimationFrame(animate)
+}
+
+
+var circleArray = []
 function init (numCircles, speedRange, radiusRange) {
 
-    var circleArray = [],
-        x,
+    console.log('Inside init')
+
+    circleArray = []
+    var x,
         y,
         dx,
         dy,
@@ -54,8 +69,8 @@ function init (numCircles, speedRange, radiusRange) {
     for(let i=0; i < numCircles; i++){
         x = Math.floor(Math.random() * innerWidth)
         y = Math.floor(Math.random() * innerHeight)
-        dx = Math.floor(Math.random() * speedRange)
-        dy = Math.floor(Math.random() * speedRange)
+        dx = Math.random() * speedRange
+        dy = Math.random() * speedRange
         radius = Math.floor(Math.random() * radiusRange)
         color = 'hsl(' + Math.floor(Math.random() * 256) + ',60%,60%)'
 
@@ -64,6 +79,7 @@ function init (numCircles, speedRange, radiusRange) {
         circle.draw()
     }
 
-
+    animate()
 }
 
+init(100, 6, 60)
