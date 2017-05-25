@@ -1,0 +1,26 @@
+{
+  "name": "gameoflife",
+  "version": "0.1.0",
+  "description": "Conway's Game of Life in React",
+  "private": true,
+  "homepage": "./",
+  "author": "Chris McCormack (https://mackville.net)",
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-bootstrap": "^0.31.0",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "eslint": "^3.19.0",
+    "eslint-plugin-react": "^7.0.1",
+    "react-scripts": "1.0.6"
+  },
+  "scripts": {
+    "sass": "sass --watch src/styles:public/styles",
+    "dev": "npm run sass | npm run start",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
