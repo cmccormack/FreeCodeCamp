@@ -96,7 +96,7 @@ function init (numCircles, minSpeed, maxSpeed, maxRadius) {
         // dx = (Math.random() -0.5) * 2 * speedRange
         // dy = (Math.random() -0.5) * 2 * speedRange
         dx = ((1 - (radius/maxRadius)) - 0.5) * 2 
-        dy = ((1 - (radius/maxRadius)) - 0.5) * 2 
+        dy = ((1 - (radius/maxRadius)) - 0.5) * 2
         color = 'hsla(' + Math.floor(Math.random() * 255) + ',60%,60%,0.9)'
 
         circle = new Circle(x, y, dx, dy, radius, color)
