@@ -31,9 +31,10 @@ document.body.append(
   createElement("button", {
     type: "button",
     textContent: "Click for Random Twitch User!",
-    onclick: handleClick
+    onclick: handleClickTwitch
   })
 );
+
 
 document.body.append(
   createElement("div", {
@@ -48,8 +49,7 @@ document.body.append(
   })
 );
 
-
-function handleClick() {
+function handleClickTwitch() {
   document.getElementById("channel-user").innerHTML = ""
   
   var channel = channels[Math.floor(Math.random() * channels.length)],
@@ -62,6 +62,7 @@ function handleClick() {
     timeout: 5
   });
 }
+
 
 function displayChannel(jsonp){
   var channelDiv = document.getElementById("channel-user"),
