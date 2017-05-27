@@ -58,7 +58,19 @@ main {
   margin-bottom: 56px;
 }
 
+.board {
 
+  margin: auto;
+  .cell {
+    width: 15px;
+    height: 15px;
+    margin: 0 0 -1px -1px;
+    border: 1px solid gray;
+    float: left;
+    background-color: #333;
+  }
+
+}
 
 
 
