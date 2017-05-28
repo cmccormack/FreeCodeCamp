@@ -103,22 +103,29 @@ class Board extends React.Component {
     }
     console.log(grid)
     return (
-      <div className='board' style={boardDivStyle}>{grid}</div>
+      <div 
+          className='board' 
+          style={boardDivStyle}
+      >
+        {grid}
+      </div>
     )
   }
 }
 
 
 function Cell(props) {
+  const cellStyle = { 
+    clear: (props.col % props.boardSize.width === 0) ? 'both' : '',
+    width: props.width + 'px',
+    height: props.height + 'px'
+  }
+
   return (
     <div 
         className='cell'
         data-pos={props.row + ',' + props.col}
-        style={{ 
-          clear: (props.col % props.boardSize.width === 0) ? 'both' : '',
-          width: props.width + 'px',
-          height: props.height + 'px'
-        }}
+        style={cellStyle}
     />
   )
 }
