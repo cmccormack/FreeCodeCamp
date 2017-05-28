@@ -43,8 +43,6 @@ main {
 .board {
   margin: auto; }
   .board .cell {
-    width: 15px;
-    height: 15px;
     margin: 0 0 -1px -1px;
     border: 1px solid gray;
     float: left;

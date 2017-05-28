@@ -1,9 +1,6 @@
 /*eslint no-console: "off"*/
 
 import { 
-  // InputGroup,
-  // FormControl,
-  // Button,
   Col, Row, Grid,
 } from 'react-bootstrap'
 import React from 'react'
@@ -11,8 +8,12 @@ import ReactDOM from 'react-dom'
 
 var grid = [],
   boardSize = {
-    width: 20,
-    height: 20
+    width: 50,
+    height: 30
+  },
+  cellSize = {
+    width: 16,
+    height: 16
   }
 
 
@@ -50,6 +51,7 @@ class App extends React.Component {
           <Col sm={12}>
             <Board 
                 boardSize={this.props.boardSize}
+                cellSize={this.props.cellSize}
             >{grid}</Board>
           </Col>
 
@@ -75,48 +77,57 @@ class Board extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-
   initializeGrid() {
-    console.log(this.props)
-    for (let i = 0; i < this.props.boardSize.width * this.props.boardSize.height; i++){
-      console.log(i, (i % (this.props.boardSize.height)) === 0)
-      grid.push(
-        <Cell 
-            boardSize={this.props.boardSize}
-            col={i % this.props.boardSize.width}
-            key={i}
-            row={Math.floor(i / this.props.boardSize.height)}
-        />
-      )
+    for (let row = 0; row < this.props.boardSize.height; row++){
+      for (let col = 0; col < this.props.boardSize.width; col++){
+        grid.push(
+          <Cell 
+              boardSize={this.props.boardSize}
+              col={col}
+              height={this.props.cellSize.height}
+              key={row + ',' + col}
+              row={row}
+              style={{clear: col % this.props.boardSize.width === 0 ? 'both' : ''}}
+              width={this.props.cellSize.width}
+          />
+        )
+      }
     }
   }
 
   render() {
+
+    const boardDivStyle = {
+      width: (this.props.boardSize.width * (this.props.cellSize.width-1)) + 'px',
+      height: (this.props.boardSize.height * (this.props.cellSize.height-1)) + 'px'
+    }
     console.log(grid)
     return (
-      <div className='board'>{grid}</div>
+      <div className='board' style={boardDivStyle}>{grid}</div>
     )
   }
 }
 
 
-class Cell extends React.Component {
-
-  shouldComponentUpdate(nextProps, nextState){
-    return this.props === nextProps && this.state===nextState ? false : true
-  }
-
-  render() {
-
-    return (
-      <div 
-          className='cell'
-          data-pos={this.props.row + ',' + this.props.col}
-          style={{ clear: (this.props.col % this.props.boardSize.width === 0) ? 'both' : '' }}
-      />
-    )
-  }
+function Cell(props) {
+  return (
+    <div 
+        className='cell'
+        data-pos={props.row + ',' + props.col}
+        style={{ 
+          clear: (props.col % props.boardSize.width === 0) ? 'both' : '',
+          width: props.width + 'px',
+          height: props.height + 'px'
+        }}
+    />
+  )
 }
 
 
-ReactDOM.render(<App boardSize={boardSize} />, document.getElementById('root'))
+ReactDOM.render(
+  <App
+      boardSize={boardSize}
+      cellSize={cellSize}
+  />, 
+  document.getElementById('root')
+)
