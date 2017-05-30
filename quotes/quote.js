@@ -1,56 +1,53 @@
-var apiurl = "http://quotes.stormconsultancy.co.uk/random.json?callback=?";
-var lqt = '<i class="fa fa-quote-left fa-2x fa-pull-left fa-border" aria-hidden="true"></i>';
-var author_name = "";
-var quote_text = "";
-var twitter_url = "https://twitter.com/intent/tweet?related=freecodecamp&text=";
+var apiurl = "https://mackville.net/quotes/csquotes.json"
+var twitter_url = "https://twitter.com/intent/tweet?related=freecodecamp&text="
 
-// Request a new random quote using API
-function getNewQuote() {
-  $.getJSON(apiurl, function(json) {
-    author_name = json.author;
-    quote_text = json.quote;
-    
+
+function displayQuote(author, quote) {
+
     // Add quote and author to well elements
-    $("#quote_msg").empty();
-    $("#quote_msg").append(lqt);
-    $("#quote_msg").append(quote_text);
-    //$("#quote_msg").append(rqt);
-    $("#author_name").text(author_name);
-    
-    // Build tweet message into full twitter URL 
-    var tweet = parseTweet(quote_text, author_name);
-    $("#btn-tweet").attr("href", twitter_url + fixedEncodeURIComponent(tweet));
-  });
+    $("#quote_msg").html(quote)
+    $("#author_name").text(author)
 }
 
-// Shorten tweet if longer than 140 characters
-function parseTweet (quote, author) {
-  var sep = " --";
-  var ellipse = "...";
-  var maxChars = 140;
-  var tweetLen = quote.length + sep.length + author.length;
+
+function displayTweet (author, quote) {
+  var sep = " --",
+    ellipse = "...",
+    maxChars = 140,
+    tweetLen = quote.length + sep.length + author.length
   
   // Shorten tweet if longer than 140 characters
   if (tweetLen > maxChars) {
-    quote = quote.substring(0,maxChars - (sep.length + author.length + ellipse.length));
-    quote += ellipse;
+    quote = quote.substring(0,maxChars - (sep.length + author.length + ellipse.length))
+    quote += ellipse
   }
   
-  return quote + sep + author;
+  $("#btn-tweet").attr("href", twitter_url + fixedEncodeURIComponent(quote + sep + author))
 }
-
-
-$(document).ready(function() {
-  getNewQuote();
-  $("#btn-new-quote").on("click", function() {
-    getNewQuote();
-  });
-});
-
 
 
 function fixedEncodeURIComponent (str) {
   return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
-    return '%' + c.charCodeAt(0).toString(16);
-  });
+    return '%' + c.charCodeAt(0).toString(16)
+  })
 }
+
+
+$(document).ready(function() {
+
+  $newQuote = $("#btn-new-quote")
+
+  $newQuote.on("click", function(e) {
+    e.preventDefault()
+
+    var response = $.getJSON(apiurl)
+    response.fail(function(e){console.log("Failed to reach " + apiurl)})
+    response.then( function(data){
+      quoteObj = data[Math.floor(Math.random() * data.length)]
+      displayQuote(quoteObj.author, quoteObj.quote)
+      displayTweet(quoteObj.author, quoteObj.quote)
+    })
+  })
+  // Initial Quote when page loads
+  $newQuote.click()
+})
