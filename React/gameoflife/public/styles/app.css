@@ -47,6 +47,10 @@ main {
     border: 1px solid gray;
     float: left;
     background-color: #333; }
+    .board .cell.alive {
+      background-color: #C33; }
+    .board .cell.old {
+      background-color: pink; }
 
 a:hover {
   text-decoration: none; }

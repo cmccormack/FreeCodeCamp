@@ -61,12 +61,18 @@ main {
 .board {
 
   margin: auto;
-  
+
   .cell {
     margin: 0 0 -1px -1px;
     border: 1px solid gray;
     float: left;
     background-color: #333;
+    &.alive {
+      background-color: #C33;
+    }
+    &.old {
+      background-color: pink;
+    }
   }
 
 }
