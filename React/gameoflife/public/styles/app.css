@@ -41,14 +41,19 @@ main {
   margin-bottom: 56px; }
 
 .board {
-  margin: auto; }
+  margin: auto;
+  background-color: rgba(2, 2, 2, 0.3);
+  border-radius: 10px; }
   .board .cell {
+    border-radius: 30%;
     margin: 0 0 -1px -1px;
     border: 1px solid gray;
-    float: left;
-    background-color: #333; }
+    float: left; }
+    .board .cell.dead {
+      background-color: #333; }
     .board .cell.alive {
-      background-color: #C33; }
+      background-color: #C33;
+      background-color: rgba(240, 20, 20, 0.6); }
     .board .cell.old {
       background-color: pink; }
 

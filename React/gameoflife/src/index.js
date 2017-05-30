@@ -6,15 +6,19 @@ import {
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-var grid = [],
-  boardSize = {
-    width: 5,
-    height: 10
+var globals = {
+  board: [],
+  boardSize: {
+    columns: 30,
+    rows: 30,
+    cells: 0,
+    padding: 10
   },
-  cellSize = {
+  cellSize: {
     width: 16,
     height: 16
   }
+}
 
 
 class App extends React.Component {
@@ -22,7 +26,7 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-
+      
     }
   }
 
@@ -38,23 +42,22 @@ class App extends React.Component {
 
     return (
       <Grid>
+
         <Row>
           <Col 
               className='title display-3 text-center text-shadow'
               sm={12} 
-          >{'Game of Life'}
+          >
+            {'Game of Life'}
           </Col>
         </Row>
 
         <Row>
           <Col sm={12}>
-            <Board 
-                boardSize={this.props.boardSize}
-                cellSize={this.props.cellSize}
-            >{grid}</Board>
+            <Board />
           </Col>
-
         </Row>
+
       </Grid>
     )
   }
@@ -67,7 +70,7 @@ class Board extends React.Component {
     super(props)
     this.handleCellClick = this.handleCellClick.bind(this)
     this.state = {
-      grid: this.initializeGrid()
+      board: globals.board
     }
   }
 
@@ -76,41 +79,17 @@ class Board extends React.Component {
   }
 
   handleCellClick(cell){
-    var grid = this.state.grid.slice(0)
-    console.log(grid[cell.dataset.pos])
-    // if (cell.classList.contains('alive')){
-    //   cell.classList.remove('alive')
-    // } else {
-    //   cell.classList.add('alive')
-    // }
-  }
-
-  initializeGrid() {
-    let grid = []
-    for (let row = 0, pos; row < this.props.boardSize.height; row++){
-      for (let col = 0; col < this.props.boardSize.width; col++){
-        pos = this.props.boardSize.width * row + col
-        grid.push(
-          <Cell 
-              boardSize={this.props.boardSize}
-              handleClick={this.handleCellClick}
-              height={this.props.cellSize.height}
-              key={pos}
-              pos={pos}
-              width={this.props.cellSize.width}
-          />
-        )
-      }
-    }
-    console.log(grid)
-    return grid
+    globals.board[cell.dataset.pos].class = globals.board[cell.dataset.pos].class.includes('dead') ? 
+    'cell alive' : 'cell dead'
+    this.setState({board: globals.board})
   }
 
   render() {
 
     const boardDivStyle = {
-      width: (this.props.boardSize.width * (this.props.cellSize.width-1)) + 'px',
-      height: (this.props.boardSize.height * (this.props.cellSize.height-1)) + 'px'
+      width: (globals.boardSize.columns * (globals.cellSize.width-1)+(2*globals.boardSize.padding)) + 'px',
+      height: (globals.boardSize.rows * (globals.cellSize.height-1)+(2*globals.boardSize.padding)) + 'px',
+      padding: globals.boardSize.padding
     }
 
     return (
@@ -118,7 +97,16 @@ class Board extends React.Component {
           className='board' 
           style={boardDivStyle}
       >
-        {this.state.grid}
+        {this.state.board.map( (cell) => {
+          return (
+            <Cell 
+                class={cell.class}
+                handleClick={this.handleCellClick}
+                id={cell.id}
+                key={cell.key}
+            />
+          )
+        })}
       </div>
     )
   }
@@ -126,29 +114,40 @@ class Board extends React.Component {
 
 
 function Cell(props) {
-  const cellStyle = { 
-    clear: (props.col % props.boardSize.width === 0) ? 'both' : '',
-    width: props.width + 'px',
-    height: props.height + 'px'
-  }
+
 
   var handleClick = (e) => props.handleClick(e.currentTarget)
 
   return (
     <div 
-        className={props.className || 'cell'}
-        data-pos={props.pos}
+        className={props.class}
+        data-pos={props.id}
+        id={props.id}
         onClick={handleClick}
-        style={cellStyle}
+        style={{width: globals.cellSize.width, height: globals.cellSize.height}}
     />
   )
 }
 
 
-ReactDOM.render(
-  <App
-      boardSize={boardSize}
-      cellSize={cellSize}
-  />, 
-  document.getElementById('root')
-)
+
+
+
+window.onload = function(){
+
+  initializeBoard()
+
+  ReactDOM.render(<App board={globals.board} />, 
+    document.getElementById('root')
+  )
+}
+
+
+var initializeBoard = () => {
+  globals.boardSize.cells = globals.boardSize.columns * globals.boardSize.rows
+  for (var i=0; i < globals.boardSize.cells; i++){
+
+    globals.board.push({id: i, key: i, class: Math.random() > 0.9 ? 'cell alive' : 'cell dead'})
+  }
+  return globals.board
+}
