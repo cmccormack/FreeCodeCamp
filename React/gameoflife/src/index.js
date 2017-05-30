@@ -68,7 +68,6 @@ class Board extends React.Component {
 
   constructor(props){
     super(props)
-    this.handleCellClick = this.handleCellClick.bind(this)
     this.state = {
       board: globals.board
     }
@@ -78,11 +77,6 @@ class Board extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleCellClick(cell){
-    globals.board[cell.dataset.pos].class = globals.board[cell.dataset.pos].class.includes('dead') ? 
-    'cell alive' : 'cell dead'
-    this.setState({board: globals.board})
-  }
 
   render() {
 
@@ -113,24 +107,42 @@ class Board extends React.Component {
 }
 
 
-function Cell(props) {
+class Cell extends React.Component {
+
+  constructor(props){
+    super(props)
+    this.handleClick = this.handleClick.bind(this)
+    this.state = {
+      class: this.props.class
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
 
 
-  var handleClick = (e) => props.handleClick(e.currentTarget)
+  handleClick(event) {
+    var cellpos = event.currentTarget.dataset.pos
+    this.setState({class: this.state.class.includes('dead') ? 'cell alive' : 'cell dead'})
+    globals.board[cellpos].class = this.state.class
+    getLiveNeighbors(cellpos)
+  }
 
-  return (
-    <div 
-        className={props.class}
-        data-pos={props.id}
-        id={props.id}
-        onClick={handleClick}
-        style={{width: globals.cellSize.width, height: globals.cellSize.height}}
-    />
-  )
+  render() {
+    return (
+      <div 
+          className={this.state.class}
+          data-pos={this.props.id}
+          id={this.props.id}
+          onClick={this.handleClick}
+          style={{width: globals.cellSize.width, height: globals.cellSize.height}}
+      />
+    )
+
+  }
+
 }
-
-
-
 
 
 window.onload = function(){
@@ -150,4 +162,21 @@ var initializeBoard = () => {
     globals.board.push({id: i, key: i, class: Math.random() > 0.9 ? 'cell alive' : 'cell dead'})
   }
   return globals.board
+}
+
+var getLiveNeighbors = (cellpos) => {
+  cellpos = Number(cellpos)
+  var neighbors = {
+    left: cellpos - 1,
+    right: cellpos + 1,
+    up: cellpos - globals.boardSize.columns,
+    down: cellpos + globals.boardSize.columns,
+    upleft: cellpos - globals.boardSize.columns - 1,
+    upright: cellpos - globals.boardSize.columns + 1,
+    downleft: cellpos + globals.boardSize.columns - 1,
+    downright: cellpos + globals.boardSize.columns + 1
+  }
+
+  console.log(neighbors)
+
 }

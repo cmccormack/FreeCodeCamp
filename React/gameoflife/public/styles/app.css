@@ -43,7 +43,7 @@ main {
 .board {
   margin: auto;
   background-color: rgba(2, 2, 2, 0.3);
-  border-radius: 10px; }
+  border-radius: 4px; }
   .board .cell {
     border-radius: 30%;
     margin: 0 0 -1px -1px;
@@ -52,10 +52,10 @@ main {
     .board .cell.dead {
       background-color: #333; }
     .board .cell.alive {
-      background-color: #C33;
-      background-color: rgba(240, 20, 20, 0.6); }
+      background-color: #0F0;
+      background-color: rgba(0, 255, 0, 0.8); }
     .board .cell.old {
-      background-color: pink; }
+      background-color: rgba(180, 255, 180, 0.8); }
 
 a:hover {
   text-decoration: none; }
