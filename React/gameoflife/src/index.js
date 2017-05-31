@@ -9,14 +9,14 @@ import ReactDOM from 'react-dom'
 var globals = {
   board: [],
   boardSize: {
-    columns: 30,
-    rows: 30,
+    columns: 10,
+    rows: 15,
     cells: 0,
     padding: 10
   },
   cellSize: {
-    width: 16,
-    height: 16
+    width: 32,
+    height: 32
   }
 }
 
@@ -79,7 +79,6 @@ class Board extends React.Component {
 
 
   render() {
-
     const boardDivStyle = {
       width: (globals.boardSize.columns * (globals.cellSize.width-1)+(2*globals.boardSize.padding)) + 'px',
       height: (globals.boardSize.rows * (globals.cellSize.height-1)+(2*globals.boardSize.padding)) + 'px',
@@ -123,9 +122,10 @@ class Cell extends React.Component {
 
 
   handleClick(event) {
-    var cellpos = event.currentTarget.dataset.pos
-    this.setState({class: this.state.class.includes('dead') ? 'cell alive' : 'cell dead'})
-    globals.board[cellpos].class = this.state.class
+    var cellpos = event.currentTarget.dataset.pos,
+      className = this.state.class.includes('dead') ? 'cell alive' : 'cell dead'
+    this.setState({class: className})
+    globals.board[cellpos].class = className
     getLiveNeighbors(cellpos)
   }
 
@@ -139,9 +139,7 @@ class Cell extends React.Component {
           style={{width: globals.cellSize.width, height: globals.cellSize.height}}
       />
     )
-
   }
-
 }
 
 
@@ -156,27 +154,51 @@ window.onload = function(){
 
 
 var initializeBoard = () => {
+
+  let row, col, up, down,
+    validCol = col => col >= 0 && col < globals.boardSize.columns,
+    validRow = row => row >= 0 && row < globals.boardSize.rows
+
   globals.boardSize.cells = globals.boardSize.columns * globals.boardSize.rows
+
+  function findNeighbors(row, col){
+    let neighbors = []
+    if ( validRow(row - 1) ) {
+      up = i - globals.boardSize.columns
+      neighbors.push(up)
+      if ( validCol(col - 1) ) neighbors.push(up - 1)
+      if ( validCol(col + 1) ) neighbors.push(up + 1)
+    }
+    if ( validRow(row + 1) ) {
+      down = i + globals.boardSize.columns
+      neighbors.push(down)
+      if ( validCol(col - 1) ) neighbors.push(down - 1)
+      if ( validCol(col + 1) ) neighbors.push(down + 1)
+    }
+    if ( validCol(col - 1) ) neighbors.push(i - 1)
+    if ( validCol(col + 1) ) neighbors.push(i + 1)
+
+    return neighbors
+  }
+  
   for (var i=0; i < globals.boardSize.cells; i++){
 
-    globals.board.push({id: i, key: i, class: Math.random() > 0.9 ? 'cell alive' : 'cell dead'})
+    row = Math.floor(i/globals.boardSize.columns)
+    col = i % globals.boardSize.columns
+
+    globals.board.push({
+      id: i,
+      key: i,
+      neighbors: findNeighbors(row,col),
+      class: Math.random() > 0.7 ? 'cell alive' : 'cell dead'})
   }
   return globals.board
 }
 
 var getLiveNeighbors = (cellpos) => {
-  cellpos = Number(cellpos)
-  var neighbors = {
-    left: cellpos - 1,
-    right: cellpos + 1,
-    up: cellpos - globals.boardSize.columns,
-    down: cellpos + globals.boardSize.columns,
-    upleft: cellpos - globals.boardSize.columns - 1,
-    upright: cellpos - globals.boardSize.columns + 1,
-    downleft: cellpos + globals.boardSize.columns - 1,
-    downright: cellpos + globals.boardSize.columns + 1
-  }
+  return globals.board[cellpos].neighbors.reduce( (acc, pos) => 
+    acc + (globals.board[pos].class.includes('alive') ? 1 : 0)
+  , 0)
 
-  console.log(neighbors)
 
 }
