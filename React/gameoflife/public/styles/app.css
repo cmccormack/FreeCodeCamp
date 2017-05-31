@@ -48,7 +48,9 @@ main {
     border-radius: 30%;
     margin: 0 0 -1px -1px;
     border: 1px solid gray;
-    float: left; }
+    float: left;
+    width: 20px;
+    height: 20px; }
     .board .cell.dead {
       background-color: #333; }
     .board .cell.alive {

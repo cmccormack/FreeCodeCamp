@@ -1,7 +1,7 @@
 /*eslint no-console: "off"*/
 
 import { 
-  Col, Row, Grid,
+  Col, Row, Grid, Button
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -9,15 +9,23 @@ import ReactDOM from 'react-dom'
 var globals = {
   board: [],
   boardSize: {
-    columns: 10,
-    rows: 10,
+    columns: 50,
+    rows: 50,
     cells: 0,
     padding: 10
   },
   cellSize: {
-    width: 32,
-    height: 32
+    width: 20,
+    height: 20
   }
+}
+
+
+window.onload = function(){
+
+ 
+
+  ReactDOM.render(<App board={globals.board} />, document.getElementById('root'))
 }
 
 
@@ -27,6 +35,12 @@ class App extends React.Component {
     super(props)
     this.state = {
     }
+  }
+
+
+
+  componentWillMount(){
+    initializeBoard()
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -67,10 +81,14 @@ class Board extends React.Component {
 
   constructor(props){
     super(props)
-    this.updateBoard = this.updateBoard.bind(this)
+    this.handleUpdate = this.handleUpdate.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleClearClick = this.handleClearClick.bind(this)
+    this.handleRandomClick = this.handleRandomClick.bind(this)
+    this.run = this.run.bind(this)
+    this.stop = this.stop.bind(this)
     this.state = {
+      interval: 0,
       board: this.props.board
     }
   }
@@ -84,14 +102,30 @@ class Board extends React.Component {
   }
 
   handleClearClick(){
+    this.stop()
     for (let cell in globals.board) globals.board[cell].alive = false
     this.setState({board: globals.board.slice(0)})
   }
 
-  updateBoard(){
-    updateBoard()
-    this.setState({board: globals.board.slice(0)})
-    displayBoard(this.state.board)
+  handleRandomClick(){
+    this.stop()
+    globals.board = randomizedBoard(globals.board)
+    this.setState({board: updateBoard()})
+  }
+
+  handleUpdate(){
+    this.setState({board: updateBoard()})
+  }
+
+  run() {
+    this.stop()
+    this.setState({
+      interval: setInterval(this.handleUpdate, 50)
+    })
+  }
+
+  stop() {
+    clearInterval(this.state.interval)
   }
 
   render() {
@@ -106,34 +140,31 @@ class Board extends React.Component {
           className='board' 
           style={boardDivStyle}
       >
+        <Cells 
+            board={this.state.board}
+            handleClick={this.handleCellClick}
+        />
 
-        {this.state.board.map( (cell) => {
-          return (
-            <Cell 
-                alive={cell.alive}
-                handleClick={this.handleCellClick}
-                id={cell.id}
-                key={cell.id + (cell.alive ? 'alive':'dead')}
-            />
-          )
-        })}
-        <p><a style={{color: 'white'}} onClick={this.updateBoard}>{'Update Board'}</a></p>
-        <p><a style={{color: 'white'}} onClick={()=> displayBoard(this.state.board)}>{'Display Board'}</a></p>
-        <p><a style={{color: 'white'}} onClick={()=> displayBoard(globals.board)}>{'Display Global Board'}</a></p>
-        <p><a style={{color: 'white'}} onClick={this.handleClearClick}>{'Clear Board'}</a></p>
+        <Button onClick={this.handleUpdate}>{'Step Forward'}</Button>
+        <Button onClick={()=> displayBoard(this.state.board)}>{'Display Board'}</Button>
+        <Button onClick={()=> displayBoard(globals.board)}>{'Display Global Board'}</Button>
+        <Button onClick={this.handleClearClick}>{'Clear Board'}</Button>
+        <Button onClick={this.handleRandomClick}>{'Randomize Board'}</Button>
+        <Button onClick={this.run}>{'Run'}</Button>
+        <Button onClick={this.stop}>{'Stop'}</Button>
       </div>
     )
   }
 }
 
 
-class Cell extends React.Component {
+class Cells extends React.Component {
 
   constructor(props){
     super(props)
     this.handleClick = this.handleClick.bind(this)
     this.state = {
-      alive: this.props.alive
+
     }
   }
 
@@ -141,35 +172,37 @@ class Cell extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-
   handleClick(event) {
-    globals.board[event.currentTarget.dataset.pos].alive = !this.state.alive
+    var cell = globals.board[event.currentTarget.id]
+    cell.alive = !cell.alive
     this.props.handleClick()
   }
 
   render() {
-
     return (
-      <div 
-          className={this.state.alive ? 'cell alive' : 'cell dead'}
-          data-pos={this.props.id}
-          id={this.props.id}
-          onClick={this.handleClick}
-          style={{width: globals.cellSize.width, height: globals.cellSize.height}}
-      />
+      <div>
+        {this.props.board.map( (cell, i) => {
+          return (
+            <div 
+                className={cell.alive ? 'cell alive' : 'cell dead'}
+                id={i}
+                key={i}
+                onClick={this.handleClick}
+            />
+          )
+        })}
+      </div>
+
+
     )
   }
+
+
 }
 
 
-window.onload = function(){
 
-  initializeBoard()
 
-  ReactDOM.render(<App board={globals.board} />, 
-    document.getElementById('root')
-  )
-}
 
 
 var initializeBoard = () => {
@@ -208,9 +241,15 @@ var initializeBoard = () => {
     globals.board.push({
       id: i,
       neighbors: findNeighbors(row,col),
-      alive: Math.random() > 0.7 ? true : false})
+      alive: false
+    })
   }
-  return globals.board
+  return randomizedBoard(globals.board)
+}
+
+var randomizedBoard = (board) => {
+  for (let cell in board) board[cell].alive = (Math.random() > 0.7 ? true : false)
+  return board
 }
 
 var getLiveNeighbors = (cellpos) => 
@@ -220,19 +259,20 @@ var getLiveNeighbors = (cellpos) =>
 
 var updateBoard = () => {
 
-  var liveNeighbors
+  var liveNeighbors, 
+    newBoard = []
 
   for (let cell in globals.board){
     liveNeighbors = getLiveNeighbors(cell)
-    // globals.board[cell].nextState = globals.board[cell].alive
+    newBoard[cell] = {id: Number(cell), neighbors: globals.board[cell].neighbors, alive: false}
     if (globals.board[cell].alive){
-      globals.board[cell].nextState = ((liveNeighbors === 2 || liveNeighbors === 3) ? true : false)
+      newBoard[cell].alive = ((liveNeighbors === 2 || liveNeighbors === 3) ? true : false)
     } else {
-      globals.board[cell].nextState = (liveNeighbors === 3 ? true : false)
+      newBoard[cell].alive = (liveNeighbors === 3 ? true : false)
     }
   }
-
-  for (let cell in globals.board) globals.board[cell].alive = globals.board[cell].nextState
+  globals.board = newBoard
+  return globals.board
 }
 
 var displayBoard = (board) => {
