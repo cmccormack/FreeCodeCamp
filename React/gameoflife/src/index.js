@@ -15,8 +15,8 @@ var globals = {
     padding: 10
   },
   cellSize: {
-    width: 20,
-    height: 20
+    width: 8,
+    height: 8
   }
 }
 
@@ -89,8 +89,14 @@ class Board extends React.Component {
     this.stop = this.stop.bind(this)
     this.state = {
       interval: 0,
-      board: this.props.board
+      board: this.props.board,
+      isRunning: true
     }
+  }
+
+
+  componentWillMount() {
+    if (this.state.isRunning) this.run()
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -102,15 +108,16 @@ class Board extends React.Component {
   }
 
   handleClearClick(){
-    this.stop()
+    clearInterval(this.state.interval)
     for (let cell in globals.board) globals.board[cell].alive = false
-    this.setState({board: globals.board.slice(0)})
+    this.handleUpdate()
   }
 
   handleRandomClick(){
     this.stop()
     globals.board = randomizedBoard(globals.board)
-    this.setState({board: updateBoard()})
+    this.handleUpdate()
+    if (this.state.isRunning) this.run()
   }
 
   handleUpdate(){
@@ -120,12 +127,14 @@ class Board extends React.Component {
   run() {
     this.stop()
     this.setState({
-      interval: setInterval(this.handleUpdate, 50)
+      interval: setInterval(this.handleUpdate, 50),
+      isRunning: true
     })
   }
 
   stop() {
     clearInterval(this.state.interval)
+    this.setState({isRunning: false})
   }
 
   render() {
@@ -146,8 +155,8 @@ class Board extends React.Component {
         />
 
         <Button onClick={this.handleUpdate}>{'Step Forward'}</Button>
-        <Button onClick={()=> displayBoard(this.state.board)}>{'Display Board'}</Button>
-        <Button onClick={()=> displayBoard(globals.board)}>{'Display Global Board'}</Button>
+        {/*<Button onClick={()=> displayBoard(this.state.board)}>{'Display Board'}</Button>
+        <Button onClick={()=> displayBoard(globals.board)}>{'Display Global Board'}</Button>*/}
         <Button onClick={this.handleClearClick}>{'Clear Board'}</Button>
         <Button onClick={this.handleRandomClick}>{'Randomize Board'}</Button>
         <Button onClick={this.run}>{'Run'}</Button>
@@ -192,17 +201,9 @@ class Cells extends React.Component {
           )
         })}
       </div>
-
-
     )
   }
-
-
 }
-
-
-
-
 
 
 var initializeBoard = () => {
