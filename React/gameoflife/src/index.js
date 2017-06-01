@@ -17,7 +17,8 @@ var globals = {
   cellSize: {
     width: 12,
     height: 12
-  }
+  },
+  delay: 1 * 1000
 }
 
 
@@ -113,10 +114,13 @@ class Board extends React.Component {
   }
 
   handleRandomClick(){
-    this.stop()
+    clearInterval(this.state.interval)
     globals.board = randomizedBoard(globals.board)
-    this.handleUpdate()
-    if (this.state.isRunning) this.run()
+    this.setState({generation: -1}, () => { 
+      this.handleUpdate()
+      if (this.state.isRunning) this.run()
+    })
+    
   }
 
   handleUpdate(){
@@ -126,7 +130,7 @@ class Board extends React.Component {
   run() {
     this.stop()
     this.setState({
-      interval: setInterval(this.handleUpdate, 10),
+      interval: setInterval(this.handleUpdate, globals.delay),
       isRunning: true
     })
   }
@@ -208,6 +212,10 @@ class Cells extends React.Component {
                 id={i}
                 key={cell.id}
                 onClick={this.handleClick}
+                style={{
+                  width: globals.cellSize.width,
+                  height: globals.cellSize.height
+                }}
             />
           )
         })}
