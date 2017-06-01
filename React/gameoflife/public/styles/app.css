@@ -57,17 +57,27 @@ main {
       background-color: rgba(0, 255, 0, 0.8); }
     .board .cells .cell.old {
       background-color: rgba(180, 255, 180, 0.8); }
-  .board .buttons .btn-group {
+  .board .buttons > .btn-group {
     margin-top: 10px;
-    width: 60%; }
-    .board .buttons .btn-group .btn {
+    width: 70%; }
+    .board .buttons > .btn-group .btn {
       transition: none;
       background-color: rgba(2, 2, 2, 0.3); }
-      .board .buttons .btn-group .btn:hover {
+      .board .buttons > .btn-group .btn:hover {
         background-color: rgba(2, 2, 2, 0.4); }
+    .board .buttons > .btn-group .dropdown-menu {
+      padding: 0;
+      border: 2px solid #AAA;
+      min-width: 0; }
+      .board .buttons > .btn-group .dropdown-menu .dropdown-item {
+        background-color: #333;
+        color: #CCC; }
+        .board .buttons > .btn-group .dropdown-menu .dropdown-item:hover {
+          background-color: #222;
+          color: #EEE; }
   .board .buttons .generations {
     display: inline-block;
-    width: 40%;
+    width: 30%;
     border: 2px solid #333;
     background-color: #333;
     border-bottom-right-radius: 10px;

@@ -88,9 +88,9 @@ main {
     }
   }
   .buttons{
-    .btn-group{
+    & > .btn-group{
       margin-top: 10px;
-      width: 60%;
+      width: 70%;
 
       .btn {
         transition: none;
@@ -100,10 +100,26 @@ main {
           background-color: rgba(2,2,2,0.4);
         }
       }
+
+      .dropdown-menu {
+        padding: 0;
+        border: 2px solid #AAA;
+        min-width: 0;
+        
+        .dropdown-item {
+          background-color: #333;
+          color: #CCC;
+
+          &:hover {
+            background-color: #222;
+            color: #EEE;
+          }
+        }
+      }
     }
     .generations {
       display: inline-block;
-      width: 40%;
+      width: 30%;
       border: 2px solid #333;
       background-color: #333;
       border-bottom-right-radius: 10px;

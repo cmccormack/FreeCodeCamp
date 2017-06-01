@@ -18,7 +18,16 @@ var globals = {
     width: 12,
     height: 12
   },
-  delay: 1 * 1000
+  delay: 0.1 * 1000,
+  speed: [
+    { text: '10x', dataSpeed: 10 },
+    { text: '5x', dataSpeed: 5 },
+    { text: '3x', dataSpeed: 3 },
+    { text: '2x', dataSpeed: 2 },
+    { text: '1x', dataSpeed: 1 },
+    { text: '1/2x', dataSpeed: 0.5 },
+    { text: '1/4x', dataSpeed: 0.25 }
+  ]
 }
 
 
@@ -75,6 +84,7 @@ class Board extends React.Component {
 
   constructor(props){
     super(props)
+    this.handleSpeedClick = this.handleSpeedClick.bind(this)
     this.handleStepClick = this.handleStepClick.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
@@ -86,7 +96,8 @@ class Board extends React.Component {
       interval: 0,
       generation: 0,
       board: this.props.board,
-      isRunning: true
+      isRunning: true,
+      delay: globals.delay
     }
   }
 
@@ -97,6 +108,14 @@ class Board extends React.Component {
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  handleSpeedClick(speed){
+    clearInterval(this.state.interval)
+    this.setState({delay: Math.floor(1/speed * globals.delay)}, () => {
+      if (this.state.isRunning) this.run()
+      console.log(this.state.delay)
+    })
   }
 
   handleCellClick(){
@@ -130,7 +149,7 @@ class Board extends React.Component {
   run() {
     this.stop()
     this.setState({
-      interval: setInterval(this.handleUpdate, globals.delay),
+      interval: setInterval(this.handleUpdate, this.state.delay),
       isRunning: true
     })
   }
@@ -150,6 +169,7 @@ class Board extends React.Component {
         handleClearClick: this.handleClearClick,
         handleStepClick: this.handleStepClick,
         handleRandomClick: this.handleRandomClick,
+        handleSpeedClick: this.handleSpeedClick,
         run: this.run,
         stop: this.stop
       }
@@ -227,8 +247,15 @@ class Cells extends React.Component {
 
 var Buttons = (props) => {
   let buttonAttr = {
-    class: 'btn btn-outline-secondary btn-sm'
-  }
+      btn: 'btn btn-outline-secondary btn-sm',
+      dropBtn:  'btn btn-outline-secondary btn-sm dropdown-toggle'
+    },
+    handleSpeedClick = (e) => {
+      console.log(e.currentTarget.dataset.speed)
+      props.funcs.handleSpeedClick(e.currentTarget.dataset.speed)
+
+    }
+  
 
   return (
     <div
@@ -236,33 +263,58 @@ var Buttons = (props) => {
         role='group'
     >
       <button 
-          className={buttonAttr.class}
+          className={buttonAttr.btn}
           onClick={props.funcs.handleStepClick}
           type='button'
       >{'Step Forward'}
       </button>
       <button
-          className={buttonAttr.class}
+          className={buttonAttr.btn}
           onClick={props.funcs.handleClearClick}
           type='button'
       >{'Clear Board'}
       </button>
       <button
-          className={buttonAttr.class}
+          className={buttonAttr.btn}
           onClick={props.funcs.handleRandomClick}
           type='button'
       >{'Randomize Board'}
       </button>
       <button
-          className={buttonAttr.class}
+          className={buttonAttr.btn}
           onClick={props.funcs.run}
           type='button'
       >{'Run'}</button>
       <button
-          className={buttonAttr.class}
+          className={buttonAttr.btn}
           onClick={props.funcs.stop}
           type='button'
       >{'Stop'}</button>
+
+      <div 
+          className='btn-group dropup'
+          role='group'
+      >
+        <button
+            className={buttonAttr.dropBtn}
+            data-toggle='dropdown'
+            type='button'
+        >{'Speed'}</button>
+        <div className='dropdown-menu'>
+          {globals.speed.map( (speed) => {
+            return (
+              <a
+                  className={'dropdown-item'}
+                  data-speed={speed.dataSpeed}
+                  key={speed.text}
+                  onClick={handleSpeedClick}
+              >{speed.text}</a>
+            )
+
+          })}
+        </div>
+      </div>
+
     </div>
   )
 }
