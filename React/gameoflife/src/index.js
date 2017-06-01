@@ -52,7 +52,7 @@ class App extends React.Component {
         <Grid>
           <Row>
             <Col 
-                className='title display-3 text-center text-shadow'
+                className='title display-3 text-center text-shadow unselectable'
                 sm={12} 
             >
               {'Game of Life'}
@@ -167,7 +167,9 @@ class Board extends React.Component {
         <div>
           <div className='buttons'>
             <Buttons funcs={btnFuncs} />
-            <div className='generations'>{'Generation: '}{this.state.generation}</div>
+            <div className='generations unselectable'>
+              {'Generation: '}{this.state.generation}
+            </div>
           </div>
         </div>
       </div>

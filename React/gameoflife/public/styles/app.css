@@ -44,7 +44,8 @@ main {
 .board {
   margin: auto;
   background-color: rgba(2, 2, 2, 0.4);
-  border-radius: 4px; }
+  border-radius: 4px;
+  box-shadow: -8px 8px 8px #333; }
   .board .cells .cell {
     margin: 0 0 -1px -1px;
     border: 1px solid #444;
