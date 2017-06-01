@@ -28,6 +28,7 @@ footer {
 
 main {
   max-width: 1024px;
+  width: 1024px;
   margin: auto;
   position: relative; }
 
@@ -66,7 +67,15 @@ main {
       .board .buttons .btn-group .btn:hover {
         background-color: rgba(2, 2, 2, 0.4); }
   .board .buttons .generations {
-    display: inline-block; }
+    display: inline-block;
+    width: 40%;
+    border: 2px solid #333;
+    background-color: #333;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    color: lightgray;
+    text-align: center;
+    box-shadow: -2px 2px 4px #111; }
 
 a:hover {
   text-decoration: none; }

@@ -22,9 +22,6 @@ var globals = {
 
 
 window.onload = function(){
-
- 
-
   ReactDOM.render(<App board={globals.board} />, document.getElementById('root'))
 }
 
@@ -33,11 +30,8 @@ class App extends React.Component {
 
   constructor(props){
     super(props)
-    this.state = {
-    }
+    this.state = {}
   }
-
-
 
   componentWillMount(){
     initializeBoard()
@@ -89,6 +83,7 @@ class Board extends React.Component {
     this.stop = this.stop.bind(this)
     this.state = {
       interval: 0,
+      generation: 0,
       board: this.props.board,
       isRunning: true
     }
@@ -114,7 +109,7 @@ class Board extends React.Component {
   handleClearClick(){
     clearInterval(this.state.interval)
     for (let cell in globals.board) globals.board[cell].alive = false
-    this.handleUpdate()
+    this.setState({generation: -1}, () => { this.handleUpdate() })
   }
 
   handleRandomClick(){
@@ -125,7 +120,7 @@ class Board extends React.Component {
   }
 
   handleUpdate(){
-    this.setState({board: updateBoard()})
+    this.setState({board: updateBoard(), generation: this.state.generation + 1})
   }
 
   run() {
@@ -172,7 +167,7 @@ class Board extends React.Component {
         <div>
           <div className='buttons'>
             <Buttons funcs={btnFuncs} />
-            <div className='generations'>{'Generation: '}</div>
+            <div className='generations'>{'Generation: '}{this.state.generation}</div>
           </div>
         </div>
       </div>
@@ -333,15 +328,3 @@ var updateBoard = () => {
   return globals.board
 }
 
-
-
-// For Debug - Remove when completed
-// var displayBoard = (board) => {
-//   let str = ''
-//   for (let cell = 0; cell < globals.boardSize.cells; cell++){
-//     str += board[cell].alive ? '1' : '0'
-//     str += (cell+1) % globals.boardSize.columns === 0 ? '\n' : ' '
-//   }
-
-//   console.log(str)
-// }
