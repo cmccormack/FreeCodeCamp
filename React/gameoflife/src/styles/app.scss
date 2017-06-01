@@ -42,6 +42,7 @@ footer {
 
 main {
   max-width: 1024px;
+  width: 1024px;
   margin: auto;
   position: relative;
 
@@ -64,29 +65,50 @@ main {
   background-color: rgba(2,2,2,0.4);
   border-radius: 4px;
 
-  .cell {
-    border-radius: 30%;
-    margin: 0 0 -1px -1px;
-    border: 1px solid gray;
-    float: left;
-    width: 8px;
-    height: 8px;
+  .cells{
+    .cell {
+      // border-radius: 30%;
+      margin: 0 0 -1px -1px;
+      border: 1px solid #444;
+      float: left;
+      width: 12px;
+      height: 12px;
 
-    &.dead{
-      background-color: #333;
-    }
-    &.alive {
-      background-color: #0F0;
-      background-color: rgba(0,255,0,0.8);
-    }
-    &.old {
-      background-color: rgba(180,255,180,0.8);
+      &.dead{
+        background-color: #333;
+      }
+      &.alive {
+        background-color: #0F0;
+        background-color: rgba(0,255,0,0.8);
+      }
+      &.old {
+        background-color: rgba(180,255,180,0.8);
+      }
     }
   }
+  .buttons{
+    .btn-group{
+      margin-top: 10px;
+      width: 60%;
 
+      .btn {
+        // box-sizing: border-box;
+        transition: none;
+        // width: 20%;
+        background-color: rgba(2,2,2,0.2);
+
+        &:hover {
+          background-color: rgba(2,2,2,0.4);
+        }
+      }
+    }
+    .generations {
+      display: inline-block;
+      width: 40%;
+      text-align: center;
+    }
+  }
 }
-
-
 
 
 a {
@@ -132,11 +154,5 @@ a {
     .title {
       font-size: 3rem;
     }
-}
-
-@media screen and (min-width: 576px) {
-  .modal-dialog {
-    max-width: 800px;
-  }
 }
 

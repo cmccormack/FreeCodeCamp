@@ -1,7 +1,7 @@
 /*eslint no-console: "off"*/
 
 import { 
-  Col, Row, Grid, Button
+  Col, Row, Grid
 } from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -9,14 +9,14 @@ import ReactDOM from 'react-dom'
 var globals = {
   board: [],
   boardSize: {
-    columns: 50,
+    columns: 70,
     rows: 50,
     cells: 0,
     padding: 10
   },
   cellSize: {
-    width: 8,
-    height: 8
+    width: 12,
+    height: 12
   }
 }
 
@@ -54,24 +54,23 @@ class App extends React.Component {
   render() {
 
     return (
-      <Grid>
-
-        <Row>
-          <Col 
-              className='title display-3 text-center text-shadow'
-              sm={12} 
-          >
-            {'Game of Life'}
-          </Col>
-        </Row>
-
-        <Row>
-          <Col sm={12}>
+      <div>
+        <Grid>
+          <Row>
+            <Col 
+                className='title display-3 text-center text-shadow'
+                sm={12} 
+            >
+              {'Game of Life'}
+            </Col>
+          </Row>
+        </Grid>
+        <div>
+          <div>
             <Board board={this.props.board} />
-          </Col>
-        </Row>
-
-      </Grid>
+          </div>
+        </div>
+      </div>
     )
   }
 }
@@ -81,6 +80,7 @@ class Board extends React.Component {
 
   constructor(props){
     super(props)
+    this.handleStepClick = this.handleStepClick.bind(this)
     this.handleUpdate = this.handleUpdate.bind(this)
     this.handleCellClick = this.handleCellClick.bind(this)
     this.handleClearClick = this.handleClearClick.bind(this)
@@ -107,6 +107,10 @@ class Board extends React.Component {
     this.setState({board: globals.board.slice(0)})
   }
 
+  handleStepClick(){
+    if (!this.state.isRunning) this.handleUpdate()
+  }
+
   handleClearClick(){
     clearInterval(this.state.interval)
     for (let cell in globals.board) globals.board[cell].alive = false
@@ -127,7 +131,7 @@ class Board extends React.Component {
   run() {
     this.stop()
     this.setState({
-      interval: setInterval(this.handleUpdate, 50),
+      interval: setInterval(this.handleUpdate, 10),
       isRunning: true
     })
   }
@@ -139,28 +143,38 @@ class Board extends React.Component {
 
   render() {
     const boardDivStyle = {
-      width: (globals.boardSize.columns * (globals.cellSize.width-1)+(2*globals.boardSize.padding)) + 'px',
-      height: '100%',
-      padding: globals.boardSize.padding
-    }
+        width: (globals.boardSize.columns * (globals.cellSize.width-1)+(2*globals.boardSize.padding)) + 'px',
+        height: '100%',
+        padding: globals.boardSize.padding
+      },
+      btnFuncs = {
+        handleClearClick: this.handleClearClick,
+        handleStepClick: this.handleStepClick,
+        handleRandomClick: this.handleRandomClick,
+        run: this.run,
+        stop: this.stop
+      }
+      
 
     return (
       <div 
           className='board' 
           style={boardDivStyle}
       >
-        <Cells 
-            board={this.state.board}
-            handleClick={this.handleCellClick}
-        />
-
-        <Button onClick={this.handleUpdate}>{'Step Forward'}</Button>
-        {/*<Button onClick={()=> displayBoard(this.state.board)}>{'Display Board'}</Button>
-        <Button onClick={()=> displayBoard(globals.board)}>{'Display Global Board'}</Button>*/}
-        <Button onClick={this.handleClearClick}>{'Clear Board'}</Button>
-        <Button onClick={this.handleRandomClick}>{'Randomize Board'}</Button>
-        <Button onClick={this.run}>{'Run'}</Button>
-        <Button onClick={this.stop}>{'Stop'}</Button>
+        <div>
+          <div className='cells'>
+            <Cells 
+                board={this.state.board}
+                handleClick={this.handleCellClick}
+            />
+          </div>
+        </div>
+        <div>
+          <div className='buttons'>
+            <Buttons funcs={btnFuncs} />
+            <div className='generations'>{'Generation: '}</div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -195,7 +209,7 @@ class Cells extends React.Component {
             <div 
                 className={cell.alive ? 'cell alive' : 'cell dead'}
                 id={i}
-                key={i}
+                key={cell.id}
                 onClick={this.handleClick}
             />
           )
@@ -203,6 +217,49 @@ class Cells extends React.Component {
       </div>
     )
   }
+}
+
+
+var Buttons = (props) => {
+  let buttonAttr = {
+    class: 'btn btn-outline-secondary btn-sm'
+  }
+
+  return (
+    <div
+        className='btn-group'
+        role='group'
+    >
+      <button 
+          className={buttonAttr.class}
+          onClick={props.funcs.handleStepClick}
+          type='button'
+      >{'Step Forward'}
+      </button>
+      <button
+          className={buttonAttr.class}
+          onClick={props.funcs.handleClearClick}
+          type='button'
+      >{'Clear Board'}
+      </button>
+      <button
+          className={buttonAttr.class}
+          onClick={props.funcs.handleRandomClick}
+          type='button'
+      >{'Randomize Board'}
+      </button>
+      <button
+          className={buttonAttr.class}
+          onClick={props.funcs.run}
+          type='button'
+      >{'Run'}</button>
+      <button
+          className={buttonAttr.class}
+          onClick={props.funcs.stop}
+          type='button'
+      >{'Stop'}</button>
+    </div>
+  )
 }
 
 
@@ -276,12 +333,15 @@ var updateBoard = () => {
   return globals.board
 }
 
-var displayBoard = (board) => {
-  let str = ''
-  for (let cell = 0; cell < globals.boardSize.cells; cell++){
-    str += board[cell].alive ? '1' : '0'
-    str += (cell+1) % globals.boardSize.columns === 0 ? '\n' : ' '
-  }
 
-  console.log(str)
-}
+
+// For Debug - Remove when completed
+// var displayBoard = (board) => {
+//   let str = ''
+//   for (let cell = 0; cell < globals.boardSize.cells; cell++){
+//     str += board[cell].alive ? '1' : '0'
+//     str += (cell+1) % globals.boardSize.columns === 0 ? '\n' : ' '
+//   }
+
+//   console.log(str)
+// }

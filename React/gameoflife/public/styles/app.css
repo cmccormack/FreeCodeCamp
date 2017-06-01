@@ -44,20 +44,29 @@ main {
   margin: auto;
   background-color: rgba(2, 2, 2, 0.4);
   border-radius: 4px; }
-  .board .cell {
-    border-radius: 30%;
+  .board .cells .cell {
     margin: 0 0 -1px -1px;
-    border: 1px solid gray;
+    border: 1px solid #444;
     float: left;
-    width: 8px;
-    height: 8px; }
-    .board .cell.dead {
+    width: 12px;
+    height: 12px; }
+    .board .cells .cell.dead {
       background-color: #333; }
-    .board .cell.alive {
+    .board .cells .cell.alive {
       background-color: #0F0;
       background-color: rgba(0, 255, 0, 0.8); }
-    .board .cell.old {
+    .board .cells .cell.old {
       background-color: rgba(180, 255, 180, 0.8); }
+  .board .buttons .btn-group {
+    margin-top: 10px;
+    width: 60%; }
+    .board .buttons .btn-group .btn {
+      transition: none;
+      background-color: rgba(2, 2, 2, 0.2); }
+      .board .buttons .btn-group .btn:hover {
+        background-color: rgba(2, 2, 2, 0.4); }
+  .board .buttons .generations {
+    display: inline-block; }
 
 a:hover {
   text-decoration: none; }
@@ -90,8 +99,5 @@ a:hover {
 @media screen and (max-width: 720px) {
   .title {
     font-size: 3rem; } }
-@media screen and (min-width: 576px) {
-  .modal-dialog {
-    max-width: 800px; } }
 
 /*# sourceMappingURL=app.css.map */
