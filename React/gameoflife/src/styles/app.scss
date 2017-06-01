@@ -168,12 +168,3 @@ a {
     user-select: none;
     cursor: default;
 }
-
-
-// Viewport specific configurations
-@media screen and (max-width: 720px) {
-    .title {
-      font-size: 3rem;
-    }
-}
-
