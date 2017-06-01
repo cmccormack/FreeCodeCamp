@@ -49,9 +49,7 @@ main {
   .board .cells .cell {
     margin: 0 0 -1px -1px;
     border: 1px solid #444;
-    float: left;
-    width: 12px;
-    height: 12px; }
+    float: left; }
     .board .cells .cell.dead {
       background-color: #333; }
     .board .cells .cell.alive {
@@ -64,7 +62,7 @@ main {
     width: 60%; }
     .board .buttons .btn-group .btn {
       transition: none;
-      background-color: rgba(2, 2, 2, 0.2); }
+      background-color: rgba(2, 2, 2, 0.3); }
       .board .buttons .btn-group .btn:hover {
         background-color: rgba(2, 2, 2, 0.4); }
   .board .buttons .generations {
