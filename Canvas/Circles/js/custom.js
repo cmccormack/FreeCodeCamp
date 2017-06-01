@@ -1,5 +1,3 @@
-// arc(x, y, radius, startAngle, endAngle, anticlockwise)
-
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
 canvas.width = window.innerWidth
@@ -93,10 +91,10 @@ function init (numCircles, minSpeed, maxSpeed, maxRadius) {
         radius = Math.floor(Math.random() * maxRadius)
         x = radius + Math.floor(Math.random() * (window.innerWidth - 2 * radius))
         y = radius + Math.floor(Math.random() * (window.innerHeight - 2 * radius))
-        // dx = (Math.random() -0.5) * 2 * speedRange
-        // dy = (Math.random() -0.5) * 2 * speedRange
-        dx = ((1 - (radius/maxRadius)) - 0.5) * 2 
-        dy = ((1 - (radius/maxRadius)) - 0.5) * 2
+        dx = (Math.random() -0.5) * 2 * maxSpeed
+        dy = (Math.random() -0.5) * 2 * maxSpeed
+        // dx = ((1 - (radius/maxRadius)) - 0.5) * 2 
+        // dy = ((1 - (radius/maxRadius)) - 0.5) * 2
         color = 'hsla(' + Math.floor(Math.random() * 255) + ',60%,60%,0.9)'
 
         circle = new Circle(x, y, dx, dy, radius, color)
@@ -107,7 +105,4 @@ function init (numCircles, minSpeed, maxSpeed, maxRadius) {
     animate()
 }
 
-init(numCircles = 50, minSpeed = 5, maxSpeed=10, radiusRange = 60)
-
-
-// 30/5 6, x = 30.  10/x = 2
+init(numCircles = 100, minSpeed = 5, maxSpeed=10, radiusRange = 60)
