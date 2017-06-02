@@ -114,8 +114,4 @@ a:hover {
   user-select: none;
   cursor: default; }
 
-@media screen and (max-width: 720px) {
-  .title {
-    font-size: 3rem; } }
-
 /*# sourceMappingURL=app.css.map */

@@ -328,7 +328,7 @@ var initializeBoard = () => {
     // Functions to find all possible valid neighbors for each cell
     validCol = col => col >= 0 && col < globals.boardSize.columns,
     validRow = row => row >= 0 && row < globals.boardSize.rows,
-    findNeighbors = (row, col) => {
+    findNeighborsBounded = (i, row, col) => {
       let neighbors = []
       if ( validRow(row - 1) ) {
         up = i - globals.boardSize.columns
@@ -346,6 +346,30 @@ var initializeBoard = () => {
       if ( validCol(col + 1) ) neighbors.push(i + 1)
 
       return neighbors
+    },
+    findNeighbors = (i, row, col) => {
+      let neighbors = [], up, down, left, right,
+        cells = globals.boardSize.cells,
+        cols = globals.boardSize.columns
+
+      // if (validRow(row-1)) up = i - cols
+      // else up = i + cols - cells
+      // neighbors.push(up)
+      // if (up + 1 >= cols) neighbors.push(up - cols + 1)
+      // else neighbors.push(up + 1)
+      // if (up - 1 < 0) neighbors.push(up + cols - 1)
+
+      left = ((i - 1) < 0) ? (i + cols - 1) : (i - 0)
+      right = ((i + 1) >= cols) ? (i - cols + 1) : (i + 1)
+      up = validRow(row-1) ? (i - cols) : (i - cols + cells)
+      down = validRow(row+1) ? (i + cols) : (i + cols - cells)
+      neighbors.push(left)
+      neighbors.push(right)
+      neighbors.push(up)
+      neighbors.push(down)
+      console.log(neighbors)
+      return neighbors
+
     }
     
   
@@ -355,7 +379,7 @@ var initializeBoard = () => {
 
     globals.board.push({
       id: i,
-      neighbors: findNeighbors(row,col),
+      neighbors: findNeighbors(i, row,col),
       alive: false
     })
   }
@@ -390,3 +414,21 @@ var updateBoard = () => {
   return globals.board
 }
 
+
+
+/*
+
+00 01 02 03 04
+05 06 07 08 09
+10 11 12 13 14
+15 16 17 18 19
+20 21 22 23 24
+
+00 01 02
+03 04 05
+06 07 08
+09 10 11
+12 13 14
+
+
+*/
