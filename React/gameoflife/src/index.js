@@ -350,7 +350,11 @@ var initializeBoard = () => {
     findNeighbors = (i, row, col) => {
       let neighbors = [], up, down, left, right,
         cells = globals.boardSize.cells,
-        cols = globals.boardSize.columns
+        cols = globals.boardSize.columns,
+        checkLeft = () => ((i - 1) < 0) ? (i + cols - 1) : (i - 0),
+        checkRight = () => ((i + 1) >= cols) ? (i - cols + 1) : (i + 1),
+        checkUp = () => validRow(row-1) ? (i - cols) : (i - cols + cells),
+        checkDown = () => validRow(row+1) ? (i + cols) : (i + cols - cells)
 
       // if (validRow(row-1)) up = i - cols
       // else up = i + cols - cells
@@ -359,10 +363,10 @@ var initializeBoard = () => {
       // else neighbors.push(up + 1)
       // if (up - 1 < 0) neighbors.push(up + cols - 1)
 
-      left = ((i - 1) < 0) ? (i + cols - 1) : (i - 0)
-      right = ((i + 1) >= cols) ? (i - cols + 1) : (i + 1)
-      up = validRow(row-1) ? (i - cols) : (i - cols + cells)
-      down = validRow(row+1) ? (i + cols) : (i + cols - cells)
+      left = checkLeft()
+      right = checkRight()
+      up = checkUp()
+      down = checkDown()
       neighbors.push(left)
       neighbors.push(right)
       neighbors.push(up)
