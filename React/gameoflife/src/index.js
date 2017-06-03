@@ -220,6 +220,7 @@ class Cells extends React.Component {
   handleClick(event) {
     var cell = globals.board[event.currentTarget.id]
     cell.alive = !cell.alive
+    cell.new = cell.alive ? true : false
     this.props.handleClick()
   }
 
