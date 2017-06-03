@@ -55,7 +55,7 @@ main {
     .board .cells .cell.alive {
       background-color: #0F0;
       background-color: rgba(0, 255, 0, 0.8); }
-    .board .cells .cell.old {
+    .board .cells .cell.new {
       background-color: rgba(180, 255, 180, 0.8); }
   .board .buttons > .btn-group {
     margin-top: 10px;

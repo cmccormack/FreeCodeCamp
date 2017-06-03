@@ -229,7 +229,7 @@ class Cells extends React.Component {
         {this.props.board.map( (cell, i) => {
           return (
             <div 
-                className={cell.alive ? 'cell alive' : 'cell dead'}
+                className={!cell.alive ? 'cell dead' : cell.new ? 'cell alive new' : 'cell alive'}
                 id={i}
                 key={cell.id}
                 onClick={this.handleClick}
@@ -381,9 +381,11 @@ var updateBoard = () => {
     liveNeighbors = getLiveNeighbors(cell)
     newBoard[cell] = {id: Number(cell), neighbors: globals.board[cell].neighbors, alive: false}
     if (globals.board[cell].alive){
+      newBoard[cell].new = false
       newBoard[cell].alive = ((liveNeighbors === 2 || liveNeighbors === 3) ? true : false)
     } else {
       newBoard[cell].alive = (liveNeighbors === 3 ? true : false)
+      newBoard[cell].new = newBoard[cell].alive ? true : false
     }
   }
   globals.board = newBoard
