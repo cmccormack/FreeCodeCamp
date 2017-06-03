@@ -325,30 +325,9 @@ var initializeBoard = () => {
 
   globals.boardSize.cells = globals.boardSize.columns * globals.boardSize.rows
 
-  let row, col, up, down,
+  let row, col,
     // Functions to find all possible valid neighbors for each cell
-    validCol = col => col >= 0 && col < globals.boardSize.columns,
-    validRow = row => row >= 0 && row < globals.boardSize.rows,
-    findNeighborsBounded = (i, row, col) => {
-      let neighbors = []
-      if ( validRow(row - 1) ) {
-        up = i - globals.boardSize.columns
-        neighbors.push(up)
-        if ( validCol(col - 1) ) neighbors.push(up - 1)
-        if ( validCol(col + 1) ) neighbors.push(up + 1)
-      }
-      if ( validRow(row + 1) ) {
-        down = i + globals.boardSize.columns
-        neighbors.push(down)
-        if ( validCol(col - 1) ) neighbors.push(down - 1)
-        if ( validCol(col + 1) ) neighbors.push(down + 1)
-      }
-      if ( validCol(col - 1) ) neighbors.push(i - 1)
-      if ( validCol(col + 1) ) neighbors.push(i + 1)
-
-      return neighbors
-    },
-    findNeighbors = (i) => {
+    findNeighborsToroidal = (i) => {
       let neighbors = [],
         cells = globals.boardSize.cells,
         cols = globals.boardSize.columns,
@@ -376,7 +355,7 @@ var initializeBoard = () => {
 
     globals.board.push({
       id: i,
-      neighbors: findNeighbors(i, row,col),
+      neighbors: findNeighborsToroidal(i, row,col),
       alive: false
     })
   }
