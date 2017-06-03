@@ -27,7 +27,8 @@ var globals = {
     { text: '1x', dataSpeed: 1 },
     { text: '1/2x', dataSpeed: 0.5 },
     { text: '1/4x', dataSpeed: 0.25 }
-  ]
+  ],
+  seed: 0.3
 }
 
 
@@ -347,31 +348,23 @@ var initializeBoard = () => {
 
       return neighbors
     },
-    findNeighbors = (i, row, col) => {
-      let neighbors = [], up, down, left, right,
+    findNeighbors = (i) => {
+      let neighbors = [],
         cells = globals.boardSize.cells,
         cols = globals.boardSize.columns,
-        checkLeft = () => ((i - 1) < 0) ? (i + cols - 1) : (i - 0),
-        checkRight = () => ((i + 1) >= cols) ? (i - cols + 1) : (i + 1),
-        checkUp = () => validRow(row-1) ? (i - cols) : (i - cols + cells),
-        checkDown = () => validRow(row+1) ? (i + cols) : (i + cols - cells)
+        checkLeft = (i) => ((i%cols - 1) < 0) ? (i + cols - 1) : (i - 1),
+        checkRight = (i) => ((i%cols + 1) >= cols) ? (i - cols + 1) : (i + 1),
+        checkUp = (i) => ((i-cols) < 0) ? (i-cols+cells) : (i-cols),
+        checkDown = (i) => (i+cols) >= cells ? (i + cols - cells) : (i + cols)
 
-      // if (validRow(row-1)) up = i - cols
-      // else up = i + cols - cells
-      // neighbors.push(up)
-      // if (up + 1 >= cols) neighbors.push(up - cols + 1)
-      // else neighbors.push(up + 1)
-      // if (up - 1 < 0) neighbors.push(up + cols - 1)
-
-      left = checkLeft()
-      right = checkRight()
-      up = checkUp()
-      down = checkDown()
-      neighbors.push(left)
-      neighbors.push(right)
-      neighbors.push(up)
-      neighbors.push(down)
-      console.log(neighbors)
+      neighbors.push(checkLeft(i))
+      neighbors.push(checkRight(i))
+      neighbors.push(checkUp(i))
+      neighbors.push(checkDown(i))
+      neighbors.push(checkUp(checkLeft(i)))
+      neighbors.push(checkUp(checkRight(i)))
+      neighbors.push(checkDown(checkLeft(i)))
+      neighbors.push(checkDown(checkRight(i)))
       return neighbors
 
     }
@@ -391,7 +384,7 @@ var initializeBoard = () => {
 }
 
 var randomizedBoard = (board) => {
-  for (let cell in board) board[cell].alive = (Math.random() > 0.7 ? true : false)
+  for (let cell in board) board[cell].alive = (Math.random() > 1-globals.seed ? true : false)
   return board
 }
 
@@ -417,22 +410,3 @@ var updateBoard = () => {
   globals.board = newBoard
   return globals.board
 }
-
-
-
-/*
-
-00 01 02 03 04
-05 06 07 08 09
-10 11 12 13 14
-15 16 17 18 19
-20 21 22 23 24
-
-00 01 02
-03 04 05
-06 07 08
-09 10 11
-12 13 14
-
-
-*/
