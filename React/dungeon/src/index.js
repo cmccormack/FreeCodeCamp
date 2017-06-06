@@ -4,12 +4,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
-  cols: 70,
-  rows: 50,
+  tiles: [],
+  cols: 10,
+  rows: 10,
   padding: 12,
   tile:{
-    width: 12,
-    height: 10
+    width: 24,
+    height: 24
   }
 }
 
@@ -28,12 +29,19 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-    this.setState({
-      mapTiles: initializeTiles(map.rows, map.cols, 
+
+    map.tiles = initializeTiles(map.rows, map.cols, 
         {
-          class:'tile hidden'
+          class:'tile wall hidden'
         }
       )
+
+    var rect = new Rect(0, 0, 2, 2)
+    rect.draw(map.tiles)
+    
+
+    this.setState({
+      mapTiles: map.tiles
     })
   }
 
@@ -42,6 +50,7 @@ class App extends React.Component {
   }
 
   render() {
+
     return (
       <div>
         <div className='title display-2 text-center text-shadow unselectable'>
@@ -75,16 +84,13 @@ class Map extends React.Component {
       padding: map.padding
     }
 
-    var rect = new Rect(0, 0, 100, 100)
-    console.log(this.props.mapTiles)
-
     return (
       <div 
           className={'mapContainer'} 
           style={mapContainerStyle}
       >
         {this.props.mapTiles.map((row,y)=>
-          row.map( (tile,x) => (
+          row.map((tile,x) => (
             <Tile tile={tile} pos={{x:x, y:y}} />
           ))
         )}
@@ -92,6 +98,7 @@ class Map extends React.Component {
     )
   }
 }
+
 
 var Tile = (props) => {
   
@@ -105,7 +112,7 @@ var Tile = (props) => {
       style={{
         width: map.tile.width,
         height: map.tile.height,
-        clear: x > 0 && x % (map.cols-1) === 0 ? 'both' : 'none'
+        clear: x === map.cols ? 'both' : 'none'
       }}
     />
   )
@@ -113,11 +120,13 @@ var Tile = (props) => {
 
 
 var initializeTiles = function(rows, cols, initObj={}) {
-  var tiles = []
+  var tiles = [],
+    className = initObj.class || ''
+
   for (var row = 0; row < rows; row++){
     tiles.push([])
     for (var col = 0; col < cols; col++){
-      tiles[row].push(initObj)
+      tiles[row].push({class: className})
     }
   }
   return tiles
@@ -139,8 +148,14 @@ var Rect = function(x, y, w, h) {
     this.x + (this.w / 2),
     this.y + (this.h / 2)
   )
-  this.draw = function(canvas) {
-
+  this.draw = function(map) {
+    console.log(JSON.stringify(map))
+    for (var row = this.y; row < (this.h + this.y); row++){
+      for (var col = this.x; col < this.w + this.x; col++){
+        map[row][col].class = 'tile floor'
+      }
+    }
+    console.log(JSON.stringify(map))
   }
   return this
 }
