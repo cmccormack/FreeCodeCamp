@@ -1,3 +1,5 @@
+/*eslint no-console: "off"*/
+
 // import {Grid, Row, Col} from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -6,9 +8,10 @@ var map = {
   width: 70,
   height: 50,
   tiles: 0,
+  padding: 12,
   tile:{
-    width: 8,
-    height: 8
+    width: 12,
+    height: 10
   }
 }
 
@@ -27,7 +30,7 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-    this.setState({mapTiles: initializeBoard()})
+    this.setState({mapTiles: initializeMap()})
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -63,7 +66,9 @@ class Map extends React.Component {
   render() {
 
     var mapContainerStyle = {
-        // width: (map.tile.width - 1) * map.width
+      width: ((map.tile.width - 1) * map.width) + (2 * map.padding),
+      height: ((map.tile.height - 1) * map.height) + (2 * map.padding),
+      padding: map.padding
     }
 
     return (
@@ -90,12 +95,11 @@ class Map extends React.Component {
 }
 
 
-var initializeBoard = () => {
+var initializeMap = () => {
   map.tiles = map.width * map.height
   var board = []
   for (var i = 0; i < map.tiles; i++){
-    board.push({id: i, class:'tile'})
+    board.push({id: i, class:'tile hidden'})
   }
-  console.log(board)
   return board
 }

@@ -36,13 +36,17 @@ main {
   position: relative; }
 
 .mapContainer {
-  margin: auto; }
+  margin: auto;
+  background-color: rgba(2, 2, 2, 0.4);
+  border-radius: 4px;
+  box-shadow: -8px 8px 8px #333; }
   .mapContainer .tile {
-    border: 1px solid slategray;
-    background-color: black;
+    border: 1px solid #444;
     margin-left: -1px;
     margin-top: -1px;
     float: left; }
+    .mapContainer .tile.hidden {
+      background-color: #333; }
 
 a:hover {
   text-decoration: none; }
