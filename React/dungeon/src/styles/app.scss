@@ -65,6 +65,14 @@ main {
     margin-top: -1px;
     float: left;
 
+    &.wall{
+      background-color: #800;
+    }
+
+    &.floor{
+      background-color: #CCC;
+    }
+
     &.hidden {
       background-color: #333;
     }

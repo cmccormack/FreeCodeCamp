@@ -45,6 +45,10 @@ main {
     margin-left: -1px;
     margin-top: -1px;
     float: left; }
+    .mapContainer .tile.wall {
+      background-color: #800; }
+    .mapContainer .tile.floor {
+      background-color: #CCC; }
     .mapContainer .tile.hidden {
       background-color: #333; }
 
