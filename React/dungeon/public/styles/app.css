@@ -26,20 +26,15 @@ footer {
   padding: .5rem 1.5rem;
   z-index: 50; }
 
-main {
-  max-width: 1024px;
-  width: 1024px;
-  margin: auto;
-  position: relative; }
-
 .title {
-  margin: 50px 0 50px;
+  margin: 70px 0 50px;
   width: 100%; }
 
 main {
   min-width: 320px;
-  margin-top: 30px;
-  margin-bottom: 56px; }
+  width: 1024px;
+  margin: auto;
+  position: relative; }
 
 a:hover {
   text-decoration: none; }
@@ -63,7 +58,6 @@ a:hover {
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
-  -khtml-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;

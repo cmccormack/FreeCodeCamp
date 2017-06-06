@@ -13,11 +13,11 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
-    "react-scripts": "1.0.7"
+    "react-scripts": "^1.0.7"
   },
   "scripts": {
     "sass": "sass --watch src/styles:public/styles",
-    "dev": "npm run sass & npm run start",
+    "dev": "npm run sass | npm run start",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
