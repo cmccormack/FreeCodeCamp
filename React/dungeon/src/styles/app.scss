@@ -10,7 +10,6 @@ body {
   background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
   width: 100%;
   margin-bottom: 60px;
@@ -53,7 +52,18 @@ main {
   position: relative;
 }
 
+.mapContainer{
 
+  margin: auto;
+
+  .tile {
+    border: 1px solid slategray;
+    background-color: black;
+    margin-left: -1px;
+    margin-top: -1px;
+    float: left;
+  }
+}
 
 
 a {

@@ -2,28 +2,32 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-var globals = {
-  map: {
-    width: 70,
-    height: 50,
-    cells: 0
+var map = {
+  width: 70,
+  height: 50,
+  tiles: 0,
+  tile:{
+    width: 8,
+    height: 8
   }
 }
 
 
 window.onload = function(){
-  ReactDOM.render(<App map={globals.map} />, document.getElementById('root'))
+  ReactDOM.render(<App map={map} />, document.getElementById('root'))
 }
 
 class App extends React.Component {
 
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      mapTiles: []
+    }
   }
 
-  componentWillUpdate(){
-    initializeBoard()
+  componentWillMount(){
+    this.setState({mapTiles: initializeBoard()})
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -31,22 +35,21 @@ class App extends React.Component {
   }
 
   render() {
-
     return (
       <div>
         <div className='title display-2 text-center text-shadow unselectable'>
           {'Dungeon Roguelike'}
         </div>
-        <div>
-          <Board map={this.props.map} />
-        </div>
+        <Map
+            mapTiles={this.state.mapTiles}
+        />
       </div>
     )
   }
 }
 
 
-class Board extends React.Component {
+class Map extends React.Component {
 
   constructor(props){
     super(props)
@@ -59,12 +62,28 @@ class Board extends React.Component {
 
   render() {
 
-    var cells = []
-    // for (row =0)
+    var mapContainerStyle = {
+        // width: (map.tile.width - 1) * map.width
+    }
 
     return (
-      <div>
-        
+      <div 
+          className={'mapContainer'} 
+          style={mapContainerStyle}
+      >
+        {this.props.mapTiles.map((tile,i)=> (
+          <div
+              className={tile.class}
+              id={tile.id}
+              key={tile.id}
+              style={{
+                width: map.tile.width,
+                height: map.tile.height,
+                clear: (i > 0) && (i % (map.width)) === 0 ? 'both' : 'none'
+              }}
+          />
+          )
+        )}
       </div>
     )
   }
@@ -72,9 +91,11 @@ class Board extends React.Component {
 
 
 var initializeBoard = () => {
-  globals.board.cells = globals.board.width * globals.board.height
+  map.tiles = map.width * map.height
   var board = []
-  for (var cell in globals.board.cells){
-    board.push({id: cell})
+  for (var i = 0; i < map.tiles; i++){
+    board.push({id: i, class:'tile'})
   }
+  console.log(board)
+  return board
 }
