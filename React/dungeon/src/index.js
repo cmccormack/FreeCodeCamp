@@ -1,13 +1,11 @@
 /*eslint no-console: "off"*/
 
-// import {Grid, Row, Col} from 'react-bootstrap'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
-  width: 70,
-  height: 50,
-  tiles: 0,
+  cols: 70,
+  rows: 50,
   padding: 12,
   tile:{
     width: 12,
@@ -30,7 +28,13 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-    this.setState({mapTiles: initializeMap()})
+    this.setState({
+      mapTiles: initializeTiles(map.rows, map.cols, 
+        {
+          class:'tile hidden'
+        }
+      )
+    })
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -66,40 +70,77 @@ class Map extends React.Component {
   render() {
 
     var mapContainerStyle = {
-      width: ((map.tile.width - 1) * map.width) + (2 * map.padding),
-      height: ((map.tile.height - 1) * map.height) + (2 * map.padding),
+      width: ((map.tile.width - 1) * map.cols) + (2 * map.padding),
+      height: ((map.tile.height - 1) * map.rows) + (2 * map.padding),
       padding: map.padding
     }
+
+    var rect = new Rect(0, 0, 100, 100)
+    console.log(this.props.mapTiles)
 
     return (
       <div 
           className={'mapContainer'} 
           style={mapContainerStyle}
       >
-        {this.props.mapTiles.map((tile,i)=> (
-          <div
-              className={tile.class}
-              id={tile.id}
-              key={tile.id}
-              style={{
-                width: map.tile.width,
-                height: map.tile.height,
-                clear: (i > 0) && (i % (map.width)) === 0 ? 'both' : 'none'
-              }}
-          />
-          )
+        {this.props.mapTiles.map((row,y)=>
+          row.map( (tile,x) => (
+            <Tile tile={tile} pos={{x:x, y:y}} />
+          ))
         )}
       </div>
     )
   }
 }
 
+var Tile = (props) => {
+  
+  var {x, y} = props.pos
 
-var initializeMap = () => {
-  map.tiles = map.width * map.height
-  var board = []
-  for (var i = 0; i < map.tiles; i++){
-    board.push({id: i, class:'tile hidden'})
+  return (
+    <div
+      className={props.tile.class}
+      id={(y*map.cols + x)}
+      key={(y+1) * (x+1)}
+      style={{
+        width: map.tile.width,
+        height: map.tile.height,
+        clear: x > 0 && x % (map.cols-1) === 0 ? 'both' : 'none'
+      }}
+    />
+  )
+}
+
+
+var initializeTiles = function(rows, cols, initObj={}) {
+  var tiles = []
+  for (var row = 0; row < rows; row++){
+    tiles.push([])
+    for (var col = 0; col < cols; col++){
+      tiles[row].push(initObj)
+    }
   }
-  return board
+  return tiles
+}
+
+
+var Pos = function(x, y) {
+  this.x = x || 0
+  this.y = y || 0
+  return this
+}
+
+var Rect = function(x, y, w, h) {
+  this.x = x || 0
+  this.y = y || 0
+  this.w = w || window.innerWidth
+  this.h = h || window.innerHeight
+  this.center = new Pos(
+    this.x + (this.w / 2),
+    this.y + (this.h / 2)
+  )
+  this.draw = function(canvas) {
+
+  }
+  return this
 }
