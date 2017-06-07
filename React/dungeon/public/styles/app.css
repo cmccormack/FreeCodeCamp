@@ -48,9 +48,12 @@ main {
     .mapContainer .tile.wall {
       background-color: #800; }
     .mapContainer .tile.floor {
-      background-color: #CCC; }
+      background-color: #CCC;
+      border-color: #CCC; }
     .mapContainer .tile.hidden {
       background-color: #333; }
+    .mapContainer .tile.fog {
+      background-color: rgba(120, 120, 120, 0.6); }
 
 a:hover {
   text-decoration: none; }

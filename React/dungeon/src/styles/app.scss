@@ -71,10 +71,15 @@ main {
 
     &.floor{
       background-color: #CCC;
+      border-color: #CCC;
     }
 
     &.hidden {
       background-color: #333;
+    }
+
+    &.fog {
+      background-color: rgba(120,120,120,.6);
     }
   }
 }
