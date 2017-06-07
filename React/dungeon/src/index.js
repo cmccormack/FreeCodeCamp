@@ -13,8 +13,9 @@ var map = {
     height: 8
   },
   rooms: {
-    MAXROOMS:10,
-    MIN: 15,
+    MAXTRIES: 1000,
+    MAXROOMS: 20,
+    MIN: 8,
     MAX: 30
   }
 }
@@ -41,6 +42,8 @@ class App extends React.Component {
     )
 
     var rooms = generateRooms()
+    console.log(rooms.length)
+
     for (var item in rooms){
       rooms[item].draw(map.tiles)
     }
@@ -144,8 +147,8 @@ function randRange(m, n){
 }
 
 function generateRooms(){
-  var rooms = [], current_room, w, h, x, y
-  for (let i=0, cap=1000; i < map.rooms.MAXROOMS; i++, cap--){
+  var rooms = [], count=map.rooms.MAXTRIES, current_room, w, h, x, y
+  while (count > 0 && rooms.length < map.rooms.MAXROOMS){
     w = randRange(map.rooms.MIN, map.rooms.MAX)
     h = randRange(map.rooms.MIN, map.rooms.MAX)
     x = randRange(1, map.cols - w - 2)
@@ -154,6 +157,7 @@ function generateRooms(){
     if (!hasIntercepts(current_room)){
       rooms.push(current_room)
     }
+    count--
   }
 
   function hasIntercepts(newRoom){
@@ -191,14 +195,14 @@ function Room(x, y, w, h) {
 }
 
 Room.prototype.draw = function(map){
-  for (var row = this.y; row < (this.h + this.y); row++){
-    for (var col = this.x; col < this.w + this.x; col++){
+  for (var row = this.y1; row < this.y2; row++){
+    for (var col = this.x1; col < this.x2; col++){
       map[row][col].class = 'tile floor'
     }
   }
 }
 
 Room.prototype.intercept = function(other){
-  return this.x1 < other.x2 && this.x2 > other.x1 &&
-  this.y1 < other.y2 && this.y2 > other.y1
+  return this.x1 - 1 < other.x2 && this.x2 + 1 > other.x1 &&
+  this.y1 - 1 < other.y2 && this.y2 + 1 > other.y1
 }
