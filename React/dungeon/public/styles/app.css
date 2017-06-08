@@ -26,7 +26,7 @@ footer {
   z-index: 50; }
 
 .title {
-  margin: 70px 0 50px;
+  margin: 70px 0 30px;
   width: 100%; }
 
 main {
@@ -54,6 +54,8 @@ main {
       background-color: #333; }
     .mapContainer .tile.fog {
       background-color: rgba(120, 120, 120, 0.6); }
+  .mapContainer .buttons {
+    margin-top: 12px; }
 
 a:hover {
   text-decoration: none; }

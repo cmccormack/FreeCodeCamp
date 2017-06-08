@@ -41,7 +41,7 @@ footer {
 
 
 .title {
-  margin: 70px 0 50px;
+  margin: 70px 0 30px;
   width: 100%;
 }
 
@@ -81,6 +81,10 @@ main {
     &.fog {
       background-color: rgba(120,120,120,.6);
     }
+  }
+
+  .buttons {
+    margin-top: 12px;
   }
 }
 
