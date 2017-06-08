@@ -5,18 +5,19 @@ import ReactDOM from 'react-dom'
 
 var map = {
   tiles: [],
-  cols: 100,
-  rows: 80,
+  cols: 50,
+  rows: 40,
   padding: 12,
   tile:{
-    width: 8,
-    height: 8
+    width: 12,
+    height: 12
   },
   rooms: {
-    MAXTRIES: 1000,
-    MAXROOMS: 20,
-    MIN: 8,
-    MAX: 30
+    MAXTRIES: 10000,
+    MAXROOMS: 12,
+    MIN: 6,
+    MAX: 15,
+    PADDING: 4
   }
 }
 
@@ -46,6 +47,10 @@ class App extends React.Component {
 
     for (var item in rooms){
       rooms[item].draw(map.tiles)
+      if (item > 0){
+        rooms[item].h_tunnel(rooms[item - 1])
+        rooms[item].v_tunnel(rooms[item - 1])
+      }
     }
     
 
@@ -89,7 +94,7 @@ class Map extends React.Component {
 
     var mapContainerStyle = {
       width: ((map.tile.width - 1) * map.cols) + (2 * map.padding),
-      height: ((map.tile.height - 1) * map.rows) + (2 * map.padding),
+      height: '100%', //((map.tile.height - 1) * map.rows) + (2 * map.padding),
       padding: map.padding
     }
 
@@ -103,6 +108,7 @@ class Map extends React.Component {
             <Tile tile={tile} pos={{x:x, y:y}} />
           ))
         )}
+        <Buttons />
       </div>
     )
   }
@@ -124,6 +130,16 @@ function Tile(props) {
           clear: x === map.cols ? 'both' : 'none'
         }}
     />
+  )
+}
+
+function Buttons(props) {
+
+  return (
+    <div className='buttons btn-group'>
+      <button type='button' className='btn btn-outline-secondary'>{'Generate New Dungeon'}</button>
+    </div>
+
   )
 }
 
@@ -187,8 +203,8 @@ function Room(x, y, w, h) {
   this.w = w
   this.h = h
   this.center = new Pos(
-    this.x + (this.w / 2),
-    this.y + (this.h / 2)
+    (this.x1 + this.x2) / 2, 
+    (this.y1 + this.y2) / 2
   )
 
   return this
@@ -203,17 +219,32 @@ Room.prototype.draw = function(map){
 }
 
 Room.prototype.intercepts = function(other){
-  return this.x1 - 1 < other.x2 && this.x2 + 1 > other.x1 &&
-  this.y1 - 1 < other.y2 && this.y2 + 1 > other.y1
+  return this.x1 - map.rooms.PADDING < other.x2 && this.x2 + map.rooms.PADDING > other.x1 &&
+  this.y1 - map.rooms.PADDING < other.y2 && this.y2 + map.rooms.PADDING > other.y1
 }
 
-Room.prototype.h_tunnel = function(other, map){
+Room.prototype.h_tunnel = function(other){
+  // console.log(this, other)
   var startx = Math.floor(Math.min(this.center.x, other.center.x)),
     endx = Math.floor(Math.max(this.center.x, other.center.x)),
     y = Math.floor(this.center.y)
+  // console.log('startx: ' + startx, 'endx: ' + endx, 'y: ' + y)
 
   for (var i = startx; i <= endx; i++){
-    map[i][y].class = 'tile floor'
+    map.tiles[y][i].class = 'tile floor'
+    map.tiles[y-1][i].class = 'tile floor'
   }
+}
 
+Room.prototype.v_tunnel = function(other){
+  // console.log(this, other)
+  var starty = Math.floor(Math.min(this.center.y, other.center.y)),
+    endy = Math.floor(Math.max(this.center.y, other.center.y)),
+    x = Math.floor(other.center.x)
+  // console.log('starty: ' + starty, 'endy: ' + endy, 'x: ' + x)
+
+  for (var i = starty; i <= endy; i++){
+    map.tiles[i][x].class = 'tile floor'
+    map.tiles[i][x+1].class = 'tile floor'
+  }
 }
