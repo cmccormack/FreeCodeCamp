@@ -66,7 +66,7 @@ main {
     float: left;
 
     &.wall{
-      background-color: #800;
+      background-color: #008;
     }
 
     &.floor{
@@ -85,6 +85,16 @@ main {
 
   .buttons {
     margin-top: 12px;
+    .btn {
+      transition: none;
+      // background-color: rgba(2,2,2,0.3);
+      background-color: rgba(68,68,68,0.2);
+
+      &:hover {
+        background-color: rgba(68,68,68,0.6);
+        color: #EEE;
+      }
+    }
   }
 }
 

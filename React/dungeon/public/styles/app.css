@@ -46,7 +46,7 @@ main {
     margin-top: -1px;
     float: left; }
     .mapContainer .tile.wall {
-      background-color: #800; }
+      background-color: #008; }
     .mapContainer .tile.floor {
       background-color: #CCC;
       border-color: #CCC; }
@@ -56,6 +56,12 @@ main {
       background-color: rgba(120, 120, 120, 0.6); }
   .mapContainer .buttons {
     margin-top: 12px; }
+    .mapContainer .buttons .btn {
+      transition: none;
+      background-color: rgba(68, 68, 68, 0.2); }
+      .mapContainer .buttons .btn:hover {
+        background-color: rgba(68, 68, 68, 0.6);
+        color: #EEE; }
 
 a:hover {
   text-decoration: none; }
