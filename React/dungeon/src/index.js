@@ -13,7 +13,7 @@ var map = {
     height: 12
   },
   rooms: {
-    MAXTRIES: 10000,
+    MAXTRIES: 1000,
     MAXROOMS: 12,
     MIN: 6,
     MAX: 15,
@@ -30,20 +30,26 @@ class App extends React.Component {
 
   constructor(props){
     super(props)
-    this.state = {
-      mapTiles: []
+    this.funcs = {
+      handleGenerateClick: this.handleGenerateClick = this.handleGenerateClick.bind(this)
     }
+    this.state = { mapTiles: [] }
   }
 
   componentWillMount(){
-    map.tiles = initializeTiles(map.rows, map.cols, 
-      {
-        class:'tile wall hidden'
-      }
-    )
+    this.init()
+    this.setState({ mapTiles: map.tiles })
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  init(){
+    map.tiles = initializeTiles(
+      map.rows, map.cols, { class:'tile wall hidden' })
 
     var rooms = generateRooms()
-    console.log(rooms.length)
 
     for (var item in rooms){
       rooms[item].draw(map.tiles)
@@ -52,15 +58,11 @@ class App extends React.Component {
         rooms[item].v_tunnel(rooms[item - 1])
       }
     }
-    
-
-    this.setState({
-      mapTiles: map.tiles
-    })
   }
 
-  shouldComponentUpdate(nextProps, nextState){
-    return this.props === nextProps && this.state===nextState ? false : true
+  handleGenerateClick(){
+    this.init()
+    this.setState({ mapTiles: map.tiles.slice(0) })
   }
 
   render() {
@@ -71,6 +73,7 @@ class App extends React.Component {
           {'Dungeon Roguelike'}
         </div>
         <Map
+            funcs={this.funcs}
             mapTiles={this.state.mapTiles}
         />
       </div>
@@ -94,7 +97,7 @@ class Map extends React.Component {
 
     var mapContainerStyle = {
       width: ((map.tile.width - 1) * map.cols) + (2 * map.padding),
-      height: '100%', //((map.tile.height - 1) * map.rows) + (2 * map.padding),
+      height: '100%',
       padding: map.padding
     }
 
@@ -105,10 +108,14 @@ class Map extends React.Component {
       >
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
-            <Tile tile={tile} pos={{x:x, y:y}} />
+            <Tile
+                key={tile.id * y + x}
+                pos={{x:x, y:y}}
+                tile={tile}
+            />
           ))
         )}
-        <Buttons />
+        <Buttons funcs={this.props.funcs} />
       </div>
     )
   }
@@ -137,12 +144,21 @@ function Buttons(props) {
 
   return (
     <div className='buttons btn-group'>
-      <button type='button' className='btn btn-outline-secondary'>{'Generate New Dungeon'}</button>
+      <button 
+          className='btn btn-outline-secondary'
+          onClick={props.funcs.handleGenerateClick}
+          type='button'
+      >{'Generate New Dungeon'}</button>
     </div>
 
   )
 }
 
+
+function randRange(m, n){
+  [m,n] = [m,n].sort((a,b)=>a-b)
+  return Math.floor((Math.random() * (n-m)) + m)
+}
 
 function initializeTiles(rows, cols, initObj={}){
   var tiles = [],
@@ -151,15 +167,10 @@ function initializeTiles(rows, cols, initObj={}){
   for (var row = 0; row < rows; row++){
     tiles.push([])
     for (var col = 0; col < cols; col++){
-      tiles[row].push({class: className})
+      tiles[row].push({class: className, id: map.cols*row + col})
     }
   }
   return tiles
-}
-
-function randRange(m, n){
-  [m,n] = [m,n].sort((a,b)=>a-b)
-  return Math.floor((Math.random() * (n-m)) + m)
 }
 
 function generateRooms(){
@@ -167,7 +178,7 @@ function generateRooms(){
   while (count > 0 && rooms.length < map.rooms.MAXROOMS){
     w = randRange(map.rooms.MIN, map.rooms.MAX)
     h = randRange(map.rooms.MIN, map.rooms.MAX)
-    x = randRange(1, map.cols - w - 2)
+    x = randRange(1, map.cols - w - 1)
     y = randRange(1, map.rows - h - 1)
     current_room = new Room(x, y, w, h)
     if (!hasIntercepts(current_room)){
@@ -187,7 +198,6 @@ function generateRooms(){
 
   return rooms
 }
-
 
 function Pos(x, y) {
   this.x = x || 0
@@ -224,11 +234,9 @@ Room.prototype.intercepts = function(other){
 }
 
 Room.prototype.h_tunnel = function(other){
-  // console.log(this, other)
   var startx = Math.floor(Math.min(this.center.x, other.center.x)),
     endx = Math.floor(Math.max(this.center.x, other.center.x)),
     y = Math.floor(this.center.y)
-  // console.log('startx: ' + startx, 'endx: ' + endx, 'y: ' + y)
 
   for (var i = startx; i <= endx; i++){
     map.tiles[y][i].class = 'tile floor'
@@ -237,11 +245,9 @@ Room.prototype.h_tunnel = function(other){
 }
 
 Room.prototype.v_tunnel = function(other){
-  // console.log(this, other)
   var starty = Math.floor(Math.min(this.center.y, other.center.y)),
     endy = Math.floor(Math.max(this.center.y, other.center.y)),
     x = Math.floor(other.center.x)
-  // console.log('starty: ' + starty, 'endy: ' + endy, 'x: ' + x)
 
   for (var i = starty; i <= endy; i++){
     map.tiles[i][x].class = 'tile floor'
