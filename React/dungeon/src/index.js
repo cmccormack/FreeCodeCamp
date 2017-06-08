@@ -162,7 +162,7 @@ function generateRooms(){
 
   function hasIntercepts(newRoom){
     for (let room in rooms){
-      if (rooms[room].intercept(newRoom)){
+      if (rooms[room].intercepts(newRoom)){
         return true
       }
     }
@@ -202,7 +202,18 @@ Room.prototype.draw = function(map){
   }
 }
 
-Room.prototype.intercept = function(other){
+Room.prototype.intercepts = function(other){
   return this.x1 - 1 < other.x2 && this.x2 + 1 > other.x1 &&
   this.y1 - 1 < other.y2 && this.y2 + 1 > other.y1
+}
+
+Room.prototype.h_tunnel = function(other, map){
+  var startx = Math.floor(Math.min(this.center.x, other.center.x)),
+    endx = Math.floor(Math.max(this.center.x, other.center.x)),
+    y = Math.floor(this.center.y)
+
+  for (var i = startx; i <= endx; i++){
+    map[i][y].class = 'tile floor'
+  }
+
 }
