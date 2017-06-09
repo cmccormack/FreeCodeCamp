@@ -4,22 +4,34 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
-  tiles: [],
-  cols: 50,
-  rows: 40,
-  padding: 12,
-  tile:{
-    width: 12,
-    height: 12
+    tiles: [],
+    cols: 50,
+    rows: 40,
+    padding: 12,
+    tile:{
+      width: 12,
+      height: 12
+    },
+    rooms: {
+      MAXTRIES: 1000,
+      MAXROOMS: 12,
+      MIN: 6,
+      MAX: 15,
+      PADDING: 4
+    }
   },
-  rooms: {
-    MAXTRIES: 1000,
-    MAXROOMS: 12,
-    MIN: 6,
-    MAX: 15,
-    PADDING: 4
-  }
-}
+  enemies = [
+    { name: 'ogre',      statmod: { atk: 2.0, hp: 1.5 }},
+    { name: 'goblin',    statmod: { atk: 1.0, hp: 1.0 }},
+    { name: 'hydra',     statmod: { atk: 1.3, hp: 1.3 }},
+    { name: 'ghoul',     statmod: { atk: 1.0, hp: 1.0 }},
+    { name: 'griffin',   statmod: { atk: 1.7, hp: 1.2 }},
+    { name: 'kobold',    statmod: { atk: 0.8, hp: 0.8 }},
+    { name: 'skeleton',  statmod: { atk: 1.0, hp: 1.0 }},
+    { name: 'troll',     statmod: { atk: 1.2, hp: 0.8 }},
+    { name: 'vampire',   statmod: { atk: 1.5, hp: 1.2 }},
+    { name: 'zombie',    statmod: { atk: 1.1, hp: 1.4 }}
+  ]
 
 
 window.onload = function(){
@@ -45,8 +57,10 @@ class App extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  init(){
-    map.tiles = initializeTiles(
+
+
+  initializeMap(){
+    map.tiles = generateTiles(
       map.rows, map.cols, { class:'tile wall hidden' })
 
     var rooms = generateRooms()
@@ -58,6 +72,19 @@ class App extends React.Component {
         rooms[item].v_tunnel(rooms[item - 1])
       }
     }
+    return rooms
+  }
+
+  initializeCharacters(rooms){
+    console.log(rooms[0].random_location())
+    var player = new Mob(rooms[0].random_location())
+    console.log(player)
+    player.draw('player')
+  }
+
+  init(){
+    var rooms = this.initializeMap()
+    this.initializeCharacters(rooms)
   }
 
   handleGenerateClick(){
@@ -160,7 +187,7 @@ function randRange(m, n){
   return Math.floor((Math.random() * (n-m)) + m)
 }
 
-function initializeTiles(rows, cols, initObj={}){
+function generateTiles(rows, cols, initObj={}){
   var tiles = [],
     className = initObj.class || ''
 
@@ -244,6 +271,11 @@ Room.prototype.h_tunnel = function(other){
   }
 }
 
+Room.prototype.random_location = function(padding=1){
+  return new Pos(randRange(this.x1+padding, this.x2-padding), 
+    randRange(this.y1 + padding,this.y2 - padding))
+}
+
 Room.prototype.v_tunnel = function(other){
   var starty = Math.floor(Math.min(this.center.y, other.center.y)),
     endy = Math.floor(Math.max(this.center.y, other.center.y)),
@@ -253,4 +285,33 @@ Room.prototype.v_tunnel = function(other){
     map.tiles[i][x].class = 'tile floor'
     map.tiles[i][x+1].class = 'tile floor'
   }
+}
+
+function Mob (startpos, hp, atk, def, wpn, armor, level, name){
+  this.hp = hp
+  this.atk = atk
+  this.def = def
+  this.wpn = wpn
+  this.armor = armor
+  this.x = startpos.x
+  this.y = startpos.y
+  this.level = level
+  this.name = name
+
+  function take_damage(dmg, piercing){
+    dmg = this.def - piercing > 0 ? this.def - piercing : 0
+    this.hp -= dmg
+  }
+
+  function modify_health(hp){
+    this.hp += hp
+  }
+
+  function get_hp(){
+    return this.hp
+  }
+}
+
+Mob.prototype.draw = function(type){
+  map.tiles[this.y][this.x].class = 'tile floor ' + type
 }
