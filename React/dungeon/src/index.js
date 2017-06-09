@@ -50,14 +50,11 @@ class App extends React.Component {
 
   componentWillMount(){
     this.init()
-    this.setState({ mapTiles: map.tiles })
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
-
-
 
   initializeMap(){
     map.tiles = generateTiles(
@@ -85,10 +82,14 @@ class App extends React.Component {
   init(){
     var rooms = this.initializeMap()
     this.initializeCharacters(rooms)
+    this.update()
   }
 
   handleGenerateClick(){
     this.init()
+  }
+
+  update(){
     this.setState({ mapTiles: map.tiles.slice(0) })
   }
 
