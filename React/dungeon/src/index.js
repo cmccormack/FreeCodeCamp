@@ -72,16 +72,27 @@ class App extends React.Component {
     return rooms
   }
 
+  initializeHandlers(){
+    const ARROW_KEYS = {
+      'ArrowUp': new Pos(0,-1),
+      'ArrowRight': new Pos(1,0),
+      'ArrowDown': new Pos(0,1),
+      'ArrowLeft': new Pos(-1,0)
+    }
+    window.addEventListener('keydown', function(e){
+      console.log(e.code)
+    })
+  }
+
   initializeCharacters(rooms){
-    console.log(rooms[0].random_location())
     var player = new Mob(rooms[0].random_location())
-    console.log(player)
     player.draw('player')
   }
 
   init(){
     var rooms = this.initializeMap()
     this.initializeCharacters(rooms)
+    this.initializeHandlers()
     this.update()
   }
 
@@ -311,8 +322,18 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   function get_hp(){
     return this.hp
   }
+
+  function move(pos, map){
+    var newpos = new Pos(this.x + pos.x, this.y + pos.y)
+    if (map[newpos.y,newpos.x].class.includes('floor')){
+      this.x = newpos.x,
+      this.y = newpos.y
+      return newpos
+    }
+      
+  }
 }
 
 Mob.prototype.draw = function(type){
-  map.tiles[this.y][this.x].class = 'tile floor ' + type
+  map.tiles[this.y][this.x].class = 'tile floor ' + (type || '')
 }
