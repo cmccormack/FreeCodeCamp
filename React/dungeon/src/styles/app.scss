@@ -81,6 +81,10 @@ main {
     &.fog {
       background-color: rgba(120,120,120,.6);
     }
+
+    &.player {
+      background-color: limegreen;
+    }
   }
 
   .buttons {
