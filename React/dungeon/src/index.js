@@ -45,7 +45,12 @@ class App extends React.Component {
     this.funcs = {
       handleGenerateClick: this.handleGenerateClick = this.handleGenerateClick.bind(this)
     }
-    this.state = { mapTiles: [] }
+
+    this.initializeHandlers = this.initializeHandlers.bind(this)
+
+    this.state = { 
+      mapTiles: [], 
+      player: {} }
   }
 
   componentWillMount(){
@@ -80,20 +85,25 @@ class App extends React.Component {
       'ArrowLeft': new Pos(-1,0)
     }
     window.addEventListener('keydown', function(e){
-      console.log(e.code)
-    })
+      var player = this.state.player
+      player.pos = player.move(ARROW_KEYS[e.code])
+      this.setState({player: player, mapTiles: map.tiles.slice(0)})
+    }.bind(this))
+
   }
 
   initializeCharacters(rooms){
-    var player = new Mob(rooms[0].random_location())
-    player.draw('player')
+    this.setState({player: new Mob(rooms[0].random_location())},()=> {
+      this.state.player.draw('player')
+      this.update()
+    })
+    
   }
 
   init(){
     var rooms = this.initializeMap()
     this.initializeCharacters(rooms)
     this.initializeHandlers()
-    this.update()
   }
 
   handleGenerateClick(){
@@ -168,6 +178,7 @@ function Tile(props) {
   return (
     <div
         className={props.tile.class}
+        data-pos={y+','+x}
         id={(y*map.cols + x)}
         key={(y+1) * (x+1)}
         style={{
@@ -305,8 +316,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.def = def
   this.wpn = wpn
   this.armor = armor
-  this.x = startpos.x
-  this.y = startpos.y
+  this.pos = startpos
   this.level = level
   this.name = name
 
@@ -323,17 +333,19 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     return this.hp
   }
 
-  function move(pos, map){
-    var newpos = new Pos(this.x + pos.x, this.y + pos.y)
-    if (map[newpos.y,newpos.x].class.includes('floor')){
-      this.x = newpos.x,
-      this.y = newpos.y
-      return newpos
-    }
-      
+}
+
+Mob.prototype.move = function move(pos){
+  var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y)
+  if (map.tiles[newpos.y][newpos.x].class.includes('floor')){
+    this.draw()
+    this.pos = new Pos(newpos.x, newpos.y)
+    this.draw('player')
+    return newpos
   }
+  return this.pos
 }
 
 Mob.prototype.draw = function(type){
-  map.tiles[this.y][this.x].class = 'tile floor ' + (type || '')
+  map.tiles[this.pos.y][this.pos.x].class = 'tile floor ' + (type || '')
 }
