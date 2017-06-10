@@ -61,8 +61,12 @@ class App extends React.Component {
   }
 
   componentWillMount(){
-    this.initializeHandlers()
     this.init()
+  }
+
+
+  componentDidMount(){
+    this.initializeHandlers()
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -71,11 +75,21 @@ class App extends React.Component {
 
   initializeHandlers(){
 
-    window.addEventListener('keydown', function(e){
-      var player = this.state.player
-      player.pos = player.move(ARROW_KEYS[e.code])
-      this.update()
-    }.bind(this))
+    window.addEventListener('keydown', (e)=> {
+      this.characterMove(ARROW_KEYS[e.code])
+    })
+
+    Array.from(document.getElementsByClassName('key')).forEach((item)=>{
+      item.addEventListener('click', (e)=>{
+        this.characterMove(ARROW_KEYS[item.id])
+      })
+    })
+  }
+
+  characterMove(direction){
+    var player = this.state.player
+    player.pos = player.move(direction)
+    this.update()
   }
 
   initializeMap(){
@@ -103,8 +117,6 @@ class App extends React.Component {
   }
 
   init(){
-    
-
     var rooms = this.initializeMap(),
       characters = this.initializeCharacters(rooms),
       player = characters[0]
@@ -206,8 +218,13 @@ function Buttons(props) {
           onClick={props.funcs.handleGenerateClick}
           type='button'
       >{'Generate New Dungeon'}</button>
+      <div className="keys">
+        <div className="key" id="ArrowLeft"><span><i className={'fa fa-arrow-left'} /></span></div>
+        <div className="key" id="ArrowDown"><span><i className={'fa fa-arrow-down'} /></span></div>
+        <div className="key" id="ArrowUp"><span><i className={'fa fa-arrow-up'} /></span></div>
+        <div className="key" id="ArrowRight"><span><i className={'fa fa-arrow-right'} /></span></div>
+      </div>
     </div>
-
   )
 }
 
