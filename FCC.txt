@@ -1,0 +1,19 @@
+```
+> var object = { 'a': 'apple', 'b': 'banana' }
+> object
+{ a: 'apple', b: 'banana' }
+> object.a
+'apple'
+> object['a']
+'apple'
+> object[a]
+undefined
+> var test = 'a'
+> object[test]
+'apple'
+> object.test
+undefined
+```
+
+
+// jshint esversion:6, asi:true
