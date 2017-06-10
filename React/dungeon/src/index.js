@@ -33,6 +33,13 @@ var map = {
     { name: 'zombie',    statmod: { atk: 1.1, hp: 1.4 }}
   ]
 
+const ARROW_KEYS = {
+  'ArrowUp': new Pos(0,-1),
+  'ArrowRight': new Pos(1,0),
+  'ArrowDown': new Pos(0,1),
+  'ArrowLeft': new Pos(-1,0)
+}
+
 
 window.onload = function(){
   ReactDOM.render(<App />, document.getElementById('root'))
@@ -54,11 +61,21 @@ class App extends React.Component {
   }
 
   componentWillMount(){
+    this.initializeHandlers()
     this.init()
   }
 
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  initializeHandlers(){
+
+    window.addEventListener('keydown', function(e){
+      var player = this.state.player
+      player.pos = player.move(ARROW_KEYS[e.code])
+      this.update()
+    }.bind(this))
   }
 
   initializeMap(){
@@ -77,33 +94,23 @@ class App extends React.Component {
     return rooms
   }
 
-  initializeHandlers(){
-    const ARROW_KEYS = {
-      'ArrowUp': new Pos(0,-1),
-      'ArrowRight': new Pos(1,0),
-      'ArrowDown': new Pos(0,1),
-      'ArrowLeft': new Pos(-1,0)
-    }
-    window.addEventListener('keydown', function(e){
-      var player = this.state.player
-      player.pos = player.move(ARROW_KEYS[e.code])
-      this.setState({player: player, mapTiles: map.tiles.slice(0)})
-    }.bind(this))
-
-  }
 
   initializeCharacters(rooms){
-    this.setState({player: new Mob(rooms[0].random_location())},()=> {
-      this.state.player.draw('player')
-      this.update()
-    })
-    
+    var characters = []
+    characters.push(new Mob(rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'Player'))
+    // Add Enemies
+    return characters
   }
 
   init(){
-    var rooms = this.initializeMap()
-    this.initializeCharacters(rooms)
-    this.initializeHandlers()
+    
+
+    var rooms = this.initializeMap(),
+      characters = this.initializeCharacters(rooms),
+      player = characters[0]
+
+    player.draw('player')
+    this.setState({player: player, mapTiles: map.tiles.slice(0)})
   }
 
   handleGenerateClick(){
@@ -332,7 +339,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   function get_hp(){
     return this.hp
   }
-
+  return this
 }
 
 Mob.prototype.move = function move(pos){
@@ -347,5 +354,6 @@ Mob.prototype.move = function move(pos){
 }
 
 Mob.prototype.draw = function(type){
+  // console.log('Drawing x:', this.pos.x, 'y:', this.pos.y)
   map.tiles[this.pos.y][this.pos.x].class = 'tile floor ' + (type || '')
 }
