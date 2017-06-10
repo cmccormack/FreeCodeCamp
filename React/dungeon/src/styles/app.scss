@@ -102,6 +102,66 @@ main {
   }
 }
 
+// Keyboard Keys CSS - https://jsfiddle.net/BinaryMoon/8UqLv/
+.keys {
+  // width: 150px;
+  position: relative;
+  // background-color: rgba(200, 0, 0, 0.5);
+}
+.key {
+  // position: absolute;
+  border-style:solid;
+  border-color:#DDD #BBB #BCBCBC #EEE;
+  border-width:2px 3px 6px 3px;
+  background-color: rgba(68,68,68,0.2);
+  display:inline-block;
+  border-radius:5px;
+  margin:10px;
+}
+
+.key span {
+  background-color: rgba(68,68,68,0.2);
+  color:#CCC;
+  display:block;
+  font-size:22px;
+  padding:0 2px;
+  border-radius:3px;
+  width:24px;
+  height:26px;
+  line-height:23px;
+  text-align:center;
+  font-weight:bold;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.keyleft {
+  left: 0;
+  bottom: 0;
+}
+.keyup {
+  left: 40px;
+  bottom: 40px;
+}
+.keydown {
+  left: 40px;
+  bottom: 0px;
+}
+.keyright {
+  left: 80px;
+  bottom: 0px;
+}
+
+
+.key.wide span {
+  width:auto;
+  padding:0 12px;
+}
+
+
+
+
+
 
 a {
   &:hover {
