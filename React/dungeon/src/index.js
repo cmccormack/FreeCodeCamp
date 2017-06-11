@@ -64,7 +64,6 @@ class App extends React.Component {
     this.init()
   }
 
-
   componentDidMount(){
     this.initializeHandlers()
   }
@@ -74,7 +73,6 @@ class App extends React.Component {
   }
 
   initializeHandlers(){
-
     window.addEventListener('keydown', (e)=> {
       this.characterMove(ARROW_KEYS[e.code])
     })
