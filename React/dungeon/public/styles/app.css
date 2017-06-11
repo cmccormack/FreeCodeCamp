@@ -75,7 +75,7 @@ main {
   background-color: rgba(68, 68, 68, 0.2);
   display: inline-block;
   border-radius: 5px;
-  margin: 10px; }
+  margin: 0 10px 0 10px; }
 
 .key span {
   background-color: rgba(68, 68, 68, 0.2);

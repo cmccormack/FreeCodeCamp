@@ -110,13 +110,13 @@ main {
 }
 .key {
   // position: absolute;
-  border-style:solid;
-  border-color:#DDD #BBB #BCBCBC #EEE;
-  border-width:2px 3px 6px 3px;
+  border-style: solid;
+  border-color: #DDD #BBB #BCBCBC #EEE;
+  border-width: 2px 3px 6px 3px;
   background-color: rgba(68,68,68,0.2);
-  display:inline-block;
-  border-radius:5px;
-  margin:10px;
+  display: inline-block;
+  border-radius: 5px;
+  margin: 0 10px 0 10px;
 }
 
 .key span {
