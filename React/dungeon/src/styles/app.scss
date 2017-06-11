@@ -3,7 +3,7 @@ $text-shadow: #444;
 $white-shadow: #EEE;
 $body-bg-img: "../images/bg.jpg";
 $body-bg-grad: linear-gradient(rgba(120,120,120,.6), rgba(120,120,120,.6));
-
+@import '../../node_modules/rpg-awesome/scss/rpg-awesome.scss';
 
 body {
   background-color: $body-bg;
@@ -59,6 +59,17 @@ main {
   border-radius: 4px;
   box-shadow: -8px 8px 8px#333;
 
+  .statusicons {
+    width: 100%;
+    border: 1px solid #AAA;
+    border-radius: 4px;
+    margin-bottom: 12px;
+
+    .ra {
+      color: red;
+    }
+  }
+
   .tile {
     border: 1px solid #444;
     margin-left: -1px;
@@ -86,7 +97,6 @@ main {
       background-color: limegreen;
     }
   }
-
   .buttons {
     margin-top: 12px;
     .btn {
