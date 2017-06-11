@@ -18,3 +18,8 @@ undefined
 
 // jshint esversion:6, asi:true
 
+\```
+   Code goes here, backticks go on their own line.  Previous posts can be edited.
+\```
+
+https://mdn.io/working_with_objects
