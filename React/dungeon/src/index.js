@@ -172,6 +172,9 @@ class Map extends React.Component {
           className={'mapContainer'} 
           style={mapContainerStyle}
       >
+        <div className={'statusicons'}>
+          <i className={'ra ra-health'} />{'Health'}
+        </div>
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
             <Tile
@@ -342,16 +345,16 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.level = level
   this.name = name
 
-  function take_damage(dmg, piercing){
+  this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0
     this.hp -= dmg
   }
 
-  function modify_health(hp){
+  this.modify_health = function(hp){
     this.hp += hp
   }
 
-  function get_hp(){
+  this.get_hp = function(){
     return this.hp
   }
   return this
