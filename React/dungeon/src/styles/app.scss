@@ -92,13 +92,16 @@ main {
   }
 
   .tile {
+    position: relative;
     border: 1px solid #444;
     margin-left: -1px;
     margin-top: -1px;
     float: left;
 
     &.wall{
-      background-color: #008;
+      background-color: #A41;
+      background-color: hsl(100,60,40);
+      z-index: 2;
     }
 
     &.floor{
@@ -106,7 +109,7 @@ main {
       border-color: #CCC;
     }
 
-    &.hidden {
+    &.stone {
       background-color: #333;
     }
 

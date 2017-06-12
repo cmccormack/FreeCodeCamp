@@ -1704,16 +1704,19 @@ main {
         .mapContainer .statusicons .status .ra.ra-player {
           color: limegreen; }
   .mapContainer .tile {
+    position: relative;
     border: 1px solid #444;
     margin-left: -1px;
     margin-top: -1px;
     float: left; }
     .mapContainer .tile.wall {
-      background-color: #008; }
+      background-color: #A41;
+      background-color: #52a329;
+      z-index: 2; }
     .mapContainer .tile.floor {
       background-color: #CCC;
       border-color: #CCC; }
-    .mapContainer .tile.hidden {
+    .mapContainer .tile.stone {
       background-color: #333; }
     .mapContainer .tile.fog {
       background-color: rgba(120, 120, 120, 0.6); }
