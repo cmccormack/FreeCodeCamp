@@ -141,6 +141,7 @@ class App extends React.Component {
         <Map
             funcs={this.funcs}
             mapTiles={this.state.mapTiles}
+            player={this.state.player}
         />
       </div>
     )
@@ -164,7 +165,8 @@ class Map extends React.Component {
     var mapContainerStyle = {
       width: ((map.tile.width - 1) * map.cols) + (2 * map.padding),
       height: '100%',
-      padding: map.padding
+      padding: map.padding,
+      player: this.props.player
     }
 
     return (
@@ -172,9 +174,7 @@ class Map extends React.Component {
           className={'mapContainer'} 
           style={mapContainerStyle}
       >
-        <div className={'statusicons'}>
-          <i className={'ra ra-health'} />{'Health'}
-        </div>
+        <Statusicons player={this.props.player} />
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
             <Tile
@@ -207,6 +207,17 @@ function Tile(props) {
           clear: x === map.cols ? 'both' : 'none'
         }}
     />
+  )
+}
+
+function Statusicons(props){
+  console.log(props)
+  return (
+    <div className={'statusicons'}>
+      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: ' + props.player.hp}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-sword'} />{'Atk: ' + props.player.atk}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</span>
+    </div>
   )
 }
 
@@ -344,6 +355,8 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.pos = startpos
   this.level = level
   this.name = name
+  this.exp = 0
+  this.tnl = 100
 
   this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0

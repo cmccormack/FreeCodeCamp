@@ -64,10 +64,28 @@ main {
     border: 1px solid #AAA;
     border-radius: 4px;
     margin-bottom: 12px;
+    padding: 2px 6px 2px 6px;
+    color: #CCC;
 
-    .ra {
-      color: red;
+    .status{
+      margin-left: 4px;
+      margin-right: 4px;
+      .ra {
+        margin-right: 2px;
+
+        &.ra-health{
+          color: rgb(220,0,0);
+        }
+        &.ra-sword{
+          color: #BA7333;
+        }
+        &.ra-shield{
+          color: silver;
+        }
+      }
     }
+
+
   }
 
   .tile {
