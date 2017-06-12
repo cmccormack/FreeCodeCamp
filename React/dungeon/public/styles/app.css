@@ -1691,8 +1691,8 @@ main {
     padding: 2px 6px 2px 6px;
     color: #CCC; }
     .mapContainer .statusicons .status {
-      margin-left: 4px;
-      margin-right: 4px; }
+      margin-left: 32px;
+      margin-right: 32px; }
       .mapContainer .statusicons .status .ra {
         margin-right: 2px; }
         .mapContainer .statusicons .status .ra.ra-health {
@@ -1701,6 +1701,8 @@ main {
           color: #BA7333; }
         .mapContainer .statusicons .status .ra.ra-shield {
           color: silver; }
+        .mapContainer .statusicons .status .ra.ra-player {
+          color: limegreen; }
   .mapContainer .tile {
     border: 1px solid #444;
     margin-left: -1px;
