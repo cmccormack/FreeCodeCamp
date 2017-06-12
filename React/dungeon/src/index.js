@@ -4,10 +4,13 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
-    tiles: [],
-    cols: 50,
-    rows: 40,
-    padding: 12,
+    TILES: [],
+    COLS: 70,
+    ROWS: 40,
+    PADDING: 2,
+    style: {
+      PADDING: 12,
+    },
     tile:{
       width: 12,
       height: 12
@@ -91,18 +94,14 @@ class App extends React.Component {
   }
 
   initializeMap(){
-    map.tiles = generateTiles(
-      map.rows, map.cols, { class:'tile wall hidden' })
+    map.TILES = generateTiles(
+      map.ROWS, map.COLS, { class:'tile stone' })
 
     var rooms = generateRooms()
+    generateTunnels(rooms)
+    generateWalls()
+    generateFog()
 
-    for (var item in rooms){
-      rooms[item].draw(map.tiles)
-      if (item > 0){
-        rooms[item].h_tunnel(rooms[item - 1])
-        rooms[item].v_tunnel(rooms[item - 1])
-      }
-    }
     return rooms
   }
 
@@ -110,7 +109,7 @@ class App extends React.Component {
   initializeCharacters(rooms){
     var characters = []
     characters.push(new Mob(rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'Player'))
-    // Add Enemies
+    // TODO: Add Enemies
     return characters
   }
 
@@ -120,7 +119,7 @@ class App extends React.Component {
       player = characters[0]
 
     player.draw('player')
-    this.setState({player: player, mapTiles: map.tiles.slice(0)})
+    this.setState({player: player, mapTiles: map.TILES.slice(0)})
   }
 
   handleGenerateClick(){
@@ -128,7 +127,7 @@ class App extends React.Component {
   }
 
   update(){
-    this.setState({ mapTiles: map.tiles.slice(0) })
+    this.setState({ mapTiles: map.TILES.slice(0) })
   }
 
   render() {
@@ -163,9 +162,9 @@ class Map extends React.Component {
   render() {
 
     var mapContainerStyle = {
-      width: ((map.tile.width - 1) * map.cols) + (2 * map.padding),
+      width: ((map.tile.width - 1) * map.COLS) + (2 * map.style.PADDING),
       height: '100%',
-      padding: map.padding,
+      padding: map.style.PADDING,
       player: this.props.player
     }
 
@@ -199,19 +198,18 @@ function Tile(props) {
     <div
         className={props.tile.class}
         data-pos={y+','+x}
-        id={(y*map.cols + x)}
+        id={(y*map.COLS + x)}
         key={(y+1) * (x+1)}
         style={{
           width: map.tile.width,
           height: map.tile.height,
-          clear: x === map.cols ? 'both' : 'none'
+          clear: x === map.COLS ? 'both' : 'none'
         }}
     />
   )
 }
 
 function Statusicons(props){
-  console.log(props)
   return (
     <div className={'statusicons unselectable'}>
       <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: ' + props.player.hp}</span>
@@ -248,28 +246,31 @@ function randRange(m, n){
 }
 
 function generateTiles(rows, cols, initObj={}){
+  console.log('Generating Tiles')
   var tiles = [],
     className = initObj.class || ''
 
   for (var row = 0; row < rows; row++){
     tiles.push([])
     for (var col = 0; col < cols; col++){
-      tiles[row].push({class: className, id: map.cols*row + col})
+      tiles[row].push({class: className, id: map.COLS*row + col})
     }
   }
   return tiles
 }
 
 function generateRooms(){
+  console.log('Generating Rooms')
   var rooms = [], count=map.rooms.MAXTRIES, current_room, w, h, x, y
   while (count > 0 && rooms.length < map.rooms.MAXROOMS){
     w = randRange(map.rooms.MIN, map.rooms.MAX)
     h = randRange(map.rooms.MIN, map.rooms.MAX)
-    x = randRange(1, map.cols - w - 1)
-    y = randRange(1, map.rows - h - 1)
+    x = randRange(map.PADDING, map.COLS - w - map.PADDING)
+    y = randRange(map.PADDING, map.ROWS - h - map.PADDING)
     current_room = new Room(x, y, w, h)
     if (!hasIntercepts(current_room)){
       rooms.push(current_room)
+      current_room.draw(map.TILES)
     }
     count--
   }
@@ -284,6 +285,49 @@ function generateRooms(){
   }
 
   return rooms
+}
+
+function generateTunnels(rooms){
+  console.log('Generating Tunnels')
+  for (var i in rooms){
+    
+    if (i > 0){
+      rooms[i].h_tunnel(rooms[i - 1])
+      rooms[i].v_tunnel(rooms[i - 1])
+    }
+  }
+}
+
+function generateWalls(){
+  console.log('Generating Walls')
+  var m = map.TILES
+  for(var y=1; y < (m.length-1); y++){
+    for(var x=1; x < (m[y].length-1); x++){
+      // console.log(y,x,m[y][x].class)
+      if( m[y][x].class.includes('stone') ){
+        console.log(m[y][x].class.includes('stone'))
+        if (
+          m[y-1][x-1].class.includes('floor') || 
+          m[y-1][x+0].class.includes('floor') || 
+          m[y-1][x+1].class.includes('floor') || 
+          m[y+0][x-1].class.includes('floor') || 
+          m[y+0][x+1].class.includes('floor') || 
+          m[y+1][x-1].class.includes('floor') || 
+          m[y+1][x+0].class.includes('floor') || 
+          m[y+1][x+1].class.includes('floor')
+        ) {
+          m[y][x].class = 'tile wall'
+        } 
+      }
+        
+    }  
+  }
+  // console.log(JSON.stringify(map.tiles.slice(0)))
+
+}
+
+function generateFog(){
+
 }
 
 function Pos(x, y) {
@@ -320,20 +364,20 @@ Room.prototype.intercepts = function(other){
   this.y1 - map.rooms.PADDING < other.y2 && this.y2 + map.rooms.PADDING > other.y1
 }
 
+Room.prototype.random_location = function(padding=1){
+  return new Pos(randRange(this.x1+padding, this.x2-padding), 
+    randRange(this.y1 + padding,this.y2 - padding))
+}
+
 Room.prototype.h_tunnel = function(other){
   var startx = Math.floor(Math.min(this.center.x, other.center.x)),
     endx = Math.floor(Math.max(this.center.x, other.center.x)),
     y = Math.floor(this.center.y)
 
   for (var i = startx; i <= endx; i++){
-    map.tiles[y][i].class = 'tile floor'
-    map.tiles[y-1][i].class = 'tile floor'
+    map.TILES[y][i].class = 'tile floor'
+    map.TILES[y-1][i].class = 'tile floor'
   }
-}
-
-Room.prototype.random_location = function(padding=1){
-  return new Pos(randRange(this.x1+padding, this.x2-padding), 
-    randRange(this.y1 + padding,this.y2 - padding))
 }
 
 Room.prototype.v_tunnel = function(other){
@@ -342,8 +386,8 @@ Room.prototype.v_tunnel = function(other){
     x = Math.floor(other.center.x)
 
   for (var i = starty; i <= endy; i++){
-    map.tiles[i][x].class = 'tile floor'
-    map.tiles[i][x+1].class = 'tile floor'
+    map.TILES[i][x].class = 'tile floor'
+    map.TILES[i][x+1].class = 'tile floor'
   }
 }
 
@@ -376,7 +420,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y)
-  if (map.tiles[newpos.y][newpos.x].class.includes('floor')){
+  if (map.TILES[newpos.y][newpos.x].class.includes('floor')){
     this.draw()
     this.pos = new Pos(newpos.x, newpos.y)
     this.draw('player')
@@ -387,5 +431,5 @@ Mob.prototype.move = function move(pos){
 
 Mob.prototype.draw = function(type){
   // console.log('Drawing x:', this.pos.x, 'y:', this.pos.y)
-  map.tiles[this.pos.y][this.pos.x].class = 'tile floor ' + (type || '')
+  map.TILES[this.pos.y][this.pos.x].class = 'tile floor ' + (type || '')
 }
