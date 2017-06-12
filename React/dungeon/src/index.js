@@ -213,10 +213,11 @@ function Tile(props) {
 function Statusicons(props){
   console.log(props)
   return (
-    <div className={'statusicons'}>
+    <div className={'statusicons unselectable'}>
       <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: ' + props.player.hp}</span>
       <span className={'status'}><i className={'ra ra-fw ra-sword'} />{'Atk: ' + props.player.atk}</span>
       <span className={'status'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</span>
     </div>
   )
 }
@@ -224,7 +225,7 @@ function Statusicons(props){
 function Buttons(props) {
 
   return (
-    <div className='buttons btn-group'>
+    <div className='buttons btn-group unselectable'>
       <button 
           className='btn btn-outline-secondary'
           onClick={props.funcs.handleGenerateClick}
@@ -356,7 +357,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.level = level
   this.name = name
   this.exp = 0
-  this.tnl = 100
+  this.tnl = 10
 
   this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0
