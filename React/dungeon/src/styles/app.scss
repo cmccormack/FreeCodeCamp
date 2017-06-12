@@ -68,8 +68,8 @@ main {
     color: #CCC;
 
     .status{
-      margin-left: 32px;
-      margin-right: 32px;
+      margin-left: 8%;
+      margin-right: 7.25%;
       .ra {
         margin-right: 2px;
 
@@ -100,13 +100,13 @@ main {
 
     &.wall{
       background-color: #A41;
-      background-color: hsl(100,60,40);
+      background-color: hsl(20,60,40);
       z-index: 2;
     }
 
     &.floor{
-      background-color: #CCC;
-      border-color: #CCC;
+      background-color: #AAA;
+      border-color: #AAA;
     }
 
     &.stone {
@@ -119,6 +119,9 @@ main {
 
     &.player {
       background-color: limegreen;
+      border-color: darkgreen;
+      border-radius: 4px;
+      z-index: 1;
     }
   }
   .buttons {

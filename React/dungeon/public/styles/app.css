@@ -1691,8 +1691,8 @@ main {
     padding: 2px 6px 2px 6px;
     color: #CCC; }
     .mapContainer .statusicons .status {
-      margin-left: 32px;
-      margin-right: 32px; }
+      margin-left: 8%;
+      margin-right: 7.25%; }
       .mapContainer .statusicons .status .ra {
         margin-right: 2px; }
         .mapContainer .statusicons .status .ra.ra-health {
@@ -1711,17 +1711,20 @@ main {
     float: left; }
     .mapContainer .tile.wall {
       background-color: #A41;
-      background-color: #52a329;
+      background-color: #a35229;
       z-index: 2; }
     .mapContainer .tile.floor {
-      background-color: #CCC;
-      border-color: #CCC; }
+      background-color: #AAA;
+      border-color: #AAA; }
     .mapContainer .tile.stone {
       background-color: #333; }
     .mapContainer .tile.fog {
       background-color: rgba(120, 120, 120, 0.6); }
     .mapContainer .tile.player {
-      background-color: limegreen; }
+      background-color: limegreen;
+      border-color: darkgreen;
+      border-radius: 4px;
+      z-index: 1; }
   .mapContainer .buttons {
     margin-top: 12px; }
     .mapContainer .buttons .btn {
