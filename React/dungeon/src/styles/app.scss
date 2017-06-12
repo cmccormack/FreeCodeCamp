@@ -61,7 +61,9 @@ main {
 
   .statusicons {
     width: 100%;
-    border: 1px solid #AAA;
+    // border: 1px solid #AAA;
+    background-color: rgba(2,2,2,0.2);
+    box-shadow: 3px 3px 6px #222;
     border-radius: 4px;
     margin-bottom: 12px;
     padding: 2px 6px 2px 6px;
@@ -194,8 +196,6 @@ main {
   width:auto;
   padding:0 12px;
 }
-
-
 
 
 
