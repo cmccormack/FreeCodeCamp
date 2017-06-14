@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
+    rooms: [],
     TILES: [],
     COLS: 70,
     ROWS: 40,
@@ -15,26 +16,28 @@ var map = {
       width: 12,
       height: 12
     },
-    rooms: {
+    roomvars: {
       MAXTRIES: 1000,
       MAXROOMS: 12,
       MIN: 6,
       MAX: 15,
-      PADDING: 4
-    }
-  },
-  enemies = [
-    { name: 'ogre',      statmod: { atk: 2.0, hp: 1.5 }},
-    { name: 'goblin',    statmod: { atk: 1.0, hp: 1.0 }},
-    { name: 'hydra',     statmod: { atk: 1.3, hp: 1.3 }},
-    { name: 'ghoul',     statmod: { atk: 1.0, hp: 1.0 }},
-    { name: 'griffin',   statmod: { atk: 1.7, hp: 1.2 }},
-    { name: 'kobold',    statmod: { atk: 0.8, hp: 0.8 }},
-    { name: 'skeleton',  statmod: { atk: 1.0, hp: 1.0 }},
-    { name: 'troll',     statmod: { atk: 1.2, hp: 0.8 }},
-    { name: 'vampire',   statmod: { atk: 1.5, hp: 1.2 }},
-    { name: 'zombie',    statmod: { atk: 1.1, hp: 1.4 }}
-  ]
+      PADDING: 4,
+      MINENEMIES: 1,
+      MAXENEMIES: 3
+    },
+    enemies: [
+      { name: 'ogre',      statmod: { atk: 2.0, hp: 1.5 }},
+      { name: 'goblin',    statmod: { atk: 1.0, hp: 1.0 }},
+      { name: 'hydra',     statmod: { atk: 1.3, hp: 1.3 }},
+      { name: 'ghoul',     statmod: { atk: 1.0, hp: 1.0 }},
+      { name: 'griffin',   statmod: { atk: 1.7, hp: 1.2 }},
+      { name: 'kobold',    statmod: { atk: 0.8, hp: 0.8 }},
+      { name: 'skeleton',  statmod: { atk: 1.0, hp: 1.0 }},
+      { name: 'troll',     statmod: { atk: 1.2, hp: 0.8 }},
+      { name: 'vampire',   statmod: { atk: 1.5, hp: 1.2 }},
+      { name: 'zombie',    statmod: { atk: 1.1, hp: 1.4 }}
+    ]
+}
 
 const ARROW_KEYS = {
   'ArrowUp': new Pos(0,-1),
@@ -77,6 +80,7 @@ class App extends React.Component {
 
   initializeHandlers(){
     window.addEventListener('keydown', (e)=> {
+      e.preventDefault()
       this.characterMove(ARROW_KEYS[e.code])
     })
 
@@ -97,19 +101,23 @@ class App extends React.Component {
     map.TILES = generateTiles(
       map.ROWS, map.COLS, { class:'tile stone' })
 
-    var rooms = generateRooms()
-    generateTunnels(rooms)
+    map.rooms = generateRooms()
+    generateTunnels()
     generateWalls()
     generateFog()
-
-    return rooms
   }
 
 
-  initializeCharacters(rooms){
-    var characters = []
-    characters.push(new Mob(rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'Player'))
-    // TODO: Add Enemies
+  initializeCharacters(){
+    var characters = [], testcharacters=[]
+    characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
+
+    var enemies = []
+    for (var i=1; i < map.rooms.length; i++) {
+      enemies = Array(randRange( map.roomvars.MINENEMIES, map.roomvars.MAXENEMIES)).fill(0).map(() => map.enemies[randRange(0, map.enemies.length)] )
+      console.log(enemies)
+    }
+    console.log(testcharacters)
     return characters
   }
 
@@ -261,10 +269,13 @@ function generateTiles(rows, cols, initObj={}){
 
 function generateRooms(){
   console.log('Generating Rooms')
-  var rooms = [], count=map.rooms.MAXTRIES, current_room, w, h, x, y
-  while (count > 0 && rooms.length < map.rooms.MAXROOMS){
-    w = randRange(map.rooms.MIN, map.rooms.MAX)
-    h = randRange(map.rooms.MIN, map.rooms.MAX)
+  var rooms = [],
+    count=map.roomvars.MAXTRIES,
+    current_room,
+    w, h, x, y
+  while (count > 0 && rooms.length < map.roomvars.MAXROOMS){
+    w = randRange(map.roomvars.MIN, map.roomvars.MAX)
+    h = randRange(map.roomvars.MIN, map.roomvars.MAX)
     x = randRange(map.PADDING, map.COLS - w - map.PADDING)
     y = randRange(map.PADDING, map.ROWS - h - map.PADDING)
     current_room = new Room(x, y, w, h)
@@ -287,13 +298,13 @@ function generateRooms(){
   return rooms
 }
 
-function generateTunnels(rooms){
+function generateTunnels(){
   console.log('Generating Tunnels')
-  for (var i in rooms){
+  for (var i in map.rooms){
     
     if (i > 0){
-      rooms[i].h_tunnel(rooms[i - 1])
-      rooms[i].v_tunnel(rooms[i - 1])
+      map.rooms[i].h_tunnel(map.rooms[i - 1])
+      map.rooms[i].v_tunnel(map.rooms[i - 1])
     }
   }
 }
@@ -305,7 +316,6 @@ function generateWalls(){
     for(var x=1; x < (m[y].length-1); x++){
       // console.log(y,x,m[y][x].class)
       if( m[y][x].class.includes('stone') ){
-        console.log(m[y][x].class.includes('stone'))
         if (
           m[y-1][x-1].class.includes('floor') || 
           m[y-1][x+0].class.includes('floor') || 
@@ -360,8 +370,8 @@ Room.prototype.draw = function(map){
 }
 
 Room.prototype.intercepts = function(other){
-  return this.x1 - map.rooms.PADDING < other.x2 && this.x2 + map.rooms.PADDING > other.x1 &&
-  this.y1 - map.rooms.PADDING < other.y2 && this.y2 + map.rooms.PADDING > other.y1
+  return this.x1 - map.roomvars.PADDING < other.x2 && this.x2 + map.roomvars.PADDING > other.x1 &&
+  this.y1 - map.roomvars.PADDING < other.y2 && this.y2 + map.roomvars.PADDING > other.y1
 }
 
 Room.prototype.random_location = function(padding=1){
