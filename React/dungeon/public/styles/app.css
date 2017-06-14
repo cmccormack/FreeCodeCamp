@@ -1727,16 +1727,23 @@ main {
       border-radius: 4px;
       z-index: 1; }
   .mapContainer .buttons {
-    margin-top: 12px; }
+    margin-top: 12px;
+    background-color: rgba(2, 2, 2, 0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%; }
     .mapContainer .buttons .btn {
       transition: none;
-      background-color: rgba(68, 68, 68, 0.2); }
+      background-color: rgba(68, 68, 68, 0.2);
+      height: 40px; }
       .mapContainer .buttons .btn:hover {
         background-color: rgba(68, 68, 68, 0.6);
         color: #EEE; }
 
 .keys {
-  position: relative; }
+  position: relative;
+  line-height: 3; }
 
 .key {
   border-style: solid;

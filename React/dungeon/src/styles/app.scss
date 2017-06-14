@@ -128,10 +128,16 @@ main {
   }
   .buttons {
     margin-top: 12px;
+    background-color: rgba(2,2,2,0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%;
+
     .btn {
       transition: none;
-      // background-color: rgba(2,2,2,0.3);
       background-color: rgba(68,68,68,0.2);
+      height: 40px;
 
       &:hover {
         background-color: rgba(68,68,68,0.6);
@@ -145,6 +151,7 @@ main {
 .keys {
   // width: 150px;
   position: relative;
+  line-height: 3;
   // background-color: rgba(200, 0, 0, 0.5);
 }
 .key {
@@ -156,6 +163,7 @@ main {
   display: inline-block;
   border-radius: 5px;
   margin: 0 10px 0 10px;
+  
 }
 
 .key span {
