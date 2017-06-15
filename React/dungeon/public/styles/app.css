@@ -1713,7 +1713,7 @@ main {
     .mapContainer .tile.wall {
       background-color: #A41;
       background-color: #a35229;
-      z-index: 2; }
+      z-index: 3; }
     .mapContainer .tile.floor {
       background-color: #AAA;
       border-color: #AAA; }
@@ -1721,11 +1721,16 @@ main {
       background-color: #333; }
     .mapContainer .tile.fog {
       background-color: rgba(120, 120, 120, 0.6); }
+    .mapContainer .tile.enemy {
+      background-color: #C41;
+      border-color: darkred;
+      border-radius: 4px;
+      z-index: 1; }
     .mapContainer .tile.player {
       background-color: limegreen;
       border-color: darkgreen;
       border-radius: 4px;
-      z-index: 1; }
+      z-index: 2; }
   .mapContainer .buttons {
     margin-top: 12px;
     background-color: rgba(2, 2, 2, 0.2);

@@ -4,39 +4,39 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var map = {
-    rooms: [],
-    TILES: [],
-    COLS: 70,
-    ROWS: 40,
-    PADDING: 2,
-    style: {
-      PADDING: 12,
-    },
-    tile:{
-      width: 12,
-      height: 12
-    },
-    roomvars: {
-      MAXTRIES: 1000,
-      MAXROOMS: 12,
-      MIN: 6,
-      MAX: 15,
-      PADDING: 4,
-      MINENEMIES: 1,
-      MAXENEMIES: 3
-    },
-    enemies: [
-      { name: 'ogre',      statmod: { atk: 2.0, hp: 1.5 }},
-      { name: 'goblin',    statmod: { atk: 1.0, hp: 1.0 }},
-      { name: 'hydra',     statmod: { atk: 1.3, hp: 1.3 }},
-      { name: 'ghoul',     statmod: { atk: 1.0, hp: 1.0 }},
-      { name: 'griffin',   statmod: { atk: 1.7, hp: 1.2 }},
-      { name: 'kobold',    statmod: { atk: 0.8, hp: 0.8 }},
-      { name: 'skeleton',  statmod: { atk: 1.0, hp: 1.0 }},
-      { name: 'troll',     statmod: { atk: 1.2, hp: 0.8 }},
-      { name: 'vampire',   statmod: { atk: 1.5, hp: 1.2 }},
-      { name: 'zombie',    statmod: { atk: 1.1, hp: 1.4 }}
-    ]
+  rooms: [],
+  TILES: [],
+  COLS: 70,
+  ROWS: 40,
+  PADDING: 2,
+  style: {
+    PADDING: 12,
+  },
+  tile:{
+    width: 12,
+    height: 12
+  },
+  roomvars: {
+    MAXTRIES: 1000,
+    MAXROOMS: 12,
+    MIN: 6,
+    MAX: 15,
+    PADDING: 4,
+    MINENEMIES: 1,
+    MAXENEMIES: 3
+  },
+  enemies: [
+    { name: 'ogre',     atk: 2.0, hp: 15, def:3 },
+    { name: 'goblin',   atk: 1.0, hp: 10, def:1 },
+    { name: 'hydra',    atk: 1.3, hp: 13, def:2 },
+    { name: 'ghoul',    atk: 1.0, hp: 10, def:1 },
+    { name: 'griffin',  atk: 1.7, hp: 12, def:2 },
+    { name: 'kobold',   atk: 0.8, hp: 8 , def:1 },
+    { name: 'skeleton', atk: 1.0, hp: 10, def:1 },
+    { name: 'troll',    atk: 1.2, hp: 8 , def:3 },
+    { name: 'vampire',  atk: 1.5, hp: 12, def:1 },
+    { name: 'zombie',   atk: 1.1, hp: 14, def:1 }
+  ]
 }
 
 const ARROW_KEYS = {
@@ -112,12 +112,9 @@ class App extends React.Component {
     var characters = [], testcharacters=[]
     characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
 
-    var enemies = []
-    for (var i=1; i < map.rooms.length; i++) {
-      enemies = Array(randRange( map.roomvars.MINENEMIES, map.roomvars.MAXENEMIES)).fill(0).map(() => map.enemies[randRange(0, map.enemies.length)] )
-      console.log(enemies)
-    }
-    console.log(testcharacters)
+    var enemies = generateEnemies()
+    console.log(enemies)
+
     return characters
   }
 
@@ -250,7 +247,7 @@ function Buttons(props) {
 
 function randRange(m, n){
   [m,n] = [m,n].sort((a,b)=>a-b)
-  return Math.floor((Math.random() * (n-m)) + m)
+  return Math.floor((Math.random() * (n+1-m)) + m)
 }
 
 function generateTiles(rows, cols, initObj={}){
@@ -285,6 +282,7 @@ function generateRooms(){
     }
     count--
   }
+
 
   function hasIntercepts(newRoom){
     for (let room in rooms){
@@ -338,6 +336,30 @@ function generateWalls(){
 
 function generateFog(){
 
+}
+
+
+
+function generateEnemies(){
+  console.log('Generating Enemies')
+  var enemies = [], enemy, enemy_count,
+    min = map.roomvars.MINENEMIES,
+    max = map.roomvars.MAXENEMIES
+
+  for (let i=1; i<map.rooms.length; i++){
+    enemy_count = randRange(min,max)
+    for (let e = 0; e < enemy_count; e++){
+      enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+      enemy = new Mob(map.rooms[i].random_location(), enemy.hp, enemy.atk, enemy.def, null, null, 1, enemy.name)
+      console.log(enemy)
+      enemy.draw('enemy')
+      enemies.push(enemy)
+      
+    }
+    // console.log(rooms)
+    // enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+    // console.log(enemy)
+  }
 }
 
 function Pos(x, y) {
