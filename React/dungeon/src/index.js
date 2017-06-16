@@ -72,6 +72,7 @@ class App extends React.Component {
 
   componentDidMount(){
     this.initializeHandlers()
+    console.log('Pos: ' + new Pos(1,2) === new Pos(3,4))
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -91,9 +92,12 @@ class App extends React.Component {
     })
   }
 
-  characterMove(direction){
-    var player = this.state.player
-    player.pos = player.move(direction)
+  characterMove(pos){
+    var player = this.state.player,
+      newpos = new Pos(player.pos.x + pos.x, player.pos.y + pos.y)
+    // if (map.TILES[newpos.y][newpos.x].class.includes('floor')){
+    
+    player.pos = player.move(pos)
     this.update()
   }
 
@@ -117,6 +121,7 @@ class App extends React.Component {
 
     return characters
   }
+
 
   init(){
     var rooms = this.initializeMap(),
@@ -217,8 +222,8 @@ function Tile(props) {
 function Statusicons(props){
   return (
     <div className={'statusicons unselectable'}>
-      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: ' + props.player.hp}</span>
-      <span className={'status'}><i className={'ra ra-fw ra-sword'} />{'Atk: ' + props.player.atk}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</span>
       <span className={'status'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</span>
       <span className={'status'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</span>
     </div>
@@ -312,7 +317,7 @@ function generateWalls(){
   var m = map.TILES
   for(var y=1; y < (m.length-1); y++){
     for(var x=1; x < (m[y].length-1); x++){
-      // console.log(y,x,m[y][x].class)
+      
       if( m[y][x].class.includes('stone') ){
         if (
           m[y-1][x-1].class.includes('floor') || 
@@ -351,14 +356,10 @@ function generateEnemies(){
     for (let e = 0; e < enemy_count; e++){
       enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
       enemy = new Mob(map.rooms[i].random_location(), enemy.hp, enemy.atk, enemy.def, null, null, 1, enemy.name)
-      console.log(enemy)
       enemy.draw('enemy')
       enemies.push(enemy)
       
     }
-    // console.log(rooms)
-    // enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
-    // console.log(enemy)
   }
 }
 
@@ -396,7 +397,7 @@ Room.prototype.intercepts = function(other){
   this.y1 - map.roomvars.PADDING < other.y2 && this.y2 + map.roomvars.PADDING > other.y1
 }
 
-Room.prototype.random_location = function(padding=1){
+Room.prototype.random_location = function(padding=2){
   return new Pos(randRange(this.x1+padding, this.x2-padding), 
     randRange(this.y1 + padding,this.y2 - padding))
 }
@@ -453,7 +454,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y)
   if (map.TILES[newpos.y][newpos.x].class.includes('floor')){
-    this.draw()
+    this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
     this.draw('player')
     return newpos
@@ -462,6 +463,10 @@ Mob.prototype.move = function move(pos){
 }
 
 Mob.prototype.draw = function(type){
-  // console.log('Drawing x:', this.pos.x, 'y:', this.pos.y)
-  map.TILES[this.pos.y][this.pos.x].class = 'tile floor ' + (type || '')
+  map.TILES[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
+}
+
+Mob.prototype.hasNeighbors = function(){
+  console.log(this.pos)
+  return this.pos.x-1
 }
