@@ -5,7 +5,7 @@ import ReactDOM from 'react-dom'
 
 var map = {
   rooms: [],
-  TILES: [],
+  tiles: [],
   COLS: 70,
   ROWS: 40,
   PADDING: 2,
@@ -72,7 +72,7 @@ class App extends React.Component {
 
   componentDidMount(){
     this.initializeHandlers()
-    console.log('Pos: ' + new Pos(1,2) === new Pos(3,4))
+    // console.log('Pos: ' + new Pos(1,2) == new Pos(1,2))
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -102,7 +102,7 @@ class App extends React.Component {
   }
 
   initializeMap(){
-    map.TILES = generateTiles(
+    map.tiles = generateTiles(
       map.ROWS, map.COLS, { class:'tile stone' })
 
     map.rooms = generateRooms()
@@ -117,7 +117,6 @@ class App extends React.Component {
     characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
 
     var enemies = generateEnemies()
-    console.log(enemies)
 
     return characters
   }
@@ -129,7 +128,7 @@ class App extends React.Component {
       player = characters[0]
 
     player.draw('player')
-    this.setState({player: player, mapTiles: map.TILES.slice(0)})
+    this.setState({player: player, mapTiles: map.tiles.slice(0)})
   }
 
   handleGenerateClick(){
@@ -137,7 +136,7 @@ class App extends React.Component {
   }
 
   update(){
-    this.setState({ mapTiles: map.TILES.slice(0) })
+    this.setState({ mapTiles: map.tiles.slice(0) })
   }
 
   render() {
@@ -250,9 +249,31 @@ function Buttons(props) {
 }
 
 
+
+
+
+
+
+
 function randRange(m, n){
   [m,n] = [m,n].sort((a,b)=>a-b)
   return Math.floor((Math.random() * (n+1-m)) + m)
+}
+
+function getNeighbors(pos){
+  var m = map.tiles, 
+    {x,y} = pos,
+    neighbors = []
+  console.log(pos)
+  neighbors.push(m[y-1][x-1])
+  neighbors.push(m[y-1][x+0])
+  neighbors.push(m[y-1][x+1])
+  neighbors.push(m[y+0][x-1])
+  neighbors.push(m[y+0][x+1])
+  neighbors.push(m[y+1][x-1])
+  neighbors.push(m[y+1][x+0])
+  neighbors.push(m[y+1][x+1])
+  return neighbors
 }
 
 function generateTiles(rows, cols, initObj={}){
@@ -283,7 +304,7 @@ function generateRooms(){
     current_room = new Room(x, y, w, h)
     if (!hasIntercepts(current_room)){
       rooms.push(current_room)
-      current_room.draw(map.TILES)
+      current_room.draw(map.tiles)
     }
     count--
   }
@@ -314,7 +335,7 @@ function generateTunnels(){
 
 function generateWalls(){
   console.log('Generating Walls')
-  var m = map.TILES
+  var m = map.tiles
   for(var y=1; y < (m.length-1); y++){
     for(var x=1; x < (m[y].length-1); x++){
       
@@ -335,8 +356,6 @@ function generateWalls(){
         
     }  
   }
-  // console.log(JSON.stringify(map.tiles.slice(0)))
-
 }
 
 function generateFog(){
@@ -357,6 +376,7 @@ function generateEnemies(){
       enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
       enemy = new Mob(map.rooms[i].random_location(), enemy.hp, enemy.atk, enemy.def, null, null, 1, enemy.name)
       enemy.draw('enemy')
+      console.log(getNeighbors(enemy.pos))
       enemies.push(enemy)
       
     }
@@ -408,8 +428,8 @@ Room.prototype.h_tunnel = function(other){
     y = Math.floor(this.center.y)
 
   for (var i = startx; i <= endx; i++){
-    map.TILES[y][i].class = 'tile floor'
-    map.TILES[y-1][i].class = 'tile floor'
+    map.tiles[y][i].class = 'tile floor'
+    map.tiles[y-1][i].class = 'tile floor'
   }
 }
 
@@ -419,8 +439,8 @@ Room.prototype.v_tunnel = function(other){
     x = Math.floor(other.center.x)
 
   for (var i = starty; i <= endy; i++){
-    map.TILES[i][x].class = 'tile floor'
-    map.TILES[i][x+1].class = 'tile floor'
+    map.tiles[i][x].class = 'tile floor'
+    map.tiles[i][x+1].class = 'tile floor'
   }
 }
 
@@ -453,7 +473,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y)
-  if (map.TILES[newpos.y][newpos.x].class.includes('floor')){
+  if (map.tiles[newpos.y][newpos.x].class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
     this.draw('player')
@@ -463,7 +483,7 @@ Mob.prototype.move = function move(pos){
 }
 
 Mob.prototype.draw = function(type){
-  map.TILES[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
+  map.tiles[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
 }
 
 Mob.prototype.hasNeighbors = function(){
