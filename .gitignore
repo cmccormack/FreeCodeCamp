@@ -8,13 +8,13 @@ React/markdownview/node_modules
 *FCC.txt
 
 # dependencies
-/node_modules
+node_modules
 
 # testing
 /coverage
 
 # production
-/build
+build
 
 # misc
 .DS_Store
