@@ -260,11 +260,12 @@ function randRange(m, n){
   return Math.floor((Math.random() * (n+1-m)) + m)
 }
 
-function getNeighbors(pos){
+function getNeighbors(pos, filter){
+  // console.log(pos)
   var m = map.tiles, 
     {x,y} = pos,
     neighbors = []
-  console.log(pos)
+  // console.log(pos)
   neighbors.push(m[y-1][x-1])
   neighbors.push(m[y-1][x+0])
   neighbors.push(m[y-1][x+1])
@@ -273,7 +274,8 @@ function getNeighbors(pos){
   neighbors.push(m[y+1][x-1])
   neighbors.push(m[y+1][x+0])
   neighbors.push(m[y+1][x+1])
-  return neighbors
+
+  return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
 }
 
 function generateTiles(rows, cols, initObj={}){
@@ -366,17 +368,21 @@ function generateFog(){
 
 function generateEnemies(){
   console.log('Generating Enemies')
-  var enemies = [], enemy, enemy_count,
+  var enemies = [], _, enemy, enemy_count, try_count,
     min = map.roomvars.MINENEMIES,
     max = map.roomvars.MAXENEMIES
 
   for (let i=1; i<map.rooms.length; i++){
     enemy_count = randRange(min,max)
     for (let e = 0; e < enemy_count; e++){
-      enemy = map.enemies[Math.floor(Math.random() * map.enemies.length)]
-      enemy = new Mob(map.rooms[i].random_location(), enemy.hp, enemy.atk, enemy.def, null, null, 1, enemy.name)
+      _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+      // Add enemies while ensuring no enemies are within a neighboring tile
+      try_count = 100, enemy = null
+      while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
+        enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
+        try_count--
+      }
       enemy.draw('enemy')
-      console.log(getNeighbors(enemy.pos))
       enemies.push(enemy)
       
     }
