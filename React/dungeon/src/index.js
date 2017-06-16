@@ -376,6 +376,7 @@ function generateEnemies(){
     enemy_count = randRange(min,max)
     for (let e = 0; e < enemy_count; e++){
       _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+
       // Add enemies while ensuring no enemies are within a neighboring tile
       try_count = 100, enemy = null
       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
@@ -406,6 +407,7 @@ function Room(x, y, w, h) {
     (this.x1 + this.x2) / 2, 
     (this.y1 + this.y2) / 2
   )
+  this.area = this.w * this.h
 
   return this
 }
