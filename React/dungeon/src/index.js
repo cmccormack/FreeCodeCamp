@@ -268,22 +268,20 @@ function getNeighbors(pos, filter){
     {x,y} = pos,
     neighbors = []
 
-  if (y-1 >= 0){
-    neighbors.push(m[y-1][x+0])
-    if (y+1 < map.ROWS){
-      neighbors.push(m[y+1][x+0])
-      if (x-1 >= 0){
-        neighbors.push(m[y-1][x-1])
-        neighbors.push(m[y+0][x-1])
-        neighbors.push(m[y+1][x-1])   
-      }
-      if (x+1 < map.COLS){
-        neighbors.push(m[y-1][x+1])
-        neighbors.push(m[y+0][x+1])
-        neighbors.push(m[y+1][x+1])
-      }
-    }
+  function validPos(y,x){
+    if(x<0 || x >= map.COLS) return false
+    if(y<0 || y >= map.ROWS) return false
+    return true
   }
+
+  if (validPos(y-1, x+0)) neighbors.push(m[y-1][x+0])
+  if (validPos(y-1, x-1)) neighbors.push(m[y-1][x-1])
+  if (validPos(y+1, x+0)) neighbors.push(m[y+1][x+0])
+  if (validPos(y+0, x-1)) neighbors.push(m[y+0][x-1])
+  if (validPos(y+1, x-1)) neighbors.push(m[y+1][x-1])   
+  if (validPos(y-1, x+1)) neighbors.push(m[y-1][x+1])
+  if (validPos(y+0, x+1)) neighbors.push(m[y+0][x+1])
+  if (validPos(y+1, x+1)) neighbors.push(m[y+1][x+1])
 
   return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
 }
@@ -296,7 +294,10 @@ function generateTiles(rows, cols, initObj={}){
   for (var row = 0; row < rows; row++){
     tiles.push([])
     for (var col = 0; col < cols; col++){
-      tiles[row].push({class: className, id: map.COLS*row + col})
+      tiles[row].push({
+        class: className,
+        id: map.COLS*row + col,
+        pos: new Pos(col,row)})
     }
   }
   return tiles
@@ -351,8 +352,8 @@ function generateTunnels(){
 function generateWalls(){
   console.log('Generating Walls')
   var m = map.tiles
-  for(var y=map.PADDING-1; y < (m.length-map.PADDING+1); y++){
-    for(var x=map.PADDING-1; x < (m[y].length-map.PADDING+1); x++){
+  for(var y=map.PADDING-1; y < (m.length-map.PADDING); y++){
+    for(var x=map.PADDING-1; x < (m[y].length-map.PADDING); x++){
       // Create wall if stone and at least one neighbor is 'floor'
       if( m[y][x].class.includes('stone') ){
         if ( getNeighbors(new Pos(x,y), 'floor').length > 0 ) {
