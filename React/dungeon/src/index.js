@@ -109,11 +109,14 @@ class App extends React.Component {
     generateTunnels()
     generateWalls()
     generateFog()
+    var tiles = getTiles('floor')
+    console.log(tiles)
+
   }
 
 
   initializeCharacters(){
-    var characters = [], testcharacters=[]
+    var characters = []
     characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
 
     var enemies = generateEnemies()
@@ -311,7 +314,6 @@ function generateRooms(){
     count--
   }
 
-
   function hasIntercepts(newRoom){
     for (let room in rooms){
       if (rooms[room].intercepts(newRoom)){
@@ -322,6 +324,10 @@ function generateRooms(){
   }
 
   return rooms
+}
+
+function getTiles(tileType){
+  return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
 }
 
 function generateTunnels(){
@@ -360,11 +366,10 @@ function generateWalls(){
   }
 }
 
+
 function generateFog(){
 
 }
-
-
 
 function generateEnemies(){
   console.log('Generating Enemies')
@@ -389,6 +394,11 @@ function generateEnemies(){
     }
   }
 }
+
+
+
+
+
 
 function Pos(x, y) {
   this.x = x || 0
