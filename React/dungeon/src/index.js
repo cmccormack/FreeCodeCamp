@@ -8,7 +8,7 @@ var map = {
   tiles: [],
   COLS: 70,
   ROWS: 40,
-  PADDING: 2,
+  PADDING: 1,
   style: {
     PADDING: 12,
   },
@@ -259,24 +259,31 @@ function Buttons(props) {
 
 
 function randRange(m, n){
-  [m,n] = [m,n].sort((a,b)=>a-b)
   return Math.floor((Math.random() * (n+1-m)) + m)
 }
 
 function getNeighbors(pos, filter){
-  // console.log(pos)
+  filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
     neighbors = []
-  // console.log(pos)
-  neighbors.push(m[y-1][x-1])
-  neighbors.push(m[y-1][x+0])
-  neighbors.push(m[y-1][x+1])
-  neighbors.push(m[y+0][x-1])
-  neighbors.push(m[y+0][x+1])
-  neighbors.push(m[y+1][x-1])
-  neighbors.push(m[y+1][x+0])
-  neighbors.push(m[y+1][x+1])
+
+  if (y-1 >= 0){
+    neighbors.push(m[y-1][x+0])
+    if (y+1 < map.ROWS){
+      neighbors.push(m[y+1][x+0])
+      if (x-1 >= 0){
+        neighbors.push(m[y-1][x-1])
+        neighbors.push(m[y+0][x-1])
+        neighbors.push(m[y+1][x-1])   
+      }
+      if (x+1 < map.COLS){
+        neighbors.push(m[y-1][x+1])
+        neighbors.push(m[y+0][x+1])
+        neighbors.push(m[y+1][x+1])
+      }
+    }
+  }
 
   return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
 }
@@ -344,24 +351,14 @@ function generateTunnels(){
 function generateWalls(){
   console.log('Generating Walls')
   var m = map.tiles
-  for(var y=1; y < (m.length-1); y++){
-    for(var x=1; x < (m[y].length-1); x++){
-      
+  for(var y=map.PADDING-1; y < (m.length-map.PADDING+1); y++){
+    for(var x=map.PADDING-1; x < (m[y].length-map.PADDING+1); x++){
+      // Create wall if stone and at least one neighbor is 'floor'
       if( m[y][x].class.includes('stone') ){
-        if (
-          m[y-1][x-1].class.includes('floor') || 
-          m[y-1][x+0].class.includes('floor') || 
-          m[y-1][x+1].class.includes('floor') || 
-          m[y+0][x-1].class.includes('floor') || 
-          m[y+0][x+1].class.includes('floor') || 
-          m[y+1][x-1].class.includes('floor') || 
-          m[y+1][x+0].class.includes('floor') || 
-          m[y+1][x+1].class.includes('floor')
-        ) {
+        if ( getNeighbors(new Pos(x,y), 'floor').length > 0 ) {
           m[y][x].class = 'tile wall'
         } 
       }
-        
     }  
   }
 }
