@@ -10,6 +10,7 @@ var map = {
   COLS: 70,
   ROWS: 40,
   PADDING: 1,
+  MAXENEMIES: 25,
   style: {
     PADDING: 12,
   },
@@ -94,10 +95,8 @@ class App extends React.Component {
   }
 
   characterMove(pos){
-    var player = this.state.player,
-      newpos = new Pos(player.pos.x + pos.x, player.pos.y + pos.y)
-    // if (map.TILES[newpos.y][newpos.x].class.includes('floor')){
-    
+    var player = this.state.player
+
     player.pos = player.move(pos)
     this.update()
   }
@@ -122,11 +121,35 @@ class App extends React.Component {
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0){
       player = new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player')
+    } else { // Move player to room 0, maintaining stats, gear and experience
+      player.pos = map.rooms[0].random_location()
+    }
+    player.draw('player')
+
+    // enemies = generateEnemies()
+
+
+    // Testing random enemy generation
+    var floorTiles = getTiles('floor')
+    // enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
+    // var newArr = Array(30).fill(0).map(()=>floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0])
+
+    var tile, enemy, type
+    for (let i = 0; i < map.MAXENEMIES; i++){
+      type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+      tile = floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0]
+      enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
+      if (enemy.hasNeighbors('wall', 'player', 'enemy')){
+        i--
+      } else {
+        enemies.push(enemy)
+        enemy.draw('enemy')
+      }
     }
 
-    enemies = generateEnemies()
-    
-    player.draw('player')
+    enemies.map((e)=>{e.draw('enemy')})
+
+
     map.enemies = [player].concat(enemies)
   }
 
@@ -266,6 +289,7 @@ function randRange(m, n){
 }
 
 function getNeighbors(pos, filter){
+  // console.log('getNeighbors: pos:', pos, 'filter:', filter)
   filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
@@ -286,10 +310,6 @@ function getNeighbors(pos, filter){
   if (validPos(y+0, x+1)){ neighbors.push(m[y+0][x+1]) }
   if (validPos(y+1, x+1)){ neighbors.push(m[y+1][x+1]) }
 
-  // console.log(map.tiles[pos.y][pos.x])
-  // console.log(JSON.stringify(neighbors))
-  // console.log(JSON.stringify(neighbors.filter((l)=>l.class.includes('enemy'))))
-  // if (filter === 'enemy') console.log(JSON.stringify(neighbors.filter((i)=>i.class.includes(filter))))
   return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
 }
 
@@ -309,6 +329,7 @@ function generateTiles(rows, cols, initObj={}){
   }
   return tiles
 }
+
 
 function generateRooms(){
   console.log('Generating Rooms')
@@ -342,7 +363,10 @@ function generateRooms(){
 }
 
 function getTiles(tileType){
-  return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
+  if (typeof tileType ==='string'){
+    return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
+  }
+  return map.tiles
 }
 
 function generateTunnels(){
@@ -511,6 +535,5 @@ Mob.prototype.draw = function(type){
 }
 
 Mob.prototype.hasNeighbors = function(){
-  console.log(this.pos)
-  return this.pos.x-1
+  return Array.from(arguments).reduce((a,i)=>a + getNeighbors(this.pos, i).length, 0) > 0
 }
