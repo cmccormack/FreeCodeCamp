@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 var map = {
   rooms: [],
   tiles: [],
+  characters: [],
   COLS: 70,
   ROWS: 40,
   PADDING: 1,
@@ -115,29 +116,25 @@ class App extends React.Component {
 
 
   initializeCharacters(){
-    var characters = []
+    var player = this.state.player,
+      enemies = []
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0){
-      characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
-    }
-    else {
-      characters.push(this.state.player)
+      player = new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player')
     }
 
-
-    characters = characters.concat(generateEnemies())
-    return characters
+    enemies = generateEnemies()
+    
+    player.draw('player')
+    map.enemies = [player].concat(enemies)
   }
 
 
   init(){
-    var rooms = this.initializeMap(),
-      characters = this.initializeCharacters(rooms),
-      player = characters[0]
-    console.log(characters)
-    player.draw('player')
-    this.setState({player: player, mapTiles: map.tiles.slice(0)})
+    var rooms = this.initializeMap()
+    this.initializeCharacters()
+    this.setState({player: map.enemies[0], mapTiles: map.tiles.slice(0)})
   }
 
   handleGenerateClick(){
@@ -280,15 +277,19 @@ function getNeighbors(pos, filter){
     return true
   }
 
-  if (validPos(y-1, x+0)) neighbors.push(m[y-1][x+0])
-  if (validPos(y-1, x-1)) neighbors.push(m[y-1][x-1])
-  if (validPos(y+1, x+0)) neighbors.push(m[y+1][x+0])
-  if (validPos(y+0, x-1)) neighbors.push(m[y+0][x-1])
-  if (validPos(y+1, x-1)) neighbors.push(m[y+1][x-1])   
-  if (validPos(y-1, x+1)) neighbors.push(m[y-1][x+1])
-  if (validPos(y+0, x+1)) neighbors.push(m[y+0][x+1])
-  if (validPos(y+1, x+1)) neighbors.push(m[y+1][x+1])
+  if (validPos(y-1, x+0)){ neighbors.push(m[y-1][x+0]) } 
+  if (validPos(y-1, x-1)){ neighbors.push(m[y-1][x-1]) }
+  if (validPos(y+1, x+0)){ neighbors.push(m[y+1][x+0]) }
+  if (validPos(y+0, x-1)){ neighbors.push(m[y+0][x-1]) }
+  if (validPos(y+1, x-1)){ neighbors.push(m[y+1][x-1]) }   
+  if (validPos(y-1, x+1)){ neighbors.push(m[y-1][x+1]) }
+  if (validPos(y+0, x+1)){ neighbors.push(m[y+0][x+1]) }
+  if (validPos(y+1, x+1)){ neighbors.push(m[y+1][x+1]) }
 
+  // console.log(map.tiles[pos.y][pos.x])
+  // console.log(JSON.stringify(neighbors))
+  // console.log(JSON.stringify(neighbors.filter((l)=>l.class.includes('enemy'))))
+  // if (filter === 'enemy') console.log(JSON.stringify(neighbors.filter((i)=>i.class.includes(filter))))
   return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
 }
 
@@ -388,6 +389,7 @@ function generateEnemies(){
 
       // Add enemies while ensuring no enemies are within a neighboring tile
       try_count = 100, enemy = null
+      
       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
         enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
         try_count--
