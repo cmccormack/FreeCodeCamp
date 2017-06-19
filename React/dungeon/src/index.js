@@ -110,17 +110,23 @@ class App extends React.Component {
     generateWalls()
     generateFog()
     var tiles = getTiles('floor')
-    console.log(tiles)
 
   }
 
 
   initializeCharacters(){
     var characters = []
-    characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
 
-    var enemies = generateEnemies()
+    // Only push new player if player does not exist
+    if (Object.keys(this.state.player).length === 0){
+      characters.push(new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player'))
+    }
+    else {
+      characters.push(this.state.player)
+    }
 
+
+    characters = characters.concat(generateEnemies())
     return characters
   }
 
@@ -129,7 +135,7 @@ class App extends React.Component {
     var rooms = this.initializeMap(),
       characters = this.initializeCharacters(rooms),
       player = characters[0]
-
+    console.log(characters)
     player.draw('player')
     this.setState({player: player, mapTiles: map.tiles.slice(0)})
   }
@@ -388,9 +394,9 @@ function generateEnemies(){
       }
       enemy.draw('enemy')
       enemies.push(enemy)
-      
     }
   }
+  return enemies
 }
 
 
