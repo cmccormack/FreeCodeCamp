@@ -10,7 +10,7 @@ var map = {
   COLS: 70,
   ROWS: 40,
   PADDING: 1,
-  MAXENEMIES: 20,
+  MAXENEMIES: 25,
   style: {
     PADDING: 12,
   },
@@ -126,27 +126,7 @@ class App extends React.Component {
     }
     player.draw('player')
 
-    // enemies = generateEnemies()
-
-
-    // Testing random enemy generation
-    var floorTiles = getTiles('floor')
-    // enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
-    // var newArr = Array(30).fill(0).map(()=>floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0])
-
-    var tile, enemy, type
-    for (let i = 0; i < map.MAXENEMIES; i++){
-      type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
-      tile = floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0]
-      enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
-      if (enemy.hasNeighbors('player', 'enemy')){
-        i--
-      } else {
-        enemies.push(enemy)
-        enemy.draw('enemy')
-      }
-    }
-
+    enemies = generateEnemiesByMap()
     enemies.map((e)=>{e.draw('enemy')})
 
 
@@ -400,7 +380,7 @@ function generateFog(){
 
 }
 
-function generateEnemies(){
+function generateEnemiesByRoom(){
   console.log('Generating Enemies')
   var enemies = [], _, enemy, enemy_count, try_count,
     min = map.roomvars.MINENEMIES,
@@ -425,6 +405,25 @@ function generateEnemies(){
   return enemies
 }
 
+
+function generateEnemiesByMap(){
+  var enemies = []
+  var floorTiles = getTiles('floor')
+  var tile, enemy, type
+  for (let i = 0; i < map.MAXENEMIES; i++){
+    type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+    tile = floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0]
+    enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
+    if (enemy.hasNeighbors('player', 'enemy', 'wall')){
+      i--
+    } else {
+      enemies.push(enemy)
+      enemy.draw('enemy')
+    }
+  }
+  return enemies
+
+}
 
 
 
