@@ -10,7 +10,7 @@ var map = {
   COLS: 70,
   ROWS: 40,
   PADDING: 1,
-  MAXENEMIES: 25,
+  MAXENEMIES: 20,
   style: {
     PADDING: 12,
   },
@@ -139,7 +139,7 @@ class App extends React.Component {
       type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
       tile = floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0]
       enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
-      if (enemy.hasNeighbors('wall', 'player', 'enemy')){
+      if (enemy.hasNeighbors('player', 'enemy')){
         i--
       } else {
         enemies.push(enemy)
