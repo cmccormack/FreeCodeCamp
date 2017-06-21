@@ -532,6 +532,7 @@ Mob.prototype.move = function move(pos){
 }
 
 Mob.prototype.draw = function(type){
+  map.tiles[this.pos.y][this.pos.x].mob=this
   map.tiles[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
 }
 
