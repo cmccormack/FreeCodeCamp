@@ -106,6 +106,7 @@ class App extends React.Component {
       map.ROWS, map.COLS, { class:'tile stone' })
 
     map.rooms = generateRooms()
+    console.log(map.tiles)
     generateTunnels()
     generateWalls()
     generateFog()
@@ -454,6 +455,7 @@ function Room(x, y, w, h) {
 Room.prototype.draw = function(map){
   for (var row = this.y1; row < this.y2; row++){
     for (var col = this.x1; col < this.x2; col++){
+      map[row][col].room = this
       map[row][col].class = 'tile floor'
     }
   }
