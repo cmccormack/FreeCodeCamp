@@ -508,8 +508,10 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 
   this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0
+    console.log(this.name + ' takes ' + dmg + ' damage!')
     this.hp -= dmg
     if (this.hp <- 0){
+      console.log(this.name + ' was killed!')
       this.draw('floor')
       delete map.tiles[this.pos.y][this.pos.x].mob
     }
@@ -540,7 +542,7 @@ Mob.prototype.move = function move(pos){
   }
 
   if (tile.class.includes('enemy')){
-    console.log(tile.mob)
+    console.log(this.name + ' attacks ' + tile.mob.name + '.')
     this.attack(tile.mob)
   }
 
