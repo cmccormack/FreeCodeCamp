@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 var map = {
   rooms: [],
   tiles: [],
+  statusText: [],
   characters: [],
   COLS: 70,
   ROWS: 40,
@@ -15,8 +16,8 @@ var map = {
     PADDING: 12,
   },
   tile:{
-    width: 12,
-    height: 12
+    width: 10,
+    height: 10
   },
   roomvars: {
     MAXTRIES: 1000,
@@ -65,7 +66,9 @@ class App extends React.Component {
 
     this.state = { 
       mapTiles: [], 
-      player: {} }
+      player: {},
+      statusText: map.statusText
+    }
   }
 
   componentWillMount(){
@@ -146,7 +149,10 @@ class App extends React.Component {
   }
 
   update(){
-    this.setState({ mapTiles: map.tiles.slice(0) })
+    this.setState({ 
+      mapTiles: map.tiles.slice(0),
+      statusText: map.statusText
+    })
   }
 
   render() {
@@ -160,6 +166,7 @@ class App extends React.Component {
             funcs={this.funcs}
             mapTiles={this.state.mapTiles}
             player={this.state.player}
+            statusText={this.state.statusText}
         />
       </div>
     )
@@ -203,6 +210,12 @@ class Map extends React.Component {
           ))
         )}
         <Buttons funcs={this.props.funcs} />
+        <div className={'statusText'}>
+          <ul>
+            { this.props.statusText.map((v,i)=><li key={''+i+v}>{v}</li>)}
+          </ul>
+          
+        </div>
       </div>
     )
   }
@@ -509,9 +522,11 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0
     console.log(this.name + ' takes ' + dmg + ' damage!')
+    map.statusText.unshift(this.name + ' takes ' + dmg + ' damage!')
     this.hp -= dmg
     if (this.hp <- 0){
       console.log(this.name + ' was killed!')
+      map.statusText.unshift(this.name + ' was killed!')
       this.draw('floor')
       delete map.tiles[this.pos.y][this.pos.x].mob
     }
@@ -543,6 +558,7 @@ Mob.prototype.move = function move(pos){
 
   if (tile.class.includes('enemy')){
     console.log(this.name + ' attacks ' + tile.mob.name + '.')
+    map.statusText.unshift(this.name + ' attacks ' + tile.mob.name + '.')
     this.attack(tile.mob)
   }
 

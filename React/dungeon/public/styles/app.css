@@ -1745,6 +1745,20 @@ main {
       .mapContainer .buttons .btn:hover {
         background-color: rgba(68, 68, 68, 0.6);
         color: #EEE; }
+  .mapContainer .statusText {
+    margin-top: 12px;
+    background-color: rgba(2, 2, 2, 0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    height: 100px;
+    width: 100%;
+    overflow-y: scroll; }
+    .mapContainer .statusText ul {
+      font-size: 0.8rem; }
+      .mapContainer .statusText ul li {
+        color: #888; }
+        .mapContainer .statusText ul li:nth-child(-n+2) {
+          color: #CCC; }
 
 .keys {
   position: relative;
