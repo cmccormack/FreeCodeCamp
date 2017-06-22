@@ -106,7 +106,6 @@ class App extends React.Component {
       map.ROWS, map.COLS, { class:'tile stone' })
 
     map.rooms = generateRooms()
-    console.log(map.tiles)
     generateTunnels()
     generateWalls()
     generateFog()
@@ -128,6 +127,7 @@ class App extends React.Component {
     player.draw('player')
 
     enemies = generateEnemiesByMap()
+    // enemies = generateEnemiesByRoom()
     enemies.map((e)=>{e.draw('enemy')})
 
 
@@ -502,12 +502,21 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.pos = startpos
   this.level = level
   this.name = name
+  this.piercing = 0
   this.exp = 0
   this.tnl = 10
 
   this.take_damage = function(dmg, piercing){
     dmg = this.def - piercing > 0 ? this.def - piercing : 0
     this.hp -= dmg
+    if (this.hp <- 0){
+      this.draw('floor')
+      delete map.tiles[this.pos.y][this.pos.x].mob
+    }
+  }
+
+  this.attack = function(target){
+    target.take_damage(this.atk, this.piercing)
   }
 
   this.modify_health = function(hp){
@@ -521,13 +530,21 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 }
 
 Mob.prototype.move = function move(pos){
-  var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y)
-  if (map.tiles[newpos.y][newpos.x].class.includes('floor')){
+  var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
+    tile = map.tiles[newpos.y][newpos.x]
+  if (tile.class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
     this.draw('player')
     return newpos
   }
+
+  if (tile.class.includes('enemy')){
+    console.log(tile.mob)
+    this.attack(tile.mob)
+  }
+
+
   return this.pos
 }
 
