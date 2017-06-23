@@ -409,30 +409,30 @@ function generateWalls(){
 }
 
 
-// function generateEnemiesByRoom(){
-//   console.log('Generating Enemies')
-//   var enemies = [], _, enemy, enemy_count, try_count,
-//     min = map.roomvars.MINENEMIES,
-//     max = map.roomvars.MAXENEMIES
+function generateEnemiesByRoom(){
+  console.log('Generating Enemies')
+  var enemies = [], _, enemy, enemy_count, try_count,
+    min = map.roomvars.MINENEMIES,
+    max = map.roomvars.MAXENEMIES
 
-//   for (let i=1; i<map.rooms.length; i++){
-//     enemy_count = randRange(min,max)
-//     for (let e = 0; e < enemy_count; e++){
-//       _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+  for (let i=1; i<map.rooms.length; i++){
+    enemy_count = randRangeInt(min,max)
+    for (let e = 0; e < enemy_count; e++){
+      _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
 
-//       // Add enemies while ensuring no enemies are within a neighboring tile
-//       try_count = 100, enemy = null
+      // Add enemies while ensuring no enemies are within a neighboring tile
+      try_count = 100, enemy = null
       
-//       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
-//         enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
-//         try_count--
-//       }
-//       enemy.draw('enemy')
-//       enemies.push(enemy)
-//     }
-//   }
-//   return enemies
-// }
+      while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
+        enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
+        try_count--
+      }
+      enemy.draw('enemy')
+      enemies.push(enemy)
+    }
+  }
+  return enemies
+}
 
 
 function generateEnemiesByMap(){
@@ -586,19 +586,19 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
-    tile = map.tiles[newpos.y][newpos.x]
+    map_tile = map.tiles[newpos.y][newpos.x]
 
-  if (tile.class.includes('floor')){
+  if (map_tile.class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
     this.draw('player')
     return newpos
   }
 
-  if (tile.class.includes('enemy')){
-    this.attack(tile.mob)
-    if (tile.mob){
-      tile.mob.attack(this)
+  if (map_tile.class.includes('enemy')){
+    this.attack(map_tile.mob)
+    if (map_tile.mob){
+      map_tile.mob.attack(this)
     }
   }
 
@@ -607,8 +607,9 @@ Mob.prototype.move = function move(pos){
 }
 
 Mob.prototype.draw = function(type){
-  map.tiles[this.pos.y][this.pos.x].mob=this
-  map.tiles[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
+  var map_tile = map.tiles[this.pos.y][this.pos.x]
+  map_tile.mob = this
+  map_tile.class = 'tile ' + (type || '')
 }
 
 Mob.prototype.hasNeighbors = function(...filterArr){
