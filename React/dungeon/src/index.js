@@ -39,7 +39,17 @@ var map = {
     { name: 'troll',    atk: 1.2, hp: 8 , def:3 },
     { name: 'vampire',  atk: 1.5, hp: 12, def:1 },
     { name: 'zombie',   atk: 1.1, hp: 14, def:1 }
-  ]
+  ],
+  items: {
+    treasure: {
+      MIN: 2,
+      MAX: 5
+    },
+    health: {
+      MIN: 4,
+      MAX: 7
+    }
+  }
 }
 
 const ARROW_KEYS = {
@@ -77,7 +87,6 @@ class App extends React.Component {
 
   componentDidMount(){
     this.initializeHandlers()
-    // console.log('Pos: ' + new Pos(1,2) == new Pos(1,2))
   }
 
   shouldComponentUpdate(nextProps, nextState){
@@ -116,6 +125,7 @@ class App extends React.Component {
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
+    generateItems()
     generateFog()
   }
 
@@ -283,12 +293,12 @@ function writeStatus(text){
   map.statusText.unshift(text)
 }
 
-function randRange(m, n){
+function randRangeInt(m, n){
   return Math.floor((Math.random() * (n+1-m)) + m)
 }
 
 function getNeighbors(pos, filter){
-  // console.log('getNeighbors: pos:', pos, 'filter:', filter)
+
   filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
@@ -310,6 +320,10 @@ function getNeighbors(pos, filter){
   if (validPos(y+1, x+1)){ neighbors.push(m[y+1][x+1]) }
 
   return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
+}
+
+function hasNeighbors(pos, filterArr){
+  return filterArr.reduce((a,i)=>a + getNeighbors(pos, i).length, 0) > 0
 }
 
 function generateTiles(rows, cols, initObj={}){
@@ -337,10 +351,10 @@ function generateRooms(){
     current_room,
     w, h, x, y
   while (count > 0 && rooms.length < map.roomvars.MAXROOMS){
-    w = randRange(map.roomvars.MIN, map.roomvars.MAX)
-    h = randRange(map.roomvars.MIN, map.roomvars.MAX)
-    x = randRange(map.PADDING, map.COLS - w - map.PADDING)
-    y = randRange(map.PADDING, map.ROWS - h - map.PADDING)
+    w = randRangeInt(map.roomvars.MIN, map.roomvars.MAX)
+    h = randRangeInt(map.roomvars.MIN, map.roomvars.MAX)
+    x = randRangeInt(map.PADDING, map.COLS - w - map.PADDING)
+    y = randRangeInt(map.PADDING, map.ROWS - h - map.PADDING)
     current_room = new Room(x, y, w, h)
     if (!hasIntercepts(current_room)){
       rooms.push(current_room)
@@ -362,7 +376,7 @@ function generateRooms(){
 }
 
 function getTiles(tileType){
-  if (typeof tileType ==='string'){
+  if (typeof tileType === 'string'){
     return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
   }
   return map.tiles
@@ -394,10 +408,6 @@ function generateWalls(){
   }
 }
 
-
-function generateFog(){
-
-}
 
 // function generateEnemiesByRoom(){
 //   console.log('Generating Enemies')
@@ -431,7 +441,7 @@ function generateEnemiesByMap(){
   var tile, enemy, type
   for (let i = 0; i < map.MAXENEMIES; i++){
     type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
-    tile = floorTiles.splice(randRange(0, floorTiles.length-1), 1)[0]
+    tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
     enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
       i--
@@ -442,6 +452,22 @@ function generateEnemiesByMap(){
   }
   return enemies
 
+}
+
+function generateItems(){
+  var health_n = randRangeInt(map.items.health.MIN, map.items.health.MAX),
+    treasure_n = randRangeInt(map.items.treasure.MIN, map.items.treasure.MAX),
+    tiles = getTiles('floor')
+
+  for (let i=0; i < health_n; i++){
+    true
+  }
+
+  console.log(tiles)
+}
+
+function generateFog(){
+  // Complete later
 }
 
 
@@ -485,8 +511,8 @@ Room.prototype.intercepts = function(other){
 }
 
 Room.prototype.random_location = function(padding=2){
-  return new Pos(randRange(this.x1+padding, this.x2-padding), 
-    randRange(this.y1 + padding,this.y2 - padding))
+  return new Pos(randRangeInt(this.x1+padding, this.x2-padding), 
+    randRangeInt(this.y1 + padding,this.y2 - padding))
 }
 
 Room.prototype.h_tunnel = function(other){
@@ -513,6 +539,7 @@ Room.prototype.v_tunnel = function(other){
 
 function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.hp = hp
+  this.maxhp = hp
   this.atk = atk
   this.def = def
   this.wpn = wpn
@@ -584,6 +611,6 @@ Mob.prototype.draw = function(type){
   map.tiles[this.pos.y][this.pos.x].class = 'tile ' + (type || '')
 }
 
-Mob.prototype.hasNeighbors = function(){
-  return Array.from(arguments).reduce((a,i)=>a + getNeighbors(this.pos, i).length, 0) > 0
+Mob.prototype.hasNeighbors = function(...filterArr){
+  return hasNeighbors(this.pos, filterArr)
 }
