@@ -531,7 +531,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     strMsg += this.name + ' takes ' + dmg + ' damage!'
     console.log(mob.name + ' attacks ' + this.name + '.  ' + this.name + ' takes ' + dmg + ' damage!')
     writeStatus(strMsg)
-    this.hp -= dmg
+    this.hp -= (dmg * 10) / 10
 
     // Enemy dies if HP < 0, else attacks player
     if (this.hp <= 0){
