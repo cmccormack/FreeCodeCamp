@@ -101,7 +101,12 @@ class App extends React.Component {
     var player = this.state.player
 
     player.pos = player.move(pos)
-    this.update()
+    if (player.hp <= 0 ){
+      writeStatus(player.name + ' has died!  Like, gaame over, man!!')
+      this.init()
+    } else {
+      this.update()
+    }
   }
 
   initializeMap(){
@@ -112,8 +117,6 @@ class App extends React.Component {
     generateTunnels()
     generateWalls()
     generateFog()
-    var tiles = getTiles('floor')
-
   }
 
 
@@ -122,24 +125,22 @@ class App extends React.Component {
       enemies = []
 
     // Only push new player if player does not exist
-    if (Object.keys(this.state.player).length === 0){
-      player = new Mob(map.rooms[0].random_location(), 10, 4, 2, {}, {}, 1, 'player')
+    if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
+      player = new Mob(map.rooms[0].random_location(), 10, 4, 1, {}, {}, 1, 'player')
     } else { // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
     player.draw('player')
 
     enemies = generateEnemiesByMap()
-    // enemies = generateEnemiesByRoom()
-    enemies.map((e)=>{e.draw('enemy')})
-
-
+    // enemies.map((e)=>{e.draw('enemy')})
+    enemies.forEach((e)=>{e.draw('enemy')}) 
     map.enemies = [player].concat(enemies)
   }
 
 
   init(){
-    var rooms = this.initializeMap()
+    this.initializeMap()
     this.initializeCharacters()
     this.setState({player: map.enemies[0], mapTiles: map.tiles.slice(0)})
   }
@@ -214,7 +215,6 @@ class Map extends React.Component {
           <ul>
             { this.props.statusText.map((v,i)=><li key={''+i+v}>{v}</li>)}
           </ul>
-          
         </div>
       </div>
     )
@@ -244,7 +244,7 @@ function Tile(props) {
 function Statusicons(props){
   return (
     <div className={'statusicons unselectable'}>
-      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp}</span>
+      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</span>
       <span className={'status'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</span>
       <span className={'status'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</span>
       <span className={'status'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</span>
@@ -274,10 +274,12 @@ function Buttons(props) {
 
 
 
-
+function sentenceCase(text){
+  return text[0].toUpperCase() + text.slice(1)
+}
 
 function writeStatus(text){
-  text = text.split('.  ').map((v)=>v[0].toUpperCase() + v.slice(1)).join('.')
+  text = text.split('.  ').map((v)=>sentenceCase(v)).join('.  ')
   map.statusText.unshift(text)
 }
 
@@ -397,30 +399,30 @@ function generateFog(){
 
 }
 
-function generateEnemiesByRoom(){
-  console.log('Generating Enemies')
-  var enemies = [], _, enemy, enemy_count, try_count,
-    min = map.roomvars.MINENEMIES,
-    max = map.roomvars.MAXENEMIES
+// function generateEnemiesByRoom(){
+//   console.log('Generating Enemies')
+//   var enemies = [], _, enemy, enemy_count, try_count,
+//     min = map.roomvars.MINENEMIES,
+//     max = map.roomvars.MAXENEMIES
 
-  for (let i=1; i<map.rooms.length; i++){
-    enemy_count = randRange(min,max)
-    for (let e = 0; e < enemy_count; e++){
-      _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+//   for (let i=1; i<map.rooms.length; i++){
+//     enemy_count = randRange(min,max)
+//     for (let e = 0; e < enemy_count; e++){
+//       _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
 
-      // Add enemies while ensuring no enemies are within a neighboring tile
-      try_count = 100, enemy = null
+//       // Add enemies while ensuring no enemies are within a neighboring tile
+//       try_count = 100, enemy = null
       
-      while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
-        enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
-        try_count--
-      }
-      enemy.draw('enemy')
-      enemies.push(enemy)
-    }
-  }
-  return enemies
-}
+//       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
+//         enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
+//         try_count--
+//       }
+//       enemy.draw('enemy')
+//       enemies.push(enemy)
+//     }
+//   }
+//   return enemies
+// }
 
 
 function generateEnemiesByMap(){
@@ -523,16 +525,22 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.tnl = 10
 
   this.take_damage = function(mob){
-    var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0
-    console.log(this.name + ' takes ' + dmg + ' damage!')
-    writeStatus(this.name + ' takes ' + dmg + ' damage!')
+    var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0,
+      strMsg = ''
+    strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  '
+    strMsg += this.name + ' takes ' + dmg + ' damage!'
+    console.log(mob.name + ' attacks ' + this.name + '.  ' + this.name + ' takes ' + dmg + ' damage!')
+    writeStatus(strMsg)
     this.hp -= dmg
+
+    // Enemy dies if HP < 0, else attacks player
     if (this.hp <= 0){
       console.log(this.name + ' was killed!')
       writeStatus(this.name + ' was killed!')
       this.draw('floor')
       delete map.tiles[this.pos.y][this.pos.x].mob
     }
+    return this
   }
 
   this.attack = function(target){
@@ -552,6 +560,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
     tile = map.tiles[newpos.y][newpos.x]
+
   if (tile.class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
@@ -560,8 +569,10 @@ Mob.prototype.move = function move(pos){
   }
 
   if (tile.class.includes('enemy')){
-    writeStatus(this.name + ' attacks ' + tile.mob.name + '.')
     this.attack(tile.mob)
+    if (tile.mob){
+      tile.mob.attack(this)
+    }
   }
 
 
