@@ -276,7 +276,10 @@ function Buttons(props) {
 
 
 
-
+function writeStatus(text){
+  text = text.split('.  ').map((v)=>v[0].toUpperCase() + v.slice(1)).join('.')
+  map.statusText.unshift(text)
+}
 
 function randRange(m, n){
   return Math.floor((Math.random() * (n+1-m)) + m)
@@ -520,13 +523,13 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.tnl = 10
 
   this.take_damage = function(dmg, piercing){
-    dmg = this.def - piercing > 0 ? this.def - piercing : 0
+    dmg = dmg - this.def - piercing > 0 ? dmg - this.def - piercing : 0
     console.log(this.name + ' takes ' + dmg + ' damage!')
-    map.statusText.unshift(this.name + ' takes ' + dmg + ' damage!')
+    writeStatus(this.name + ' takes ' + dmg + ' damage!')
     this.hp -= dmg
     if (this.hp <- 0){
       console.log(this.name + ' was killed!')
-      map.statusText.unshift(this.name + ' was killed!')
+      writeStatus(this.name + ' was killed!')
       this.draw('floor')
       delete map.tiles[this.pos.y][this.pos.x].mob
     }
@@ -557,8 +560,7 @@ Mob.prototype.move = function move(pos){
   }
 
   if (tile.class.includes('enemy')){
-    console.log(this.name + ' attacks ' + tile.mob.name + '.')
-    map.statusText.unshift(this.name + ' attacks ' + tile.mob.name + '.')
+    writeStatus(this.name + ' attacks ' + tile.mob.name + '.')
     this.attack(tile.mob)
   }
 
