@@ -123,7 +123,7 @@ class App extends React.Component {
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0){
-      player = new Mob(map.rooms[0].random_location(), 10, 2, 2, {}, {}, 1, 'player')
+      player = new Mob(map.rooms[0].random_location(), 10, 4, 2, {}, {}, 1, 'player')
     } else { // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
@@ -522,12 +522,12 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.exp = 0
   this.tnl = 10
 
-  this.take_damage = function(dmg, piercing){
-    dmg = dmg - this.def - piercing > 0 ? dmg - this.def - piercing : 0
+  this.take_damage = function(mob){
+    var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0
     console.log(this.name + ' takes ' + dmg + ' damage!')
     writeStatus(this.name + ' takes ' + dmg + ' damage!')
     this.hp -= dmg
-    if (this.hp <- 0){
+    if (this.hp <= 0){
       console.log(this.name + ' was killed!')
       writeStatus(this.name + ' was killed!')
       this.draw('floor')
@@ -536,7 +536,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   }
 
   this.attack = function(target){
-    target.take_damage(this.atk, this.piercing)
+    target.take_damage(this)
   }
 
   this.modify_health = function(hp){
