@@ -459,11 +459,12 @@ function generateItems(){
     treasure_n = randRangeInt(map.items.treasure.MIN, map.items.treasure.MAX),
     tiles = getTiles('floor'), tile
 
+  console.log(tiles)
   for (let i=0; i < health_n; i++){
-    tile = randRangeInt(0, tiles.length - 1)
+    tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
     console.log(tile)
-    if (!tile.hasNeighbors('floor', 'wall')){
-      
+    if (!hasNeighbors(tile.pos, ['enemy', 'player', 'wall'])){
+      console.log(tile.pos)
     } else {
       i--
     }
