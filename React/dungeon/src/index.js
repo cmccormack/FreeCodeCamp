@@ -457,14 +457,15 @@ function generateEnemiesByMap(){
 function generateItems(){
   var health_n = randRangeInt(map.items.health.MIN, map.items.health.MAX),
     treasure_n = randRangeInt(map.items.treasure.MIN, map.items.treasure.MAX),
-    tiles = getTiles('floor'), tile
+    tiles = getTiles('floor'), tile, item
 
   console.log(tiles)
   for (let i=0; i < health_n; i++){
     tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
     console.log(tile)
-    if (!hasNeighbors(tile.pos, ['enemy', 'player', 'wall'])){
-      console.log(tile.pos)
+    item = new Item(tile.pos, 'item item-health', 'ra ra-health')
+    if (!hasNeighbors(tile.pos, ['enemy', 'player', 'wall', 'item'])){
+      item.draw('item')
     } else {
       i--
     }
@@ -624,11 +625,19 @@ Mob.prototype.hasNeighbors = function(...filterArr){
   return hasNeighbors(this.pos, filterArr)
 }
 
-function Item(pos, name){
+
+function Item(pos, name, icon){
   this.pos = pos
   this.name = name
+  this.icon = icon
 }
 
 Item.prototype.hasNeighbors = function(...filterArr){
   return hasNeighbors(this.pos, filterArr)
+}
+
+Item.prototype.draw = function(type){
+  var map_tile = map.tiles[this.pos.y][this.pos.x]
+  map_tile.item = this
+  map_tile.class = 'tile ' + (type || '')
 }
