@@ -474,7 +474,7 @@ function generateItems(){
       i -= 1
     } else {
       items.push(item)
-      item.draw('item')
+      item.draw('floor item')
     }
   }
   return items

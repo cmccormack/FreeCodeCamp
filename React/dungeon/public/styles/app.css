@@ -1731,6 +1731,17 @@ main {
       border-color: darkgreen;
       border-radius: 4px;
       z-index: 2; }
+    .mapContainer .tile.item {
+      border: 1px solid black;
+      background-color: white;
+      z-index: 1; }
+      .mapContainer .tile.item .ra-health {
+        z-index: 2;
+        position: relative;
+        top: -10.6px;
+        left: 0.5px;
+        font-size: 8px;
+        color: red; }
   .mapContainer .buttons {
     margin-top: 12px;
     background-color: rgba(2, 2, 2, 0.2);
