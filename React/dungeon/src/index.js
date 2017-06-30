@@ -211,6 +211,7 @@ class Map extends React.Component {
           style={mapContainerStyle}
       >
         <Statusicons player={this.props.player} />
+
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
             <Tile
@@ -220,6 +221,7 @@ class Map extends React.Component {
             />
           ))
         )}
+
         <Buttons funcs={this.props.funcs} />
         <div className={'statusText'}>
           <ul>
@@ -233,8 +235,8 @@ class Map extends React.Component {
 
 
 function Tile(props) {
-  
   var {x, y} = props.pos
+
 
   return (
     <div
@@ -247,7 +249,8 @@ function Tile(props) {
           height: map.tile.height,
           clear: x === map.COLS ? 'both' : 'none'
         }}
-    />
+    > {(props.tile.hasOwnProperty('item')) && (<i className={props.tile.item.icon} />)}
+    </div>
   )
 }
 
@@ -323,7 +326,7 @@ function getNeighbors(pos, filter){
 }
 
 function hasNeighbors(pos, filterArr){
-  return filterArr.reduce((a,i)=>a + getNeighbors(pos, i).length, 0) > 0
+  return filterArr.reduce((a,filter)=>a + getNeighbors(pos, filter).length, 0) > 0
 }
 
 function generateTiles(rows, cols, initObj={}){
@@ -457,22 +460,23 @@ function generateEnemiesByMap(){
 function generateItems(){
   var health_n = randRangeInt(map.items.health.MIN, map.items.health.MAX),
     treasure_n = randRangeInt(map.items.treasure.MIN, map.items.treasure.MAX),
-    tiles = getTiles('floor'), tile, item
+    tiles = getTiles('floor'), 
+    items = [],
+    tile, item
 
   console.log(tiles)
-  for (let i=0; i < health_n; i++){
+  for (let i=0; (i < health_n) && (tiles.length > 0); i+=1){
     tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
-    console.log(tile)
+    // console.log(tile)
     item = new Item(tile.pos, 'item item-health', 'ra ra-health')
-    if (!hasNeighbors(tile.pos, ['enemy', 'player', 'wall', 'item'])){
-      item.draw('item')
+    if (item.hasNeighbors('enemy', 'player', 'wall', 'item')){
+      i -= 1
     } else {
-      i--
+      items.push(item)
+      item.draw('item')
     }
-
   }
-
-  console.log(tiles)
+  return items
 }
 
 function generateFog(){
