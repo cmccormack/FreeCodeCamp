@@ -125,7 +125,6 @@ class App extends React.Component {
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
-    generateItems()
     generateFog()
   }
 
@@ -143,15 +142,19 @@ class App extends React.Component {
     player.draw('player')
 
     enemies = generateEnemiesByMap()
-    // enemies.map((e)=>{e.draw('enemy')})
     enemies.forEach((e)=>{e.draw('enemy')}) 
     map.enemies = [player].concat(enemies)
+  }
+
+  initializeItems(){
+    generateItems()
   }
 
 
   init(){
     this.initializeMap()
     this.initializeCharacters()
+    this.initializeItems()
     this.setState({player: map.enemies[0], mapTiles: map.tiles.slice(0)})
   }
 
@@ -301,7 +304,7 @@ function randRangeInt(m, n){
 }
 
 function getNeighbors(pos, filter){
-
+  console.log(filter)
   filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
@@ -334,9 +337,9 @@ function generateTiles(rows, cols, initObj={}){
   var tiles = [],
     className = initObj.class || ''
 
-  for (var row = 0; row < rows; row++){
+  for (var row = 0; row < rows; row+=1){
     tiles.push([])
-    for (var col = 0; col < cols; col++){
+    for (var col = 0; col < cols; col+=1){
       tiles[row].push({
         class: className,
         id: map.COLS*row + col,
@@ -363,7 +366,7 @@ function generateRooms(){
       rooms.push(current_room)
       current_room.draw(map.tiles)
     }
-    count--
+    count-=1
   }
 
   function hasIntercepts(newRoom){
@@ -399,8 +402,8 @@ function generateTunnels(){
 function generateWalls(){
   console.log('Generating Walls')
   var m = map.tiles
-  for(var y=map.PADDING-1; y < (m.length-map.PADDING); y++){
-    for(var x=map.PADDING-1; x < (m[y].length-map.PADDING); x++){
+  for(var y=map.PADDING-1; y < (m.length-map.PADDING); y+=1){
+    for(var x=map.PADDING-1; x < (m[y].length-map.PADDING); x+=1){
       // Create wall if stone and at least one neighbor is 'floor'
       if( m[y][x].class.includes('stone') ){
         if ( getNeighbors(new Pos(x,y), 'floor').length > 0 ) {
@@ -418,9 +421,9 @@ function generateEnemiesByRoom(){
     min = map.roomvars.MINENEMIES,
     max = map.roomvars.MAXENEMIES
 
-  for (let i=1; i<map.rooms.length; i++){
+  for (let i=1; i<map.rooms.length; i+=1){
     enemy_count = randRangeInt(min,max)
-    for (let e = 0; e < enemy_count; e++){
+    for (let e = 0; e < enemy_count; e+=1){
       _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
 
       // Add enemies while ensuring no enemies are within a neighboring tile
@@ -428,7 +431,7 @@ function generateEnemiesByRoom(){
       
       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
         enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
-        try_count--
+        try_count-=1
       }
       enemy.draw('enemy')
       enemies.push(enemy)
@@ -442,12 +445,12 @@ function generateEnemiesByMap(){
   var enemies = []
   var floorTiles = getTiles('floor')
   var tile, enemy, type
-  for (let i = 0; i < map.MAXENEMIES; i++){
+  for (let i = 0; i < map.MAXENEMIES; i+=1){
     type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
     tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
     enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
-      i--
+      i-=1
     } else {
       enemies.push(enemy)
       enemy.draw('enemy')
@@ -464,10 +467,8 @@ function generateItems(){
     items = [],
     tile, item
 
-  console.log(tiles)
   for (let i=0; (i < health_n) && (tiles.length > 0); i+=1){
     tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
-    // console.log(tile)
     item = new Item(tile.pos, 'item item-health', 'ra ra-health')
     if (item.hasNeighbors('enemy', 'player', 'wall', 'item')){
       i -= 1
@@ -478,6 +479,7 @@ function generateItems(){
   }
   return items
 }
+
 
 function generateFog(){
   // Complete later
@@ -510,8 +512,8 @@ function Room(x, y, w, h) {
 }
 
 Room.prototype.draw = function(map){
-  for (var row = this.y1; row < this.y2; row++){
-    for (var col = this.x1; col < this.x2; col++){
+  for (var row = this.y1; row < this.y2; row+=1){
+    for (var col = this.x1; col < this.x2; col+=1){
       map[row][col].room = this
       map[row][col].class = 'tile floor'
     }
@@ -533,7 +535,7 @@ Room.prototype.h_tunnel = function(other){
     endx = Math.floor(Math.max(this.center.x, other.center.x)),
     y = Math.floor(this.center.y)
 
-  for (var i = startx; i <= endx; i++){
+  for (var i = startx; i <= endx; i+=1){
     map.tiles[y][i].class = 'tile floor'
     map.tiles[y-1][i].class = 'tile floor'
   }
@@ -544,7 +546,7 @@ Room.prototype.v_tunnel = function(other){
     endy = Math.floor(Math.max(this.center.y, other.center.y)),
     x = Math.floor(other.center.x)
 
-  for (var i = starty; i <= endy; i++){
+  for (var i = starty; i <= endy; i+=1){
     map.tiles[i][x].class = 'tile floor'
     map.tiles[i][x+1].class = 'tile floor'
   }
