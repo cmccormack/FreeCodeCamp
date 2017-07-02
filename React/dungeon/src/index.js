@@ -40,16 +40,18 @@ var map = {
     { name: 'vampire',  atk: 1.5, hp: 12, def:1 },
     { name: 'zombie',   atk: 1.1, hp: 14, def:1 }
   ],
-  items: {
-    treasure: {
+  items: [
+    {
+      name: 'treasure',
       MIN: 2,
       MAX: 5
     },
-    health: {
+    {
+      name: 'health',
       MIN: 4,
       MAX: 7
     }
-  }
+  ]
 }
 
 const ARROW_KEYS = {
@@ -304,7 +306,6 @@ function randRangeInt(m, n){
 }
 
 function getNeighbors(pos, filter){
-  console.log(filter)
   filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
@@ -461,22 +462,25 @@ function generateEnemiesByMap(){
 }
 
 function generateItems(){
-  var health_n = randRangeInt(map.items.health.MIN, map.items.health.MAX),
-    treasure_n = randRangeInt(map.items.treasure.MIN, map.items.treasure.MAX),
-    tiles = getTiles('floor'), 
+  var tiles = getTiles('floor'), 
     items = [],
     tile, item
 
-  for (let i=0; (i < health_n) && (tiles.length > 0); i+=1){
-    tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
-    item = new Item(tile.pos, 'item item-health', 'ra ra-health')
-    if (item.hasNeighbors('enemy', 'player', 'wall', 'item')){
-      i -= 1
-    } else {
-      items.push(item)
-      item.draw('floor item')
-    }
+  for (item in map.items){
+    console.log(item)
+    // num_item = randRangeInt(map.items.health.MIN, map.items.health.MAX),
+    // tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
+    // item = new Item(tile.pos, 'item item-health', 'ra ra-health')
+    // if (item.hasNeighbors('enemy', 'player', 'wall', 'item')){
+    //   i -= 1
+    // } else {
+    //   items.push(item)
+    //   item.draw('floor item')
+    // }
+    
   }
+
+
   return items
 }
 
