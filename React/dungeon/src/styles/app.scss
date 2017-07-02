@@ -132,17 +132,23 @@ main {
       z-index: 2;
     }
     &.item {
-      border: 1px solid black;
-      background-color: white;
-      z-index: 1;
+      // border: 1px solid black;
+      // background-color: white;
+      // z-index: 1;
 
-      .ra-health {
+      .ra {
           z-index: 2;
           position: relative;
-          top: -10.6px;
-          left: 0.5px;
-          font-size: 8px;
-          color: red;
+          left: -2px;
+          top: -9px;
+          font-size: 12px;
+
+          &.ra-health {
+            color: green;
+          }
+          &.ra-triforce {
+            color: goldenrod;
+          }
       }
     }
 

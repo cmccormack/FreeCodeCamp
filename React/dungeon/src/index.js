@@ -43,16 +43,20 @@ var map = {
   items: [
     {
       name: 'treasure',
+      icon: 'ra ra-triforce',
       MIN: 2,
       MAX: 5
     },
     {
       name: 'health',
+      icon: 'ra ra-health',
       MIN: 4,
       MAX: 7
     }
   ]
 }
+
+// ra-hole-ladder for later 
 
 const ARROW_KEYS = {
   'ArrowUp': new Pos(0,-1),
@@ -464,23 +468,20 @@ function generateEnemiesByMap(){
 function generateItems(){
   var tiles = getTiles('floor'), 
     items = [],
-    tile, item
+    tile, item, num_item
 
-  for (item in map.items){
-    console.log(item)
-    // num_item = randRangeInt(map.items.health.MIN, map.items.health.MAX),
-    // tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
-    // item = new Item(tile.pos, 'item item-health', 'ra ra-health')
-    // if (item.hasNeighbors('enemy', 'player', 'wall', 'item')){
-    //   i -= 1
-    // } else {
-    //   items.push(item)
-    //   item.draw('floor item')
-    // }
-    
+  for (let i in map.items){
+    num_item = randRangeInt(map.items[i].MIN, map.items[i].MAX)
+    while(num_item > 0 && tiles.length > 0){
+      tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
+      item = new Item(tile.pos, map.items[i].name, map.items[i].icon)
+      if (!item.hasNeighbors('enemy', 'player', 'wall', 'item')){
+        items.push(item)
+        item.draw('floor item')
+        num_item-=1
+      }
+    }
   }
-
-
   return items
 }
 
