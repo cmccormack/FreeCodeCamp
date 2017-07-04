@@ -606,8 +606,13 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 
 Mob.prototype.move = function move(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
-    map_tile = map.tiles[newpos.y][newpos.x]
+    map_tile = map.tiles[newpos.y][newpos.x],
+    item
 
+  if (map_tile.hasOwnProperty('item')){
+    item = map_tile.item
+    console.log(item)
+  }
   if (map_tile.class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
