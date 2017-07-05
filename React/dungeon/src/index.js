@@ -51,7 +51,9 @@ var map = {
       name: 'health',
       icon: 'ra ra-health',
       MIN: 4,
-      MAX: 7
+      MAX: 7,
+      value: 10,
+      func: Mob.prototype.modify_health
     }
   ]
 }
@@ -611,6 +613,8 @@ Mob.prototype.move = function move(pos){
 
   if (map_tile.hasOwnProperty('item')){
     item = map_tile.item
+    item.func.bind(this, 100)
+    delete map_tile.item
     console.log(item)
   }
   if (map_tile.class.includes('floor')){
