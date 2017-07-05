@@ -53,7 +53,7 @@ var map = {
       MIN: 4,
       MAX: 7,
       value: 10,
-      func: Mob.prototype.modify_health
+      func: 'modify_health'
     }
   ]
 }
@@ -119,7 +119,7 @@ class App extends React.Component {
 
     player.pos = player.move(pos)
     if (player.hp <= 0 ){
-      writeStatus(player.name + ' has died!  Like, gaame over, man!!')
+      writeStatus(player.name + ' has died!  Like, game over, man!!')
       this.init()
     } else {
       this.update()
@@ -476,7 +476,7 @@ function generateItems(){
     num_item = randRangeInt(map.items[i].MIN, map.items[i].MAX)
     while(num_item > 0 && tiles.length > 0){
       tile = tiles.splice(randRangeInt(0, tiles.length - 1), 1)[0]
-      item = new Item(tile.pos, map.items[i].name, map.items[i].icon)
+      item = new Item(tile.pos, map.items[i].name, map.items[i].icon, map.items[i].func, map.items[i].value)
       if (!item.hasNeighbors('enemy', 'player', 'wall', 'item')){
         items.push(item)
         item.draw('floor item')
@@ -596,26 +596,23 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     target.take_damage(this)
   }
 
-  this.modify_health = function(hp){
-    this.hp += hp
-  }
-
   this.get_hp = function(){
     return this.hp
   }
   return this
 }
 
-Mob.prototype.move = function move(pos){
+Mob.prototype.modify_health = function(hp){
+  this.hp = this.hp + hp > this.maxhp ? this.maxhp : this.hp + hp
+}
+
+Mob.prototype.move = function(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
-    map_tile = map.tiles[newpos.y][newpos.x],
-    item
+    map_tile = map.tiles[newpos.y][newpos.x]
 
   if (map_tile.hasOwnProperty('item')){
-    item = map_tile.item
-    item.func.bind(this, 100)
+    this[map_tile.item.func](100)
     delete map_tile.item
-    console.log(item)
   }
   if (map_tile.class.includes('floor')){
     this.draw('floor')
@@ -646,10 +643,12 @@ Mob.prototype.hasNeighbors = function(...filterArr){
 }
 
 
-function Item(pos, name, icon){
+function Item(pos, name, icon, func, val){
   this.pos = pos
   this.name = name
   this.icon = icon
+  this.func = func
+  this.val = val
 }
 
 Item.prototype.hasNeighbors = function(...filterArr){
