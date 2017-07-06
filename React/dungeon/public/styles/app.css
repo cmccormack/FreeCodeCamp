@@ -1761,7 +1761,7 @@ main {
       font-size: 0.8rem; }
       .mapContainer .statusText ul li {
         color: #888; }
-        .mapContainer .statusText ul li:nth-child(-n+2) {
+        .mapContainer .statusText ul li:nth-child(-n+1) {
           color: #CCC; }
 
 .keys {

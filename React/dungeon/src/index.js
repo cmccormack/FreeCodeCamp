@@ -43,8 +43,14 @@ var map = {
   ],
   items: [
     {
-      name: 'treasure',
-      icon: 'ra ra-triforce',
+      name: 'weapon',
+      icon: 'ra ra-battered-axe',
+      MIN: 2,
+      MAX: 5
+    },
+    {
+      name: 'shield',
+      icon: 'ra ra-broken-shield',
       MIN: 2,
       MAX: 5
     },
@@ -580,11 +586,13 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.take_damage = function(mob){
     var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0,
       strMsg = ''
+    
+    dmg = randRangeInt(0.2 * dmg, dmg * 1.8)
     strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  '
     strMsg += this.name + ' takes ' + dmg + ' damage!'
-    console.log(mob.name + ' attacks ' + this.name + '.  ' + this.name + ' takes ' + dmg + ' damage!')
+    console.log(strMsg)
     writeStatus(strMsg)
-    this.hp -= (dmg * 10) / 10
+    this.hp -= dmg
 
     // Enemy dies if HP < 0, else attacks player
     if (this.hp <= 0){
@@ -610,6 +618,10 @@ Mob.prototype.modify_health = function(hp){
   this.hp = this.hp + hp > this.maxhp ? this.maxhp : this.hp + hp
 }
 
+Mob.prototype.modify_combat_stat = function(stat, val){
+  this[stat] += val
+}
+
 Mob.prototype.move = function(pos){
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
     map_tile = map.tiles[newpos.y][newpos.x]
@@ -631,7 +643,6 @@ Mob.prototype.move = function(pos){
       map_tile.mob.attack(this)
     }
   }
-
 
   return this.pos
 }
