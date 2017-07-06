@@ -1689,21 +1689,15 @@ main {
     box-shadow: 3px 3px 6px #222;
     border-radius: 4px;
     margin-bottom: 12px;
-    padding: 2px 6px 2px 6px;
     color: #CCC; }
-    .mapContainer .statusicons .status {
-      margin-left: 8%;
-      margin-right: 7.25%; }
-      .mapContainer .statusicons .status .ra {
-        margin-right: 2px; }
-        .mapContainer .statusicons .status .ra.ra-health {
-          color: #dc0000; }
-        .mapContainer .statusicons .status .ra.ra-sword {
-          color: #BA7333; }
-        .mapContainer .statusicons .status .ra.ra-shield {
-          color: silver; }
-        .mapContainer .statusicons .status .ra.ra-player {
-          color: limegreen; }
+    .mapContainer .statusicons .status .ra.ra-health {
+      color: #dc0000; }
+    .mapContainer .statusicons .status .ra.ra-sword {
+      color: #BA7333; }
+    .mapContainer .statusicons .status .ra.ra-shield {
+      color: silver; }
+    .mapContainer .statusicons .status .ra.ra-player {
+      color: limegreen; }
   .mapContainer .tile {
     position: relative;
     border: 1px solid #444;

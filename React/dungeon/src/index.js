@@ -269,12 +269,14 @@ function Tile(props) {
 function Statusicons(props){
   return (
 
-    <div className={'statusicons unselectable'}>
-      <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</span>
-      <span className={'status'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</span>
-      <span className={'status'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</span>
-      <span className={'status'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</span>
-    </div>
+    <Grid className={'statusicons unselectable'}>
+      <Row>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</Col>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</Col>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</Col>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</Col>
+      </Row>
+    </Grid>
   )
 }
 
