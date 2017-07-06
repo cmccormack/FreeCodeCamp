@@ -2,6 +2,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Col, Row, Grid } from 'react-bootstrap'
 
 var map = {
   rooms: [],
@@ -29,16 +30,16 @@ var map = {
     MAXENEMIES: 3
   },
   enemies: [
-    { name: 'ogre',     atk: 2.0, hp: 15, def:3 },
-    { name: 'goblin',   atk: 1.0, hp: 10, def:1 },
-    { name: 'hydra',    atk: 1.3, hp: 13, def:2 },
-    { name: 'ghoul',    atk: 1.0, hp: 10, def:1 },
-    { name: 'griffin',  atk: 1.7, hp: 12, def:2 },
-    { name: 'kobold',   atk: 0.8, hp: 8 , def:1 },
-    { name: 'skeleton', atk: 1.0, hp: 10, def:1 },
-    { name: 'troll',    atk: 1.2, hp: 8 , def:3 },
-    { name: 'vampire',  atk: 1.5, hp: 12, def:1 },
-    { name: 'zombie',   atk: 1.1, hp: 14, def:1 }
+    { name: 'ogre',     atk: 20, hp: 150, def:30 },
+    { name: 'goblin',   atk: 10, hp: 100, def:10 },
+    { name: 'hydra',    atk: 13, hp: 130, def:20 },
+    { name: 'ghoul',    atk: 10, hp: 100, def:10 },
+    { name: 'griffin',  atk: 17, hp: 120, def:20 },
+    { name: 'kobold',   atk: 8,  hp: 80 , def:10 },
+    { name: 'skeleton', atk: 10, hp: 100, def:10 },
+    { name: 'troll',    atk: 12, hp: 80 , def:30 },
+    { name: 'vampire',  atk: 15, hp: 120, def:10 },
+    { name: 'zombie',   atk: 11, hp: 140, def:10 }
   ],
   items: [
     {
@@ -143,7 +144,7 @@ class App extends React.Component {
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
-      player = new Mob(map.rooms[0].random_location(), 10, 4, 1, {}, {}, 1, 'player')
+      player = new Mob(map.rooms[0].random_location(), 120, 40, 6, {}, {}, 1, 'player')
     } else { // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
@@ -267,6 +268,7 @@ function Tile(props) {
 
 function Statusicons(props){
   return (
+
     <div className={'statusicons unselectable'}>
       <span className={'status'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</span>
       <span className={'status'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</span>
