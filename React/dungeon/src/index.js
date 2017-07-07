@@ -15,7 +15,12 @@ var map = {
   MAXENEMIES: 25,
   player: {
     xpPow: 3.2,
-    healthPackMult: 0.6
+    healthPackMult: 0.6,
+    initialStats: {
+      hp: 120,
+      atk: 35,
+      def: 4
+    }
   },
   style: {
     PADDING: 12,
@@ -158,7 +163,12 @@ class App extends React.Component {
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
-      player = new Mob(map.rooms[0].random_location(), 120, 40, 6, {}, {}, 1, 'player')
+
+      player = new Mob(map.rooms[0].random_location(), 0, 0, 0, {}, {}, 1, 'player')
+      player.hp = map.player.initialStats.hp
+      player.maxhp = player.hp
+      player.atk = map.player.initialStats.atk
+      player.def = map.player.initialStats.def
     } else { // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
@@ -660,15 +670,12 @@ Mob.prototype.move = function(pos){
     this[map_tile.item.func](map_tile.item.val)
     delete map_tile.item
   }
-
   if (map_tile.class.includes('floor')){
     this.draw('floor')
-    this.pos = new Pos(newpos.x, newpos.y)
+    this.pos = newpos
     this.draw('player')
-    return newpos
   }
-
-  if (map_tile.class.includes('enemy')){
+  else if (map_tile.class.includes('enemy')){
     var mobxp = Math.floor((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10)
     this.attack(map_tile.mob)
     if (map_tile.mob){
