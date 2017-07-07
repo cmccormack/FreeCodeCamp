@@ -134,7 +134,7 @@ class App extends React.Component {
 
     player.pos = player.move(pos)
     if (player.hp <= 0 ){
-      writeStatus(player.name + ' has died!  Like, game over, man!!')
+      writeStatus('Like, game over, man!!')
       this.init()
     } else {
       this.update()
@@ -285,7 +285,7 @@ function Statusicons(props){
 
     <Grid className={'statusicons unselectable'}>
       <Row>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</Col>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp + '/' + props.player.maxhp}</Col>
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</Col>
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</Col>
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.xp,props.player.tnl].join('/')}</Col>
@@ -321,7 +321,7 @@ function sentenceCase(text){
 }
 
 function writeStatus(text){
-  text = text.split('.  ').map((v)=>sentenceCase(v)).join('.  ')
+  text = text.split(';').map((v)=>sentenceCase(v)).join('')
   map.statusText.unshift(text)
 }
 
@@ -596,7 +596,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
       strMsg = ''
     
     dmg = randRangeInt(0.2 * dmg, dmg * 1.8)
-    strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  '
+    strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  ;'
     strMsg += this.name + ' takes ' + dmg + ' damage!'
     console.log(strMsg)
     writeStatus(strMsg)
@@ -635,8 +635,16 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
 }
 
 Mob.prototype.modify_health = function(hp){
-  hp = (hp==='health_pack') ? Math.floor(map.player.healthPackMult * this.maxhp) : hp
-  this.hp = this.hp + hp > this.maxhp ? this.maxhp : this.hp + hp
+  var str = ''
+  if (hp==='health_pack'){
+    str = this.name + ' found a health pack!  ;'
+    hp = Math.floor(map.player.healthPackMult * this.maxhp)
+  }
+  if (this.hp + hp > this.maxhp) {
+    hp = this.maxhp - this.hp
+  }
+  writeStatus(str + this.name + ' was healed by ' + hp + ' points.')
+  this.hp += hp
 }
 
 Mob.prototype.modify_combat_stat = function(args){
