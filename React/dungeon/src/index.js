@@ -13,6 +13,10 @@ var map = {
   ROWS: 40,
   PADDING: 1,
   MAXENEMIES: 25,
+  player: {
+    xpPow: 3.2,
+    healthPackMult: 0.6
+  },
   style: {
     PADDING: 12,
   },
@@ -27,7 +31,7 @@ var map = {
     MAX: 15,
     PADDING: 4,
     MINENEMIES: 1,
-    MAXENEMIES: 3
+    MAXENEMIES: 6
   },
   enemies: [
     { name: 'ogre',     atk: 20, hp: 150, def:30 },
@@ -45,21 +49,25 @@ var map = {
     {
       name: 'weapon',
       icon: 'ra ra-battered-axe',
+      value: ['atk', 3],
       MIN: 2,
-      MAX: 5
+      MAX: 5,
+      func: 'modify_combat_stat'
     },
     {
       name: 'shield',
       icon: 'ra ra-broken-shield',
+      value: ['def', 2],
       MIN: 2,
-      MAX: 5
+      MAX: 5,
+      func: 'modify_combat_stat'
     },
     {
       name: 'health',
       icon: 'ra ra-health',
       MIN: 4,
       MAX: 7,
-      value: 10,
+      value: 'health_pack',
       func: 'modify_health'
     }
   ]
@@ -280,7 +288,7 @@ function Statusicons(props){
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp.toFixed(1)}</Col>
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</Col>
         <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</Col>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.exp,props.player.tnl].join('/')}</Col>
+        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.xp,props.player.tnl].join('/')}</Col>
       </Row>
     </Grid>
   )
@@ -580,8 +588,8 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.level = level
   this.name = name
   this.piercing = 0
-  this.exp = 0
-  this.tnl = 10
+  this.xp = 0
+  this.tnl = 100
 
   this.take_damage = function(mob){
     var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0,
@@ -611,14 +619,28 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.get_hp = function(){
     return this.hp
   }
+
+  this.update_xp = function(xp){
+    this.xp += xp
+    if (this.xp > this.tnl){
+      this.xp = this.xp - this.tnl
+      this.maxhp = this.maxhp + (this.level * 20)
+      this.hp = this.maxhp
+      this.def = this.def + (this.level * 2)
+      this.atk = this.atk + (this.level * 4)
+      this.tnl = Math.floor(this.level * Math.pow(this.level, map.player.xpPow) + this.tnl)
+    }
+  }
   return this
 }
 
 Mob.prototype.modify_health = function(hp){
+  hp = (hp==='health_pack') ? Math.floor(map.player.healthPackMult * this.maxhp) : hp
   this.hp = this.hp + hp > this.maxhp ? this.maxhp : this.hp + hp
 }
 
-Mob.prototype.modify_combat_stat = function(stat, val){
+Mob.prototype.modify_combat_stat = function(args){
+  var [stat, val] = args
   this[stat] += val
 }
 
@@ -627,9 +649,10 @@ Mob.prototype.move = function(pos){
     map_tile = map.tiles[newpos.y][newpos.x]
 
   if (map_tile.hasOwnProperty('item')){
-    this[map_tile.item.func](100)
+    this[map_tile.item.func](map_tile.item.val)
     delete map_tile.item
   }
+
   if (map_tile.class.includes('floor')){
     this.draw('floor')
     this.pos = new Pos(newpos.x, newpos.y)
@@ -638,9 +661,12 @@ Mob.prototype.move = function(pos){
   }
 
   if (map_tile.class.includes('enemy')){
+    var mobxp = Math.floor((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10)
     this.attack(map_tile.mob)
     if (map_tile.mob){
       map_tile.mob.attack(this)
+    } else {
+      this.update_xp(mobxp)
     }
   }
 
