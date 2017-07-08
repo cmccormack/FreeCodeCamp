@@ -1,0 +1,75 @@
+[
+    {
+      recipeName: 'Duck-shaped Pickles',
+      time: {
+        prep: '10',
+        cook: '10'
+      },
+      ingredients: [
+        ['pickles', true],
+        ['salt', true],
+        ['sugar', false],
+        ['cumin', false],
+        ['celery salt', true],
+        ['black peppercorn, crushed', true],
+        ['knife', true]
+      ],
+      directions: [
+        ['Cut pickles into duck-shaped pieces'],
+        ['Place pieces in a large bowl and add 1 tsp of each seasoning'],
+        ['Toss until well coated'],
+        ['Enjoy!']
+      ]
+    },
+    {
+      recipeName: 'Smoked Chicken Thighs',
+      time: {
+        prep: '10',
+        cook: '120'
+      },
+      ingredients: [
+        ['6 chicken thighs', true],
+        ['4 tablespoons soy sauce', true],
+        ['1 teaspoon sesame oil', true],
+        ['3 garlic cloves', true],
+        ['3 scallions', true],
+        ['1/2 tablespoon thyme', true],
+        ['1 teaspoon allspice', true],
+        ['1 teaspoon pepper', true],
+        ['1/2 teaspoon cinnamon', true],
+        ['1/2 teaspoon red pepper', true]
+      ],
+      directions: [
+        'Mix soy sauce with sesame oil and lightly rub into chicken.',
+        'In a food processor, combine garlic cloves, scallions, thyme, allspice, pepper, cinnamon, and red pepper until smooth. Rub onto and underneath skin of chicken thighs.',
+        'Seal chicken in a plastic bag, place in fridge, and let marinate for at least 4 hours.',
+        'Preheat smoker to 225 degrees Fahrenheit and add cherry wood chips.',
+        'Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.',
+        'Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.'
+      ]
+    },
+    {
+      recipeName: 'Restaurant Style Ranch Dressing',
+      time: {
+        prep: '10',
+        cook: '0'
+      },
+      ingredients: [
+        ['2/3 cup sour cream (add more to increase thickness)', false],
+        ['2/3 cup mayonnaise', false],
+        ['2/3 cup buttermilk', false],
+        ['1 tsp buttermilk ranch salad dressing mix', false],
+        ['1/2 tsp garlic powder', true],
+        ['1/2 tsp onion powder', true],
+        ['1 tsp dried parsley flakes', true],
+        ['1/4 tsp salt', true],
+        ['1/8 tsp black pepper', true],
+        ['1/4 tsp paprika (optional)', true],
+        ['cayenne (optional)', true],
+        ['season salt (optional)', true]
+      ],
+      directions: [
+        'Mix all ingredients well and chill for about an hour.'
+      ]
+    }
+  ]
