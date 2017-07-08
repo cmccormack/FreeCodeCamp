@@ -169,7 +169,8 @@ class App extends React.Component {
       player.maxhp = player.hp
       player.atk = map.player.initialStats.atk
       player.def = map.player.initialStats.def
-    } else { // Move player to room 0, maintaining stats, gear and experience
+    } else { 
+      // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
     player.draw('player')
