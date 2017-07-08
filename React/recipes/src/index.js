@@ -69,6 +69,30 @@ var recipeTemplate = {
         'Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.',
         'Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.'
       ]
+    },
+    {
+      recipeName: 'Restaurant Style Ranch Dressing',
+      time: {
+        prep: '10',
+        cook: '0'
+      },
+      ingredients: [
+        ['2/3 cup sour cream (add more to increase thickness)', false],
+        ['2/3 cup mayonnaise', false],
+        ['2/3 cup buttermilk', false],
+        ['1 tsp buttermilk ranch salad dressing mix', false],
+        ['1/2 tsp garlic powder', true],
+        ['1/2 tsp onion powder', true],
+        ['1 tsp dried parsley flakes', true],
+        ['1/4 tsp salt', true],
+        ['1/8 tsp black pepper', true],
+        ['1/4 tsp paprika (optional)', true],
+        ['cayenne (optional)', true],
+        ['season salt (optional)', true]
+      ],
+      directions: [
+        'Mix all ingredients well and chill for about an hour.'
+      ]
     }
   ]
 
