@@ -13,6 +13,7 @@ var map = {
   ROWS: 40,
   PADDING: 1,
   MAXENEMIES: 25,
+  level: 1,
   player: {
     xpPow: 3.2,
     healthPackMult: 0.6,
@@ -20,6 +21,13 @@ var map = {
       hp: 120,
       atk: 35,
       def: 4
+    }
+  },
+  boss: {
+    stats: {
+      hp: 500,
+      atk: 40,
+      def: 6
     }
   },
   style: {
@@ -62,7 +70,7 @@ var map = {
     {
       name: 'shield',
       icon: 'ra ra-broken-shield',
-      value: ['def', 2],
+      value: ['def', 1],
       MIN: 2,
       MAX: 5,
       func: 'modify_combat_stat'
@@ -105,7 +113,8 @@ class App extends React.Component {
     this.state = { 
       mapTiles: [], 
       player: {},
-      statusText: map.statusText
+      statusText: map.statusText,
+      level: map.level
     }
   }
 
@@ -296,10 +305,23 @@ function Statusicons(props){
 
     <Grid className={'statusicons unselectable'}>
       <Row>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-health'} />{'HP: '  + props.player.hp + '/' + props.player.maxhp}</Col>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-sword'}  />{'Atk: ' + props.player.atk}</Col>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-shield'} />{'Def: ' + props.player.def}</Col>
-        <Col sm={3} className={'status text-center'}><i className={'ra ra-fw ra-player'} />{'EXP: ' + [props.player.xp,props.player.tnl].join('/')}</Col>
+        <Col sm={3} className={'status text-center'}>
+          <i className={'ra ra-fw ra-health'} />
+          {'HP: '  + props.player.hp + '/' + props.player.maxhp}
+        </Col>
+        <Col sm={3} className={'status text-center'}>
+          <i className={'ra ra-fw ra-sword'}  />
+          {'Atk: ' + props.player.atk}
+        </Col>
+        <Col sm={3} className={'status text-center'}>
+          <i className={'ra ra-fw ra-shield'} />
+          {'Def: ' + props.player.def}
+        </Col>
+        <Col sm={3} className={'status text-center'}>
+          {`(${props.player.level})`}
+          <i className={'ra ra-fw ra-player'} />
+          {'EXP: ' + [props.player.xp,props.player.tnl].join('/')}
+        </Col>
       </Row>
     </Grid>
   )
@@ -637,9 +659,10 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
       this.xp = this.xp - this.tnl
       this.maxhp = this.maxhp + (this.level * 20)
       this.hp = this.maxhp
-      this.def = this.def + (this.level * 2)
-      this.atk = this.atk + (this.level * 4)
+      this.def = this.def + 1
+      this.atk = this.atk + 2
       this.tnl = Math.floor(this.level * Math.pow(this.level, map.player.xpPow) + this.tnl)
+      this.level += 1
     }
   }
   return this
@@ -677,12 +700,14 @@ Mob.prototype.move = function(pos){
     this.draw('player')
   }
   else if (map_tile.class.includes('enemy')){
+    console.log(map_tile.mob.maxhp, map_tile.mob.def, map_tile.mob.atk, ((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10))
     var mobxp = Math.floor((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10)
     this.attack(map_tile.mob)
     if (map_tile.mob){
       map_tile.mob.attack(this)
     } else {
       this.update_xp(mobxp)
+      console.log('XP given: ' + mobxp)
     }
   }
 
