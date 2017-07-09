@@ -1690,14 +1690,17 @@ main {
     border-radius: 4px;
     margin-bottom: 12px;
     color: #CCC; }
-    .mapContainer .statusicons .status .ra.ra-health {
-      color: #dc0000; }
-    .mapContainer .statusicons .status .ra.ra-sword {
-      color: #BA7333; }
-    .mapContainer .statusicons .status .ra.ra-shield {
-      color: silver; }
-    .mapContainer .statusicons .status .ra.ra-player {
-      color: limegreen; }
+    .mapContainer .statusicons .status {
+      padding-left: 0;
+      padding-right: 0; }
+      .mapContainer .statusicons .status .ra.ra-health {
+        color: #dc0000; }
+      .mapContainer .statusicons .status .ra.ra-sword {
+        color: #BA7333; }
+      .mapContainer .statusicons .status .ra.ra-shield {
+        color: silver; }
+      .mapContainer .statusicons .status .ra.ra-player {
+        color: limegreen; }
   .mapContainer .tile {
     position: relative;
     border: 1px solid #444;
