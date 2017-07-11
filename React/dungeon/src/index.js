@@ -482,7 +482,7 @@ function generateEnemiesByRoom(){
   for (let i=1; i<map.rooms.length; i+=1){
     enemy_count = randRangeInt(min,max)
     for (let e = 0; e < enemy_count; e+=1){
-      _ = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+      _ = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
 
       // Add enemies while ensuring no enemies are within a neighboring tile
       try_count = 100, enemy = null
@@ -504,7 +504,7 @@ function generateEnemiesByMap(){
   var floorTiles = getTiles('floor')
   var tile, enemy, type
   for (let i = 0; i < map.MAXENEMIES; i+=1){
-    type = map.enemies[Math.floor(Math.random() * map.enemies.length)]
+    type = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
     tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
     enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
