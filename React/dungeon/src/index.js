@@ -33,7 +33,7 @@ var map = {
   style: {
     PADDING: 12,
   },
-  tile:{
+  tileSize:{
     width: 10,
     height: 10
   },
@@ -82,6 +82,14 @@ var map = {
       MAX: 7,
       value: 'health_pack',
       func: 'modify_health'
+    },
+    {
+      name: 'exit',
+      icon: 'ra ra-hole-ladder',
+      MIN: 1,
+      MAX: 1,
+      value: 'exit',
+      func: 'init'
     }
   ]
 }
@@ -115,7 +123,8 @@ class App extends React.Component {
       player: {},
       statusText: map.statusText,
       level: map.level,
-      multiplier: 0
+      multiplier: 0,
+      exit_visible: false
     }
   }
 
@@ -138,7 +147,7 @@ class App extends React.Component {
     })
 
     Array.from(document.getElementsByClassName('key')).forEach((item)=>{
-      item.addEventListener('click', (e)=>{
+      item.addEventListener('click', ()=>{
         this.characterMove(ARROW_KEYS[item.id])
       })
     })
@@ -153,6 +162,10 @@ class App extends React.Component {
       this.init()
     } else {
       this.update()
+    }
+    if (map.enemies.length < 10 && !this.state.exit_visible){
+      writeStatus('You hear sounds of stone grinding in the distance...')
+
     }
   }
 
@@ -250,7 +263,7 @@ class Map extends React.Component {
   render() {
 
     var mapContainerStyle = {
-      width: ((map.tile.width - 1) * map.COLS) + (2 * map.style.PADDING),
+      width: ((map.tileSize.width - 1) * map.COLS) + (2 * map.style.PADDING),
       height: '100%',
       padding: map.style.PADDING,
       player: this.props.player
@@ -265,7 +278,7 @@ class Map extends React.Component {
 
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
-            <Tile
+            <TileComponent
                 key={tile.id * y + x}
                 pos={{x:x, y:y}}
                 tile={tile}
@@ -285,7 +298,7 @@ class Map extends React.Component {
 }
 
 
-function Tile(props) {
+function TileComponent(props) {
   var {x, y} = props.pos
 
 
@@ -296,8 +309,8 @@ function Tile(props) {
         id={(y*map.COLS + x)}
         key={(y+1) * (x+1)}
         style={{
-          width: map.tile.width,
-          height: map.tile.height,
+          width: map.tileSize.width,
+          height: map.tileSize.height,
           clear: x === map.COLS ? 'both' : 'none'
         }}
     > {(props.tile.hasOwnProperty('item')) && (<i className={props.tile.item.icon} />)}
@@ -352,9 +365,25 @@ function Buttons(props) {
 }
 
 
+function addClasses(current, items){
+  current = removeClasses(current, items) // Prevents duplicates
+  if (typeof items === 'string') {
+    return current + ' ' + items
+  }
+  return current
+}
 
+function removeClasses(current, items){
+  current = current.split(' ')
+  items = items.split(' ')
+  for (var i in items){
+    current = current.filter((v)=>v!==items[i])
+  }
+  return current.join(' ')
+}
 
 function sentenceCase(text){
+  // Update this later with a better algorithm
   return text[0].toUpperCase() + text.slice(1)
 }
 
@@ -573,11 +602,11 @@ function Room(x, y, w, h) {
   return this
 }
 
-Room.prototype.draw = function(map){
+Room.prototype.draw = function(tiles){
   for (var row = this.y1; row < this.y2; row+=1){
     for (var col = this.x1; col < this.x2; col+=1){
-      map[row][col].room = this
-      map[row][col].class = 'tile floor'
+      tiles[row][col].room = this
+      tiles[row][col].class = 'tile floor'
     }
   }
 }
@@ -699,7 +728,8 @@ Mob.prototype.move = function(pos){
     delete map_tile.item
   }
   if (map_tile.class.includes('floor')){
-    this.draw('floor')
+    // this.draw('floor')
+    map.tiles
     this.pos = newpos
     this.draw('player')
   }
@@ -727,7 +757,6 @@ Mob.prototype.draw = function(type){
 Mob.prototype.hasNeighbors = function(...filterArr){
   return hasNeighbors(this.pos, filterArr)
 }
-
 
 function Item(pos, name, icon, func, val){
   this.pos = pos
