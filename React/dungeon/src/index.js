@@ -48,15 +48,15 @@ var map = {
   },
   enemies: [
     { name: 'ogre',     atk: 20, hp: 150, def:30 },
-    { name: 'goblin',   atk: 10, hp: 100, def:10 },
+    { name: 'goblin',   atk: 10, hp: 100, def:12 },
     { name: 'hydra',    atk: 13, hp: 130, def:20 },
-    { name: 'ghoul',    atk: 10, hp: 100, def:10 },
+    { name: 'ghoul',    atk: 10, hp: 100, def:14 },
     { name: 'griffin',  atk: 17, hp: 120, def:20 },
-    { name: 'kobold',   atk: 8,  hp: 80 , def:10 },
-    { name: 'skeleton', atk: 10, hp: 100, def:10 },
+    { name: 'kobold',   atk: 8,  hp: 80 , def:12 },
+    { name: 'skeleton', atk: 10, hp: 100, def:15 },
     { name: 'troll',    atk: 12, hp: 80 , def:30 },
-    { name: 'vampire',  atk: 15, hp: 120, def:10 },
-    { name: 'zombie',   atk: 11, hp: 140, def:10 }
+    { name: 'vampire',  atk: 15, hp: 120, def:18 },
+    { name: 'zombie',   atk: 11, hp: 140, def:16 }
   ],
   items: [
     {
