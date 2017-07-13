@@ -20,7 +20,7 @@ var map = {
     initialStats: {
       hp: 120,
       atk: 35,
-      def: 4
+      def: 6
     }
   },
   boss: {
@@ -72,7 +72,7 @@ var map = {
       icon: 'ra ra-broken-shield',
       value: ['def', 1],
       MIN: 2,
-      MAX: 5,
+      MAX: 4,
       func: 'modify_combat_stat'
     },
     {
@@ -114,7 +114,8 @@ class App extends React.Component {
       mapTiles: [], 
       player: {},
       statusText: map.statusText,
-      level: map.level
+      level: map.level,
+      multiplier: 0
     }
   }
 
@@ -184,7 +185,7 @@ class App extends React.Component {
     }
     player.draw('player')
 
-    enemies = generateEnemiesByMap()
+    enemies = generateEnemiesByMap(this.state.level + this.state.multiplier)
     enemies.forEach((e)=>{e.draw('enemy')}) 
     map.enemies = [player].concat(enemies)
   }
@@ -198,7 +199,11 @@ class App extends React.Component {
     this.initializeMap()
     this.initializeCharacters()
     this.initializeItems()
-    this.setState({player: map.enemies[0], mapTiles: map.tiles.slice(0)})
+    this.setState({
+      player: map.enemies[0], 
+      mapTiles: map.tiles.slice(0),
+      multiplier: this.state.multiplier + .5
+    })
   }
 
   handleGenerateClick(){
@@ -473,40 +478,40 @@ function generateWalls(){
 }
 
 
-function generateEnemiesByRoom(){
-  console.log('Generating Enemies')
-  var enemies = [], _, enemy, enemy_count, try_count,
-    min = map.roomvars.MINENEMIES,
-    max = map.roomvars.MAXENEMIES
+// function generateEnemiesByRoom(mult){
+//   console.log('Generating Enemies')
+//   var enemies = [], _, enemy, enemy_count, try_count,
+//     min = map.roomvars.MINENEMIES,
+//     max = map.roomvars.MAXENEMIES
 
-  for (let i=1; i<map.rooms.length; i+=1){
-    enemy_count = randRangeInt(min,max)
-    for (let e = 0; e < enemy_count; e+=1){
-      _ = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
+//   for (let i=1; i<map.rooms.length; i+=1){
+//     enemy_count = randRangeInt(min,max)
+//     for (let e = 0; e < enemy_count; e+=1){
+//       _ = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
 
-      // Add enemies while ensuring no enemies are within a neighboring tile
-      try_count = 100, enemy = null
+//       // Add enemies while ensuring no enemies are within a neighboring tile
+//       try_count = 100, enemy = null
       
-      while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
-        enemy = new Mob(map.rooms[i].random_location(), _.hp, _.atk, _.def, null, null, 1, _.name)
-        try_count-=1
-      }
-      enemy.draw('enemy')
-      enemies.push(enemy)
-    }
-  }
-  return enemies
-}
+//       while(!enemy || try_count > 0 && getNeighbors(enemy.pos, 'enemy').length > 0){
+//         enemy = new Mob(map.rooms[i].random_location(), _.hp*mult, _.atk*mult, _.def*mult, null, null, 1, _.name)
+//         try_count-=1
+//       }
+//       enemy.draw('enemy')
+//       enemies.push(enemy)
+//     }
+//   }
+//   return enemies
+// }
 
 
-function generateEnemiesByMap(){
+function generateEnemiesByMap(mult){
   var enemies = []
   var floorTiles = getTiles('floor')
   var tile, enemy, type
   for (let i = 0; i < map.MAXENEMIES; i+=1){
     type = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
     tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
-    enemy = new Mob(tile.pos, type.hp, type.atk, type.def, null, null, 1, type.name)
+    enemy = new Mob(tile.pos, type.hp*mult, type.atk*mult, type.def*mult, null, null, 1, type.name)
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
       i-=1
     } else {
@@ -515,7 +520,6 @@ function generateEnemiesByMap(){
     }
   }
   return enemies
-
 }
 
 function generateItems(){
@@ -628,7 +632,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0,
       strMsg = ''
     
-    dmg = randRangeInt(0.2 * dmg, dmg * 1.8)
+    dmg = randRangeInt(0.5 * dmg, dmg * 1.5)
     strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  ;'
     strMsg += this.name + ' takes ' + dmg + ' damage!'
     console.log(strMsg)
@@ -700,8 +704,8 @@ Mob.prototype.move = function(pos){
     this.draw('player')
   }
   else if (map_tile.class.includes('enemy')){
-    console.log(map_tile.mob.maxhp, map_tile.mob.def, map_tile.mob.atk, ((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10))
-    var mobxp = Math.floor((map_tile.mob.maxhp + map_tile.mob.def + map_tile.mob.atk) / 10)
+    var mobxp = Math.round((map_tile.mob.maxhp + map_tile.mob.def*2 + map_tile.mob.atk*2) / 10)
+    console.log(map_tile.mob.maxhp, map_tile.mob.def, map_tile.mob.atk, mobxp)
     this.attack(map_tile.mob)
     if (map_tile.mob){
       map_tile.mob.attack(this)
