@@ -11,7 +11,7 @@ var map = {
   characters: [],
   COLS: 70,
   ROWS: 40,
-  PADDING: 1,
+  PADDING: 2,
   MAXENEMIES: 25,
   level: 1,
   player: {
@@ -63,7 +63,7 @@ var map = {
       name: 'weapon',
       icon: 'ra ra-battered-axe',
       value: ['atk', 3],
-      MIN: 2,
+      MIN: 3,
       MAX: 5,
       func: 'modify_combat_stat'
     },
@@ -365,15 +365,21 @@ function Buttons(props) {
 }
 
 
+
+
 function addClasses(current, items){
-  current = removeClasses(current, items) // Prevents duplicates
+
   if (typeof items === 'string') {
+    current = removeClasses(current, items) // Prevents duplicate classes
     return current + ' ' + items
   }
   return current
 }
 
 function removeClasses(current, items){
+  if (!current) {
+    return current
+  }
   current = current.split(' ')
   items = items.split(' ')
   for (var i in items){
@@ -534,6 +540,7 @@ function generateWalls(){
 
 
 function generateEnemiesByMap(mult){
+  console.log('Generating Enemies')
   var enemies = []
   var floorTiles = getTiles('floor')
   var tile, enemy, type
@@ -552,6 +559,7 @@ function generateEnemiesByMap(mult){
 }
 
 function generateItems(){
+  console.log('Generating Items')
   var tiles = getTiles('floor'), 
     items = [],
     tile, item, num_item
@@ -603,10 +611,12 @@ function Room(x, y, w, h) {
 }
 
 Room.prototype.draw = function(tiles){
+  var map_tile
   for (var row = this.y1; row < this.y2; row+=1){
     for (var col = this.x1; col < this.x2; col+=1){
-      tiles[row][col].room = this
-      tiles[row][col].class = 'tile floor'
+      map_tile = tiles[row][col]
+      map_tile.room = this
+      map_tile.class = addClasses('', 'tile floor')
     }
   }
 }
@@ -751,7 +761,8 @@ Mob.prototype.move = function(pos){
 Mob.prototype.draw = function(type){
   var map_tile = map.tiles[this.pos.y][this.pos.x]
   map_tile.mob = this
-  map_tile.class = 'tile ' + (type || '')
+  map_tile.class = removeClasses(map_tile.class, 'floor')
+  map_tile.class = addClasses(map_tile.class, type)
 }
 
 Mob.prototype.hasNeighbors = function(...filterArr){
@@ -773,5 +784,6 @@ Item.prototype.hasNeighbors = function(...filterArr){
 Item.prototype.draw = function(type){
   var map_tile = map.tiles[this.pos.y][this.pos.x]
   map_tile.item = this
-  map_tile.class = 'tile ' + (type || '')
+  map_tile.class = removeClasses(map_tile.class, 'floor')
+  map_tile.class = addClasses(map_tile.class, type)
 }
