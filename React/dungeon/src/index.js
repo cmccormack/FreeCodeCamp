@@ -199,7 +199,6 @@ class App extends React.Component {
     player.draw('player')
 
     enemies = generateEnemiesByMap(this.state.level + this.state.multiplier)
-    enemies.forEach((e)=>{e.draw('enemy')}) 
     map.enemies = [player].concat(enemies)
   }
 
@@ -385,20 +384,26 @@ function removeClasses(current, items){
   for (let i in items){
     current = current.filter((v)=>v!==items[i])
   }
-  return current.join(' ')
+  return current.join(' ').trim()
 }
 
 function toggleClasses(current, items){
   console.log('current:' + current, 'items:' + items)
   current = current || ''
-  for (let i in items){
-    let item = items[i]
+  var itemsArr = items.split(' ')
+  for (let i in itemsArr){
+    let item = itemsArr[i]
     if (current.includes(item)){
-      return removeClasses(current, item)
+      console.log('toggleClasses: ' + item + ' in ' + current)
+      current = removeClasses(current, item)
+      console.log('toggle Classes: new current: ' + current)
     } else {
-      return addClasses(current, item)
+      console.log('toggleClasses: ' + item + ' not in ' + current)
+      current = addClasses(current, item)
+      console.log('toggleClasses: new current: ' + current)
     }
   }
+  return current
 }
 
 function sentenceCase(text){
@@ -493,7 +498,6 @@ function generateRooms(){
 }
 
 function getTiles(tileType){
-  console.log(tileType)
   if (typeof tileType === 'string'){
     return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
   }
@@ -780,9 +784,10 @@ Mob.prototype.move = function(pos){
 Mob.prototype.draw = function(type){
   var map_tile = map.tiles[this.pos.y][this.pos.x]
   map_tile.mob = this
-  // map_tile.class = removeClasses(map_tile.class, 'floor')
-  // map_tile.class = addClasses(map_tile.class, type)
+  console.log('Mob.draw tile class before: ' + map_tile.class)
+  console.log('Mob.draw type: ' + type)
   map_tile.class = toggleClasses(map_tile.class, 'floor ' + type)
+  console.log('Mob.draw tile class after: ' + map_tile.class)
 }
 
 Mob.prototype.hasNeighbors = function(...filterArr){
@@ -804,6 +809,5 @@ Item.prototype.hasNeighbors = function(...filterArr){
 Item.prototype.draw = function(type){
   var map_tile = map.tiles[this.pos.y][this.pos.x]
   map_tile.item = this
-  map_tile.class = removeClasses(map_tile.class, 'floor')
   map_tile.class = addClasses(map_tile.class, type)
 }
