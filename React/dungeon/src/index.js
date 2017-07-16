@@ -88,8 +88,8 @@ var map = {
       icon: 'ra ra-hole-ladder',
       MIN: 1,
       MAX: 1,
-      value: 'exit',
-      func: 'init'
+      value: null,
+      func: null
     }
   ]
 }
@@ -382,10 +382,23 @@ function removeClasses(current, items){
   }
   current = current.split(' ')
   items = items.split(' ')
-  for (var i in items){
+  for (let i in items){
     current = current.filter((v)=>v!==items[i])
   }
   return current.join(' ')
+}
+
+function toggleClasses(current, items){
+  console.log('current:' + current, 'items:' + items)
+  current = current || ''
+  for (let i in items){
+    let item = items[i]
+    if (current.includes(item)){
+      return removeClasses(current, item)
+    } else {
+      return addClasses(current, item)
+    }
+  }
 }
 
 function sentenceCase(text){
@@ -480,6 +493,7 @@ function generateRooms(){
 }
 
 function getTiles(tileType){
+  console.log(tileType)
   if (typeof tileType === 'string'){
     return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
   }
@@ -583,8 +597,6 @@ function generateItems(){
 function generateFog(){
   // Complete later
 }
-
-
 
 
 
@@ -730,25 +742,32 @@ Mob.prototype.modify_combat_stat = function(args){
 }
 
 Mob.prototype.move = function(pos){
+  console.log(this.pos)
   var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
-    map_tile = map.tiles[newpos.y][newpos.x]
+    old_map_tile = map.tiles[this.pos.y][this.pos.x],
+    new_map_tile = map.tiles[newpos.y][newpos.x]
+  console.log(old_map_tile)
+  console.log(new_map_tile)
 
-  if (map_tile.hasOwnProperty('item')){
-    this[map_tile.item.func](map_tile.item.val)
-    delete map_tile.item
+  if (new_map_tile.hasOwnProperty('item')){
+    if (new_map_tile.item.func){
+      this[new_map_tile.item.func](new_map_tile.item.val)
+      new_map_tile.class = removeClasses(new_map_tile.class, 'item')
+      delete new_map_tile.item
+    }
   }
-  if (map_tile.class.includes('floor')){
-    // this.draw('floor')
-    map.tiles
+  if (new_map_tile.class.includes('floor')){
+    old_map_tile.class = removeClasses(old_map_tile.class, 'player')
+    old_map_tile.class = addClasses(old_map_tile.class, 'floor')
     this.pos = newpos
     this.draw('player')
   }
-  else if (map_tile.class.includes('enemy')){
-    var mobxp = Math.round((map_tile.mob.maxhp + map_tile.mob.def*2 + map_tile.mob.atk*2) / 10)
-    console.log(map_tile.mob.maxhp, map_tile.mob.def, map_tile.mob.atk, mobxp)
-    this.attack(map_tile.mob)
-    if (map_tile.mob){
-      map_tile.mob.attack(this)
+  else if (new_map_tile.class.includes('enemy')){
+    var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
+    console.log(new_map_tile.mob.maxhp, new_map_tile.mob.def, new_map_tile.mob.atk, mobxp)
+    this.attack(new_map_tile.mob)
+    if (new_map_tile.mob){
+      new_map_tile.mob.attack(this)
     } else {
       this.update_xp(mobxp)
       console.log('XP given: ' + mobxp)
@@ -761,8 +780,9 @@ Mob.prototype.move = function(pos){
 Mob.prototype.draw = function(type){
   var map_tile = map.tiles[this.pos.y][this.pos.x]
   map_tile.mob = this
-  map_tile.class = removeClasses(map_tile.class, 'floor')
-  map_tile.class = addClasses(map_tile.class, type)
+  // map_tile.class = removeClasses(map_tile.class, 'floor')
+  // map_tile.class = addClasses(map_tile.class, type)
+  map_tile.class = toggleClasses(map_tile.class, 'floor ' + type)
 }
 
 Mob.prototype.hasNeighbors = function(...filterArr){
