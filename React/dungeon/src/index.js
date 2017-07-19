@@ -196,7 +196,7 @@ class App extends React.Component {
       // Move player to room 0, maintaining stats, gear and experience
       player.pos = map.rooms[0].random_location()
     }
-    player.draw('player')
+    player.draw('player floor')
 
     enemies = generateEnemiesByMap(this.state.level + this.state.multiplier)
     map.enemies = [player].concat(enemies)
@@ -364,90 +364,6 @@ function Buttons(props) {
 }
 
 
-
-
-function addClasses(current, items){
-
-  if (typeof items === 'string') {
-    current = removeClasses(current, items) // Prevents duplicate classes
-    return current + ' ' + items
-  }
-  return current
-}
-
-function removeClasses(current, items){
-  if (!current) {
-    return current
-  }
-  current = current.split(' ')
-  items = items.split(' ')
-  for (let i in items){
-    current = current.filter((v)=>v!==items[i])
-  }
-  return current.join(' ').trim()
-}
-
-function toggleClasses(current, items){
-  console.log('current:' + current, 'items:' + items)
-  current = current || ''
-  var itemsArr = items.split(' ')
-  for (let i in itemsArr){
-    let item = itemsArr[i]
-    if (current.includes(item)){
-      console.log('toggleClasses: ' + item + ' in ' + current)
-      current = removeClasses(current, item)
-      console.log('toggle Classes: new current: ' + current)
-    } else {
-      console.log('toggleClasses: ' + item + ' not in ' + current)
-      current = addClasses(current, item)
-      console.log('toggleClasses: new current: ' + current)
-    }
-  }
-  return current
-}
-
-function sentenceCase(text){
-  // Update this later with a better algorithm
-  return text[0].toUpperCase() + text.slice(1)
-}
-
-function writeStatus(text){
-  text = text.split(';').map((v)=>sentenceCase(v)).join('')
-  map.statusText.unshift(text)
-}
-
-function randRangeInt(m, n){
-  return Math.floor((Math.random() * (n+1-m)) + m)
-}
-
-function getNeighbors(pos, filter){
-  filter = typeof(filter)==='string' ? filter : false
-  var m = map.tiles, 
-    {x,y} = pos,
-    neighbors = []
-
-  function validPos(y,x){
-    if(x<0 || x >= map.COLS) return false
-    if(y<0 || y >= map.ROWS) return false
-    return true
-  }
-
-  if (validPos(y-1, x+0)){ neighbors.push(m[y-1][x+0]) } 
-  if (validPos(y-1, x-1)){ neighbors.push(m[y-1][x-1]) }
-  if (validPos(y+1, x+0)){ neighbors.push(m[y+1][x+0]) }
-  if (validPos(y+0, x-1)){ neighbors.push(m[y+0][x-1]) }
-  if (validPos(y+1, x-1)){ neighbors.push(m[y+1][x-1]) }   
-  if (validPos(y-1, x+1)){ neighbors.push(m[y-1][x+1]) }
-  if (validPos(y+0, x+1)){ neighbors.push(m[y+0][x+1]) }
-  if (validPos(y+1, x+1)){ neighbors.push(m[y+1][x+1]) }
-
-  return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
-}
-
-function hasNeighbors(pos, filterArr){
-  return filterArr.reduce((a,filter)=>a + getNeighbors(pos, filter).length, 0) > 0
-}
-
 function generateTiles(rows, cols, initObj={}){
   console.log('Generating Tiles')
   var tiles = [],
@@ -497,12 +413,7 @@ function generateRooms(){
   return rooms
 }
 
-function getTiles(tileType){
-  if (typeof tileType === 'string'){
-    return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
-  }
-  return map.tiles
-}
+
 
 function generateTunnels(){
   console.log('Generating Tunnels')
@@ -570,7 +481,7 @@ function generateEnemiesByMap(mult){
       i-=1
     } else {
       enemies.push(enemy)
-      enemy.draw('enemy')
+      enemy.draw('enemy floor')
     }
   }
   return enemies
@@ -589,7 +500,7 @@ function generateItems(){
       item = new Item(tile.pos, map.items[i].name, map.items[i].icon, map.items[i].func, map.items[i].value)
       if (!item.hasNeighbors('enemy', 'player', 'wall', 'item')){
         items.push(item)
-        item.draw('floor item')
+        item.draw('item')
         num_item-=1
       }
     }
@@ -623,51 +534,53 @@ function Room(x, y, w, h) {
   )
   this.area = this.w * this.h
 
+  this.intercepts = function(other){
+    return this.x1 - map.roomvars.PADDING < other.x2 && this.x2 + map.roomvars.PADDING > other.x1 &&
+    this.y1 - map.roomvars.PADDING < other.y2 && this.y2 + map.roomvars.PADDING > other.y1
+  }
+
+
+  this.random_location = function(padding=2){
+    return new Pos(randRangeInt(this.x1+padding, this.x2-padding), 
+      randRangeInt(this.y1 + padding,this.y2 - padding))
+  }
+
+  this.h_tunnel = function(other){
+    var startx = Math.floor(Math.min(this.center.x, other.center.x)),
+      endx = Math.floor(Math.max(this.center.x, other.center.x)),
+      y = Math.floor(this.center.y)
+
+    for (var i = startx; i <= endx; i+=1){
+      map.tiles[y][i].class = 'tile floor'
+      map.tiles[y-1][i].class = 'tile floor'
+    }
+  }
+
+  this.v_tunnel = function(other){
+    var starty = Math.floor(Math.min(this.center.y, other.center.y)),
+      endy = Math.floor(Math.max(this.center.y, other.center.y)),
+      x = Math.floor(other.center.x)
+
+    for (var i = starty; i <= endy; i+=1){
+      map.tiles[i][x].class = 'tile floor'
+      map.tiles[i][x+1].class = 'tile floor'
+    }
+  }
+
+  this.draw = function(tiles){
+    var map_tile
+    for (var row = this.y1; row < this.y2; row+=1){
+      for (var col = this.x1; col < this.x2; col+=1){
+        map_tile = tiles[row][col]
+        map_tile.room = this
+        map_tile.class = toggleClasses('', 'tile floor')
+      }
+    }
+  }
+
   return this
 }
 
-Room.prototype.draw = function(tiles){
-  var map_tile
-  for (var row = this.y1; row < this.y2; row+=1){
-    for (var col = this.x1; col < this.x2; col+=1){
-      map_tile = tiles[row][col]
-      map_tile.room = this
-      map_tile.class = addClasses('', 'tile floor')
-    }
-  }
-}
-
-Room.prototype.intercepts = function(other){
-  return this.x1 - map.roomvars.PADDING < other.x2 && this.x2 + map.roomvars.PADDING > other.x1 &&
-  this.y1 - map.roomvars.PADDING < other.y2 && this.y2 + map.roomvars.PADDING > other.y1
-}
-
-Room.prototype.random_location = function(padding=2){
-  return new Pos(randRangeInt(this.x1+padding, this.x2-padding), 
-    randRangeInt(this.y1 + padding,this.y2 - padding))
-}
-
-Room.prototype.h_tunnel = function(other){
-  var startx = Math.floor(Math.min(this.center.x, other.center.x)),
-    endx = Math.floor(Math.max(this.center.x, other.center.x)),
-    y = Math.floor(this.center.y)
-
-  for (var i = startx; i <= endx; i+=1){
-    map.tiles[y][i].class = 'tile floor'
-    map.tiles[y-1][i].class = 'tile floor'
-  }
-}
-
-Room.prototype.v_tunnel = function(other){
-  var starty = Math.floor(Math.min(this.center.y, other.center.y)),
-    endy = Math.floor(Math.max(this.center.y, other.center.y)),
-    x = Math.floor(other.center.x)
-
-  for (var i = starty; i <= endy; i+=1){
-    map.tiles[i][x].class = 'tile floor'
-    map.tiles[i][x+1].class = 'tile floor'
-  }
-}
 
 function Mob (startpos, hp, atk, def, wpn, armor, level, name){
   this.hp = hp
@@ -698,18 +611,18 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     if (this.hp <= 0){
       console.log(this.name + ' was killed!')
       writeStatus(this.name + ' was killed!')
-      this.draw('floor')
+      this.draw('floor enemy')
       delete map.tiles[this.pos.y][this.pos.x].mob
     }
     return this
   }
 
-  this.attack = function(target){
-    target.take_damage(this)
-  }
-
   this.get_hp = function(){
     return this.hp
+  }
+
+  this.attack = function(target){
+    target.take_damage(this)
   }
 
   this.update_xp = function(xp){
@@ -724,75 +637,69 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
       this.level += 1
     }
   }
+  this.modify_health = function(hp){
+    var str = ''
+    if (hp==='health_pack'){
+      str = this.name + ' found a health pack!  ;'
+      hp = Math.floor(map.player.healthPackMult * this.maxhp)
+    }
+    if (this.hp + hp > this.maxhp) {
+      hp = this.maxhp - this.hp
+    }
+    writeStatus(str + this.name + ' was healed by ' + hp + ' points.')
+    this.hp += hp
+  }
+  this.modify_combat_stat = function(args){
+    var [stat, val] = args
+    this[stat] += val
+  }
+
+  this.move = function(pos){
+    
+    var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
+      new_map_tile = map.tiles[newpos.y][newpos.x]
+
+    if (new_map_tile.hasOwnProperty('item')){
+      if (new_map_tile.item.func){
+        this[new_map_tile.item.func](new_map_tile.item.val)
+        new_map_tile.class = toggleClasses(new_map_tile.class, 'item')
+        delete new_map_tile.item
+      }
+    }
+
+    if (new_map_tile.class.includes('floor')){
+      this.draw('player floor')
+      this.pos = newpos
+      this.draw('floor player')
+    }
+    else if (new_map_tile.class.includes('enemy')){
+      var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
+      console.log(new_map_tile.mob.maxhp, new_map_tile.mob.def, new_map_tile.mob.atk, mobxp)
+      this.attack(new_map_tile.mob)
+      if (new_map_tile.mob){
+        new_map_tile.mob.attack(this)
+      } else {
+        this.update_xp(mobxp)
+        console.log('XP given: ' + mobxp)
+      }
+    }
+
+    return this.pos
+  }
+
+  this.draw = function(classes){
+    var map_tile = map.tiles[this.pos.y][this.pos.x]
+    map_tile.mob = this
+    map_tile.class = toggleClasses(map_tile.class, classes)
+  }
+
+  this.hasNeighbors = function(...filterArr){
+    return hasNeighbors(this.pos, filterArr)
+  }
+
   return this
 }
 
-Mob.prototype.modify_health = function(hp){
-  var str = ''
-  if (hp==='health_pack'){
-    str = this.name + ' found a health pack!  ;'
-    hp = Math.floor(map.player.healthPackMult * this.maxhp)
-  }
-  if (this.hp + hp > this.maxhp) {
-    hp = this.maxhp - this.hp
-  }
-  writeStatus(str + this.name + ' was healed by ' + hp + ' points.')
-  this.hp += hp
-}
-
-Mob.prototype.modify_combat_stat = function(args){
-  var [stat, val] = args
-  this[stat] += val
-}
-
-Mob.prototype.move = function(pos){
-  console.log(this.pos)
-  var newpos = new Pos(this.pos.x + pos.x, this.pos.y + pos.y),
-    old_map_tile = map.tiles[this.pos.y][this.pos.x],
-    new_map_tile = map.tiles[newpos.y][newpos.x]
-  console.log(old_map_tile)
-  console.log(new_map_tile)
-
-  if (new_map_tile.hasOwnProperty('item')){
-    if (new_map_tile.item.func){
-      this[new_map_tile.item.func](new_map_tile.item.val)
-      new_map_tile.class = removeClasses(new_map_tile.class, 'item')
-      delete new_map_tile.item
-    }
-  }
-  if (new_map_tile.class.includes('floor')){
-    old_map_tile.class = removeClasses(old_map_tile.class, 'player')
-    old_map_tile.class = addClasses(old_map_tile.class, 'floor')
-    this.pos = newpos
-    this.draw('player')
-  }
-  else if (new_map_tile.class.includes('enemy')){
-    var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
-    console.log(new_map_tile.mob.maxhp, new_map_tile.mob.def, new_map_tile.mob.atk, mobxp)
-    this.attack(new_map_tile.mob)
-    if (new_map_tile.mob){
-      new_map_tile.mob.attack(this)
-    } else {
-      this.update_xp(mobxp)
-      console.log('XP given: ' + mobxp)
-    }
-  }
-
-  return this.pos
-}
-
-Mob.prototype.draw = function(type){
-  var map_tile = map.tiles[this.pos.y][this.pos.x]
-  map_tile.mob = this
-  console.log('Mob.draw tile class before: ' + map_tile.class)
-  console.log('Mob.draw type: ' + type)
-  map_tile.class = toggleClasses(map_tile.class, 'floor ' + type)
-  console.log('Mob.draw tile class after: ' + map_tile.class)
-}
-
-Mob.prototype.hasNeighbors = function(...filterArr){
-  return hasNeighbors(this.pos, filterArr)
-}
 
 function Item(pos, name, icon, func, val){
   this.pos = pos
@@ -800,14 +707,115 @@ function Item(pos, name, icon, func, val){
   this.icon = icon
   this.func = func
   this.val = val
+
+  this.draw = function(classes){
+    var map_tile = map.tiles[this.pos.y][this.pos.x]
+    map_tile.item = this
+    map_tile.class = toggleClasses(map_tile.class, classes)
+  }
 }
 
 Item.prototype.hasNeighbors = function(...filterArr){
   return hasNeighbors(this.pos, filterArr)
 }
 
-Item.prototype.draw = function(type){
-  var map_tile = map.tiles[this.pos.y][this.pos.x]
-  map_tile.item = this
-  map_tile.class = addClasses(map_tile.class, type)
+// Item.prototype.draw = function(type){
+//   var map_tile = map.tiles[this.pos.y][this.pos.x]
+//   map_tile.item = this
+//   map_tile.class = addClasses(map_tile.class, type)
+// }
+
+
+
+
+// ===========================================================================
+//
+//                          UTILITY FUNCTIONS
+//
+// ===========================================================================
+
+function addClasses(current, items){
+
+  if (typeof items === 'string') {
+    current = removeClasses(current, items) // Prevents duplicate classes
+    return current + ' ' + items
+  }
+  return current
+}
+
+function removeClasses(current, items){
+  if (!current) {
+    return current
+  }
+  current = current.split(' ')
+  items = items.split(' ')
+  for (let i in items){
+    current = current.filter((v)=>v!==items[i])
+  }
+  return current.join(' ').trim()
+}
+
+function toggleClasses(current, items){
+  current = current || ''
+  var itemsArr = items.trim().split(' ')
+  for (let i in itemsArr){
+    let item = itemsArr[i]
+    if (current.includes(item)){
+      current = removeClasses(current, item)
+    } else {
+      current = addClasses(current, item)
+    }
+  }
+  return current
+}
+
+function sentenceCase(text){
+  // Update this later with a better algorithm
+  return text[0].toUpperCase() + text.slice(1)
+}
+
+function writeStatus(text){
+  text = text.split(';').map((v)=>sentenceCase(v)).join('')
+  map.statusText.unshift(text)
+}
+
+function randRangeInt(m, n){
+  return Math.floor((Math.random() * (n+1-m)) + m)
+}
+
+
+
+function hasNeighbors(pos, filterArr){
+  return filterArr.reduce((a,filter)=>a + getNeighbors(pos, filter).length, 0) > 0
+}
+
+function getNeighbors(pos, filter){
+  filter = typeof(filter)==='string' ? filter : false
+  var m = map.tiles, 
+    {x,y} = pos,
+    neighbors = []
+
+  function validPos(y,x){
+    if(x<0 || x >= map.COLS) return false
+    if(y<0 || y >= map.ROWS) return false
+    return true
+  }
+
+  if (validPos(y-1, x+0)){ neighbors.push(m[y-1][x+0]) } 
+  if (validPos(y-1, x-1)){ neighbors.push(m[y-1][x-1]) }
+  if (validPos(y+1, x+0)){ neighbors.push(m[y+1][x+0]) }
+  if (validPos(y+0, x-1)){ neighbors.push(m[y+0][x-1]) }
+  if (validPos(y+1, x-1)){ neighbors.push(m[y+1][x-1]) }   
+  if (validPos(y-1, x+1)){ neighbors.push(m[y-1][x+1]) }
+  if (validPos(y+0, x+1)){ neighbors.push(m[y+0][x+1]) }
+  if (validPos(y+1, x+1)){ neighbors.push(m[y+1][x+1]) }
+
+  return filter ? neighbors.filter((i)=>i.class.includes(filter)) : neighbors
+}
+
+function getTiles(tileType){
+  if (typeof tileType === 'string'){
+    return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
+  }
+  return map.tiles
 }
