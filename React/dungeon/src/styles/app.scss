@@ -8,8 +8,8 @@ $body-bg-grad: linear-gradient(rgba(120,120,120,.6), rgba(120,120,120,.6));
 body {
   background-color: $body-bg;
   background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
-  // -webkit-background-size: cover;
-  // -moz-background-size: cover;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
   background-size: cover;
   width: 100%;
   margin-bottom: 60px;
@@ -61,21 +61,17 @@ main {
 
   .statusicons {
     width: 100%;
-    // border: 1px solid #AAA;
     background-color: rgba(2,2,2,0.2);
     box-shadow: 3px 3px 6px #222;
     border-radius: 4px;
     margin-bottom: 12px;
-    // padding: 2px 6px 2px 6px;
     color: #CCC;
 
     .status{
       padding-left: 0;
       padding-right: 0;
-      // margin-left: 8%;
-      // margin-right: 7.25%;
+
       .ra {
-        // margin-right: 2px;
 
         &.ra-health{
           color: rgb(220,0,0);
