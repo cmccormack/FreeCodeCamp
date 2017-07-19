@@ -47,14 +47,14 @@ var map = {
     MAXENEMIES: 6
   },
   enemies: [
-    { name: 'ogre',     atk: 20, hp: 150, def:30 },
+    { name: 'ogre',     atk: 20, hp: 150, def:25 },
     { name: 'goblin',   atk: 10, hp: 100, def:12 },
     { name: 'hydra',    atk: 13, hp: 130, def:20 },
     { name: 'ghoul',    atk: 10, hp: 100, def:14 },
     { name: 'griffin',  atk: 17, hp: 120, def:20 },
     { name: 'kobold',   atk: 8,  hp: 80 , def:12 },
     { name: 'skeleton', atk: 10, hp: 100, def:15 },
-    { name: 'troll',    atk: 12, hp: 80 , def:30 },
+    { name: 'troll',    atk: 12, hp: 80 , def:25 },
     { name: 'vampire',  atk: 15, hp: 120, def:18 },
     { name: 'zombie',   atk: 11, hp: 140, def:16 }
   ],
@@ -93,8 +93,6 @@ var map = {
     }
   ]
 }
-
-// ra-hole-ladder for later 
 
 const ARROW_KEYS = {
   'ArrowUp': new Pos(0,-1),
@@ -165,14 +163,12 @@ class App extends React.Component {
     }
     if (map.enemies.length < 10 && !this.state.exit_visible){
       writeStatus('You hear sounds of stone grinding in the distance...')
-
+      this.setState({exit_visible: true})
     }
   }
 
   initializeMap(){
-    map.tiles = generateTiles(
-      map.ROWS, map.COLS, { class:'tile stone' })
-
+    map.tiles = generateTiles( map.ROWS, map.COLS, { class:'tile stone' } )
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
@@ -214,7 +210,7 @@ class App extends React.Component {
     this.setState({
       player: map.enemies[0], 
       mapTiles: map.tiles.slice(0),
-      multiplier: this.state.multiplier + .5
+      multiplier: this.state.multiplier // Finish later
     })
   }
 
@@ -674,7 +670,10 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     }
     else if (new_map_tile.class.includes('enemy')){
       var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
-      console.log(new_map_tile.mob.maxhp, new_map_tile.mob.def, new_map_tile.mob.atk, mobxp)
+      console.log('Enemy maxhp: ' + new_map_tile.mob.maxhp, 'def:', new_map_tile.mob.def, 'atk:', new_map_tile.mob.atk, 'exp:', mobxp)
+      console.log(JSON.stringify(this))
+      console.log('attacks')
+      console.log(JSON.stringify(new_map_tile.mob))
       this.attack(new_map_tile.mob)
       if (new_map_tile.mob){
         new_map_tile.mob.attack(this)
@@ -718,12 +717,6 @@ function Item(pos, name, icon, func, val){
 Item.prototype.hasNeighbors = function(...filterArr){
   return hasNeighbors(this.pos, filterArr)
 }
-
-// Item.prototype.draw = function(type){
-//   var map_tile = map.tiles[this.pos.y][this.pos.x]
-//   map_tile.item = this
-//   map_tile.class = addClasses(map_tile.class, type)
-// }
 
 
 
