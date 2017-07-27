@@ -20,7 +20,7 @@ var map = {
     initialStats: {
       hp: 120,
       atk: 35,
-      def: 6
+      def: 4
     }
   },
   boss: {
@@ -155,6 +155,9 @@ class App extends React.Component {
     var player = this.state.player
 
     player.pos = player.move(pos)
+    if (player.pos === 'exit'){
+      return(this.init())
+    }
     if (player.hp <= 0 ){
       writeStatus('Like, game over, man!!')
       this.init()
@@ -599,7 +602,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     dmg = randRangeInt(0.5 * dmg, dmg * 1.5)
     strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  ;'
     strMsg += this.name + ' takes ' + dmg + ' damage!'
-    console.log(strMsg)
+    // console.log(strMsg)
     writeStatus(strMsg)
     this.hp -= dmg
 
@@ -660,6 +663,10 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
         this[new_map_tile.item.func](new_map_tile.item.val)
         new_map_tile.class = toggleClasses(new_map_tile.class, 'item')
         delete new_map_tile.item
+      } else {
+        if (new_map_tile.item.name === 'exit'){
+          return 'exit'
+        }
       }
     }
 
@@ -670,10 +677,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name){
     }
     else if (new_map_tile.class.includes('enemy')){
       var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
-      console.log('Enemy maxhp: ' + new_map_tile.mob.maxhp, 'def:', new_map_tile.mob.def, 'atk:', new_map_tile.mob.atk, 'exp:', mobxp)
-      console.log(JSON.stringify(this))
-      console.log('attacks')
-      console.log(JSON.stringify(new_map_tile.mob))
+      //console.log('Enemy maxhp: ' + new_map_tile.mob.maxhp, 'def:', new_map_tile.mob.def, 'atk:', new_map_tile.mob.atk, 'exp:', mobxp)
       this.attack(new_map_tile.mob)
       if (new_map_tile.mob){
         new_map_tile.mob.attack(this)
