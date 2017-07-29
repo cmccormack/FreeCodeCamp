@@ -13,6 +13,7 @@ var map = {
   ROWS: 40,
   PADDING: 2,
   MAXENEMIES: 25,
+  FOGRADIUS: 4,
   level: 1,
   MAXLEVEL: 2,
   player: {
@@ -181,7 +182,7 @@ class App extends React.Component {
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
-    generateFog()
+    // generateFog()
   }
 
 
@@ -228,7 +229,7 @@ class App extends React.Component {
 
   init(){
     this.initializeMap()
-    console.log(this.initializeCharacters().map((v)=>v.name))
+    this.initializeCharacters()
     this.initializeItems()
     this.setState({
       mapTiles: map.tiles.slice(0)
@@ -315,21 +316,38 @@ class Map extends React.Component {
 
 
 function TileComponent(props) {
-  var {x, y} = props.pos
+  var {x, y} = props.pos,
+    type = 'floor',
+    icon = null
+
+  if (props.tile.hasOwnProperty('item')){
+    type = 'item'
+    icon = <i className={props.tile.item.icon} />
+  }
+  if (props.tile.hasOwnProperty('mob')){
+    type = 'mob'
+    if (props.tile.mob.name === 'boss'){
+      type = 'boss'
+      icon = <i className={props.tile.mob.icon} />
+    }
+  }
 
   return (
     <div
-        className={props.tile.class}
+        className={'tilewrapper'}
         data-pos={y+','+x}
         id={(y*map.COLS + x)}
         key={(y+1) * (x+1)}
         style={{
           width: map.tileSize.width,
           height: map.tileSize.height,
-          clear: x === map.COLS ? 'both' : 'none'
+          clear: x === map.COLS ? 'both' : 'none',
+          float: 'left'
         }}
-    > {(props.tile.hasOwnProperty('item')) && (<i className={props.tile.item.icon} />)}
-      {(props.tile.hasOwnProperty('mob')) && (props.tile.mob.icon) && (<i className={props.tile.mob.icon} />)}
+    >
+      <div className={props.tile.class}>
+        {icon}
+      </div>
     </div>
   )
 }
@@ -504,7 +522,8 @@ function generateItems(){
 
 
 function generateFog(){
-  // Complete later
+  let tiles = getTiles()
+  tiles.forEach((row)=>row.forEach((cell)=>{cell.class = toggleClasses(cell.class, 'fog')}))
 }
 
 
