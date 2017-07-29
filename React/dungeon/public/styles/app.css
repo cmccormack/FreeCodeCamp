@@ -1736,12 +1736,12 @@ main {
       background-color: limegreen;
       border: 1px solid darkgreen;
       border-radius: 4px;
-      z-index: 2; }
+      z-index: 3; }
     .mapContainer .tile .ra {
       z-index: 2;
       position: relative;
-      left: -2px;
-      top: -9px;
+      left: -1px;
+      top: -8px;
       font-size: 12px; }
       .mapContainer .tile .ra.ra-health {
         color: green; }
