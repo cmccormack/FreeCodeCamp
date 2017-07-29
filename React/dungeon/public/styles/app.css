@@ -1701,31 +1701,40 @@ main {
         color: silver; }
       .mapContainer .statusicons .status .ra.ra-player {
         color: limegreen; }
-  .mapContainer .tile {
+  .mapContainer .tilewrapper {
     position: relative;
-    border: 1px solid #444;
     margin-left: -1px;
     margin-top: -1px;
     float: left; }
+  .mapContainer .tile {
+    width: 100%;
+    height: 100%;
+    position: absolute; }
     .mapContainer .tile.wall {
       background-color: #A41;
       background-color: #a35229;
+      border: 1px solid #444;
       z-index: 3; }
     .mapContainer .tile.floor, .mapContainer .tile.boss {
       background-color: #AAA;
-      border-color: #AAA; }
+      border-color: 1px solid #AAA; }
     .mapContainer .tile.stone {
-      background-color: #333; }
+      background-color: #333;
+      border: 1px solid #444; }
     .mapContainer .tile.fog {
-      background-color: rgba(120, 120, 120, 0.6); }
+      background-color: #333;
+      border: 1px solid #333; }
     .mapContainer .tile.enemy {
       background-color: #C41;
-      border-color: darkred;
+      border: 1px solid darkred;
       border-radius: 4px;
-      z-index: 1; }
+      position: absolute;
+      z-index: 10; }
+    .mapContainer .tile.boss {
+      color: purple; }
     .mapContainer .tile.player {
       background-color: limegreen;
-      border-color: darkgreen;
+      border: 1px solid darkgreen;
       border-radius: 4px;
       z-index: 2; }
     .mapContainer .tile .ra {
