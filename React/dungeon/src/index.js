@@ -317,19 +317,20 @@ class Map extends React.Component {
 
 function TileComponent(props) {
   var {x, y} = props.pos,
-    type = 'floor',
+    tile = null,
     icon = null
 
   if (props.tile.hasOwnProperty('item')){
-    type = 'item'
     icon = <i className={props.tile.item.icon} />
   }
   if (props.tile.hasOwnProperty('mob')){
-    type = 'mob'
     if (props.tile.mob.name === 'boss'){
-      type = 'boss'
       icon = <i className={props.tile.mob.icon} />
     }
+  }
+
+  if (!props.tile.class.includes('fog')){
+    tile = <div className={props.tile.class}>{icon}</div>
   }
 
   return (
@@ -342,12 +343,10 @@ function TileComponent(props) {
           width: map.tileSize.width,
           height: map.tileSize.height,
           clear: x === map.COLS ? 'both' : 'none',
-          float: 'left'
+          
         }}
     >
-      <div className={props.tile.class}>
-        {icon}
-      </div>
+      {tile}
     </div>
   )
 }
@@ -522,10 +521,12 @@ function generateItems(){
 
 
 function generateFog(){
-  let tiles = getTiles()
-  tiles.forEach((row)=>row.forEach((cell)=>{cell.class = toggleClasses(cell.class, 'fog')}))
+  getTiles().forEach((row)=>row.forEach((cell)=>{cell.class = toggleClasses(cell.class, 'fog')}))
 }
 
+function updateFog(center){
+
+}
 
 
 function Pos(x, y) {
