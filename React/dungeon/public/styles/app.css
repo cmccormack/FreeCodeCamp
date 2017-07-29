@@ -1711,7 +1711,7 @@ main {
       background-color: #A41;
       background-color: #a35229;
       z-index: 3; }
-    .mapContainer .tile.floor {
+    .mapContainer .tile.floor, .mapContainer .tile.boss {
       background-color: #AAA;
       border-color: #AAA; }
     .mapContainer .tile.stone {
@@ -1728,15 +1728,15 @@ main {
       border-color: darkgreen;
       border-radius: 4px;
       z-index: 2; }
-    .mapContainer .tile.item .ra {
+    .mapContainer .tile .ra {
       z-index: 2;
       position: relative;
       left: -2px;
       top: -9px;
       font-size: 12px; }
-      .mapContainer .tile.item .ra.ra-health {
+      .mapContainer .tile .ra.ra-health {
         color: green; }
-      .mapContainer .tile.item .ra.ra-triforce {
+      .mapContainer .tile .ra.ra-triforce {
         color: goldenrod; }
   .mapContainer .buttons {
     margin-top: 12px;
