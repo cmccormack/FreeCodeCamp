@@ -21,7 +21,7 @@ var map = {
     initialStats: {
       hp: 120,
       atk: 35,
-      def: 40
+      def: 4
     }
   },
   boss: {
@@ -122,8 +122,6 @@ class App extends React.Component {
       mapTiles: [], 
       player: {},
       statusText: map.statusText,
-      level: map.level,
-      multiplier: 0,
       exit_visible: false
     }
   }
@@ -159,11 +157,11 @@ class App extends React.Component {
     player.pos = player.move(pos)
     if (player.pos === 'exit'){
       map.level += 1
-      this.setState({level: map.level})
       return(this.init())
     }
     if (player.hp <= 0 ){
       writeStatus('Like, game over, man!!')
+      map.level = 1
       this.init()
     } else {
       this.update()
@@ -172,13 +170,10 @@ class App extends React.Component {
     if (!map.boss.alive) {
       writeStatus('The dungeon boss has been defeated!  Player has saved the day once again!')
       player.hp = 0
-      this.setState({player: player}, this.init)
+      map.level = 1
+      this.setState({player: player, level: map.level}, this.init)
       map.boss.alive = true
     }
-    // if (map.enemies.length < 10 && !this.state.exit_visible){
-    //   writeStatus('You hear sounds of stone grinding in the distance...')
-    //   this.setState({exit_visible: true})
-    // }
   }
 
   initializeMap(){
@@ -192,11 +187,12 @@ class App extends React.Component {
 
   initializeCharacters(){
     var player = this.state.player,
-      enemies = []
+      multiplier = 1 + ((map.level-1)/10)
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
-
+      writeStatus('Player has started a new journey...')
+      map.level = 1
       player = new Mob(map.rooms[0].random_location(), 0, 0, 0, {}, {}, 1, 'player')
       player.hp = map.player.initialStats.hp
       player.maxhp = player.hp
@@ -207,23 +203,22 @@ class App extends React.Component {
       player.pos = map.rooms[0].random_location()
     }
     player.draw('player floor')
+    this.setState({player:player})
 
-    enemies = generateEnemiesByMap(this.state.level + this.state.multiplier)
-    map.enemies = [player].concat(enemies)
+    return generateEnemiesByMap(multiplier)
   }
 
   initializeItems(){
     var items = generateItems(),
       pos, tile, boss,
       bstats = map.boss.stats
-    if (this.state.level === map.MAXLEVEL-1){
+    if (map.level === map.MAXLEVEL){
       for (let i in items){
         if (items[i].name === 'exit') {
           pos = items[i].pos
           tile = map.tiles[pos.y][pos.x]
           delete tile.item
           boss = new Mob(pos, bstats.hp, bstats.atk, bstats.def, null, null, 10, 'boss', 'ra ra-death-skull')
-          map.enemies.push(boss)
           boss.draw('boss item floor')
         }
       }
@@ -231,15 +226,12 @@ class App extends React.Component {
 
   }
 
-
   init(){
     this.initializeMap()
-    this.initializeCharacters()
+    console.log(this.initializeCharacters().map((v)=>v.name))
     this.initializeItems()
     this.setState({
-      player: map.enemies[0], 
-      mapTiles: map.tiles.slice(0),
-      multiplier: this.state.multiplier // Finish later
+      mapTiles: map.tiles.slice(0)
     })
   }
 
@@ -474,7 +466,7 @@ function generateEnemiesByMap(mult){
   for (let i = 0; i < map.MAXENEMIES; i+=1){
     type = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
     tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
-    enemy = new Mob(tile.pos, type.hp*mult, type.atk*mult, type.def*mult, null, null, 1, type.name)
+    enemy = new Mob(tile.pos, buff(type.hp), buff(type.atk), buff(type.def), null, null, 1, type.name)
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
       i-=1
     } else {
@@ -483,6 +475,10 @@ function generateEnemiesByMap(mult){
     }
   }
   return enemies
+
+  function buff(val){
+    return Math.round(val * mult)
+  }
 }
 
 function generateItems(){
@@ -681,6 +677,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
     else if (new_map_tile.class.includes('enemy') || new_map_tile.class.includes('boss')){
       var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
       this.attack(new_map_tile.mob)
+      console.log(new_map_tile.mob)
       if (new_map_tile.mob){
         new_map_tile.mob.attack(this)
       } else {
