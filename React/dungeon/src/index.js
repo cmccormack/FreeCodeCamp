@@ -13,7 +13,7 @@ var map = {
   ROWS: 40,
   PADDING: 2,
   MAXENEMIES: 25,
-  FOGRADIUS: 4,
+  FOGRADIUS: 5,
   level: 1,
   MAXLEVEL: 2,
   player: {
@@ -182,7 +182,7 @@ class App extends React.Component {
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
-    // generateFog()
+    generateFog()
   }
 
 
@@ -204,7 +204,7 @@ class App extends React.Component {
       player.pos = map.rooms[0].random_location()
     }
     player.draw('player floor')
-    this.setState({player:player})
+    this.setState({player:player}, this.update)
 
     return generateEnemiesByMap(multiplier)
   }
@@ -241,6 +241,7 @@ class App extends React.Component {
   }
 
   update(){
+    updateFog(this.state.player.pos)
     this.setState({ 
       mapTiles: map.tiles.slice(0),
       statusText: map.statusText
@@ -524,8 +525,17 @@ function generateFog(){
   getTiles().forEach((row)=>row.forEach((cell)=>{cell.class = toggleClasses(cell.class, 'fog')}))
 }
 
-function updateFog(center){
+function updateFog({x,y}){
+  var visibleTiles = getTiles('visible')
+  visibleTiles.map((v)=>{v.class = toggleClasses(v.class, 'visible fog')})
 
+  for (let row=(y-map.FOGRADIUS); row < (y + map.FOGRADIUS); row++){
+    for (let col=(x-map.FOGRADIUS); col < (x + map.FOGRADIUS); col++){
+      if (validPos(row, col)){
+        map.tiles[row][col].class = toggleClasses(map.tiles[row][col].class, 'fog visible')
+      }
+    }
+  }
 }
 
 
@@ -804,17 +814,18 @@ function hasNeighbors(pos, filterArr){
   return filterArr.reduce((a,filter)=>a + getNeighbors(pos, filter).length, 0) > 0
 }
 
+
+function validPos(y,x){
+  if(x<0 || x >= map.COLS) return false
+  if(y<0 || y >= map.ROWS) return false
+  return true
+}
+
 function getNeighbors(pos, filter){
   filter = typeof(filter)==='string' ? filter : false
   var m = map.tiles, 
     {x,y} = pos,
     neighbors = []
-
-  function validPos(y,x){
-    if(x<0 || x >= map.COLS) return false
-    if(y<0 || y >= map.ROWS) return false
-    return true
-  }
 
   if (validPos(y-1, x+0)){ neighbors.push(m[y-1][x+0]) } 
   if (validPos(y-1, x-1)){ neighbors.push(m[y-1][x-1]) }
