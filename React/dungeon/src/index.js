@@ -13,7 +13,7 @@ var map = {
   ROWS: 40,
   PADDING: 2,
   MAXENEMIES: 25,
-  FOGRADIUS: 5,
+  FOGRADIUS: 6,
   level: 1,
   MAXLEVEL: 2,
   player: {
@@ -526,16 +526,24 @@ function generateFog(){
 }
 
 function updateFog({x,y}){
-  var visibleTiles = getTiles('visible')
+  var visibleTiles = getTiles('visible'),
+    radius = map.FOGRADIUS,
+    tile
+
   visibleTiles.map((v)=>{v.class = toggleClasses(v.class, 'visible fog')})
 
-  for (let row=(y-map.FOGRADIUS); row < (y + map.FOGRADIUS); row++){
-    for (let col=(x-map.FOGRADIUS); col < (x + map.FOGRADIUS); col++){
-      if (validPos(row, col)){
-        map.tiles[row][col].class = toggleClasses(map.tiles[row][col].class, 'fog visible')
+  for (let row=(-radius); row <= radius; row++){
+    for (let col=(-radius); col <= radius; col++){
+      if (Math.pow(row, 2) + Math.pow(col, 2) <= Math.pow(radius, 2)){
+        
+        if (validPos(row + y, col + x)){
+          tile = map.tiles[row + y][col + x]
+          tile.class = toggleClasses(tile.class, 'fog visible')
+        }
       }
     }
   }
+
 }
 
 
@@ -707,7 +715,6 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
     else if (new_map_tile.class.includes('enemy') || new_map_tile.class.includes('boss')){
       var mobxp = Math.round((new_map_tile.mob.maxhp + new_map_tile.mob.def*2 + new_map_tile.mob.atk*2) / 10)
       this.attack(new_map_tile.mob)
-      console.log(new_map_tile.mob)
       if (new_map_tile.mob){
         new_map_tile.mob.attack(this)
       } else {
