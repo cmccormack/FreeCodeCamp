@@ -1711,7 +1711,6 @@ main {
     height: 100%;
     position: absolute; }
     .mapContainer .tile.wall {
-      background-color: #A41;
       background-color: #a35229;
       border: 1px solid #444;
       z-index: 3; }
@@ -1730,6 +1729,10 @@ main {
       border-radius: 4px;
       position: absolute;
       z-index: 10; }
+    .mapContainer .tile.floor.visited.fog {
+      background-color: #666; }
+    .mapContainer .tile.wall.visited.fog {
+      background-color: #1f1814; }
     .mapContainer .tile.boss {
       color: purple; }
     .mapContainer .tile.player {

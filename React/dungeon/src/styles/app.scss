@@ -104,7 +104,6 @@ main {
       position: absolute;
 
       &.wall{
-        background-color: #A41;
         background-color: hsl(20,60,40);
         border: 1px solid #444;
         z-index: 3;
@@ -131,6 +130,12 @@ main {
         border-radius: 4px;
         position: absolute;
         z-index: 10;
+      }
+      &.floor.visited.fog{
+        background-color: #666;
+      }
+      &.wall.visited.fog{
+        background-color: hsl(20,20,10);
       }
       &.boss {
         color: purple;

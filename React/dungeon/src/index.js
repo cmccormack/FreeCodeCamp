@@ -13,7 +13,7 @@ var map = {
   ROWS: 40,
   PADDING: 2,
   MAXENEMIES: 25,
-  FOGRADIUS: 6,
+  FOGRADIUS: 8,
   level: 1,
   MAXLEVEL: 2,
   player: {
@@ -153,11 +153,14 @@ class App extends React.Component {
   }
 
   characterMove(pos){
-    var player = this.state.player
+    var player = this.state.player,
+     final = 'Something large bellows in the distance...'
 
     player.pos = player.move(pos)
     if (player.pos === 'exit'){
       map.level += 1
+      writeStatus(`Player has discovered a ladder to a deeper level.  ${map.level===map.MAXLEVEL?final:''}`)
+      writeStatus(`Player has descended to level ${map.level}.`)
       return(this.init())
     }
     if (player.hp <= 0 ){
@@ -330,8 +333,29 @@ function TileComponent(props) {
     }
   }
 
+  // Display fog for all unseen tiles
+  if(props.tile.class.includes('fog') && !props.tile.class.includes('visited')){
+    tile = <div className={'tile fog'} />
+  }
+
+  // Show full tile if no fog
   if (!props.tile.class.includes('fog')){
     tile = <div className={props.tile.class}>{icon}</div>
+  }
+
+  if(props.tile.class.includes('visited') && !props.tile.class.includes('visible')){
+    switch (true){
+    case props.tile.class.includes('stone'):
+    case props.tile.class.includes('wall'):
+      tile = <div className={props.tile.class} />
+      break
+    case props.tile.class.includes('enemy'):
+      tile = <div className={props.tile.class.replace('enemy', 'floor')} />
+      break
+    case props.tile.class.includes('item'):
+    case props.tile.class.includes('floor'):
+      tile = <div className={props.tile.class}>{icon}</div>
+    }
   }
 
   return (
@@ -538,6 +562,7 @@ function updateFog({x,y}){
         
         if (validPos(row + y, col + x)){
           tile = map.tiles[row + y][col + x]
+          tile.class = addClasses(tile.class, 'visited')
           tile.class = toggleClasses(tile.class, 'fog visible')
         }
       }
