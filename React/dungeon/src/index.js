@@ -124,7 +124,8 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.funcs = {
-      handleGenerateClick: this.handleGenerateClick = this.handleGenerateClick.bind(this)
+      handleGenerateClick: this.handleGenerateClick = this.handleGenerateClick.bind(this),
+      handleFogClick: this.handleFogClick = this.handleFogClick.bind(this)
     }
 
     this.initializeHandlers = this.initializeHandlers.bind(this)
@@ -133,7 +134,7 @@ class App extends React.Component {
       mapTiles: [], 
       player: {},
       statusText: map.statusText,
-      exit_visible: false
+      showFog: true
     }
   }
 
@@ -164,7 +165,7 @@ class App extends React.Component {
 
   characterMove(pos){
     var player = this.state.player,
-     final = 'Something large bellows in the distance...'
+      final = 'Something large bellows in the distance...'
 
     player.pos = player.move(pos)
     if (player.pos === 'exit'){
@@ -195,7 +196,7 @@ class App extends React.Component {
     map.rooms = generateRooms()
     generateTunnels()
     generateWalls()
-    generateFog()
+    this.state.showFog && generateFog()
   }
 
 
@@ -265,8 +266,20 @@ class App extends React.Component {
     this.init()
   }
 
+  handleFogClick(){
+    if (!this.state.showFog){
+      generateFog()
+      updateFog(this.state.player.pos)
+    } else {
+      getTiles().map((tile)=>{
+        tile.class=removeClasses(tile.class, 'fog')
+      })
+    }
+    this.setState({showFog: !this.state.showFog})
+  }
+
   update(){
-    updateFog(this.state.player.pos)
+    this.state.showFog && updateFog(this.state.player.pos)
     this.setState({ 
       mapTiles: map.tiles.slice(0),
       statusText: map.statusText
@@ -281,6 +294,7 @@ class App extends React.Component {
           {'Dungeon Roguelike'}
         </div>
         <Map
+            fog={this.state.showFog}
             funcs={this.funcs}
             mapTiles={this.state.mapTiles}
             player={this.state.player}
@@ -318,7 +332,7 @@ class Map extends React.Component {
           style={mapContainerStyle}
       >
         <Statusicons player={this.props.player} />
-
+        
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
             <TileComponent
@@ -329,7 +343,10 @@ class Map extends React.Component {
           ))
         )}
 
-        <Buttons funcs={this.props.funcs} />
+        <Buttons 
+            fog={this.props.fog}
+            funcs={this.props.funcs} 
+        />
         <StatusText text={this.props.text} />
       </div>
     )
@@ -340,7 +357,8 @@ class Map extends React.Component {
 function TileComponent(props) {
   var {x, y} = props.pos,
     tile = null,
-    icon = null
+    icon = null,
+    newClass = props.tile.class
 
   if (props.tile.hasOwnProperty('item')){
     icon = <i className={props.tile.item.icon} />
@@ -351,30 +369,18 @@ function TileComponent(props) {
     }
   }
 
-  // Display fog for all unseen tiles
-  if(props.tile.class.includes('fog') && !props.tile.class.includes('visited')){
-    tile = <div className={'tile fog'} />
-  }
+  tile = <div className={newClass}>{icon}</div>
 
-  // Show full tile if no fog
-  if (!props.tile.class.includes('fog')){
-    tile = <div className={props.tile.class}>{icon}</div>
-  }
-
-  if(props.tile.class.includes('visited') && !props.tile.class.includes('visible')){
-    switch (true){
-    case props.tile.class.includes('stone'):
-    case props.tile.class.includes('wall'):
-      tile = <div className={props.tile.class} />
-      break
-    case props.tile.class.includes('enemy'):
-      tile = <div className={props.tile.class.replace('enemy', 'floor')} />
-      break
-    case props.tile.class.includes('item'):
-    case props.tile.class.includes('floor'):
-      tile = <div className={props.tile.class}>{icon}</div>
+  if(newClass.includes('fog')){
+    if(newClass.includes('enemy')){
+      newClass = newClass.replace('enemy', 'floor')
+    }
+    if(!newClass.includes('visited')){
+      icon = null
     }
   }
+
+  tile = <div className={newClass}>{icon}</div>
 
   return (
     <div
@@ -417,6 +423,7 @@ function Statusicons(props){
           {'EXP: ' + [props.player.xp,props.player.tnl].join('/')}
         </Col>
       </Row>
+      <div id='dungeonLevelWrapper'><span id='dungeonLevel'>{`Level: ${map.level}`}</span></div>
     </Grid>
   )
 }
@@ -453,6 +460,12 @@ function Buttons(props) {
         <div className="key" id="ArrowUp"><span><i className={'fa fa-arrow-up'} /></span></div>
         <div className="key" id="ArrowRight"><span><i className={'fa fa-arrow-right'} /></span></div>
       </div>
+      <button
+          className='btn btn-outline-secondary'
+          onClick={props.funcs.handleFogClick}
+          style={{width: '150px'}}
+          type='button'
+      >{props.fog ? 'Hide Fog' : 'Show Fog'}</button>
     </div>
   )
 }
@@ -586,15 +599,20 @@ function generateItems(){
 
 
 function generateFog(){
-  getTiles().forEach((row)=>row.forEach((cell)=>{cell.class = toggleClasses(cell.class, 'fog')}))
+  console.log('Generating Fog')
+  getTiles().forEach((tile)=>{tile.class = toggleClasses(tile.class, 'fog')})
 }
 
 function updateFog({x,y}){
+  console.log('Updating Fog')
   var visibleTiles = getTiles('visible'),
     radius = map.FOGRADIUS,
     tile
 
-  visibleTiles.map((v)=>{v.class = toggleClasses(v.class, 'visible fog')})
+  visibleTiles.map((v)=>{
+    v.class = removeClasses(v.class, 'visible')
+    v.class = addClasses(v.class, 'fog')
+  })
 
   for (let row=(-radius); row <= radius; row++){
     for (let col=(-radius); col <= radius; col++){
@@ -602,8 +620,8 @@ function updateFog({x,y}){
         
         if (validPos(row + y, col + x)){
           tile = map.tiles[row + y][col + x]
-          tile.class = addClasses(tile.class, 'visited')
-          tile.class = toggleClasses(tile.class, 'fog visible')
+          tile.class = addClasses(tile.class, 'visited visible')
+          tile.class = removeClasses(tile.class, 'fog')
         }
       }
     }
@@ -914,7 +932,7 @@ function getTiles(tileType){
   if (typeof tileType === 'string'){
     return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
   }
-  return map.tiles
+  return [].concat.apply([], map.tiles)
 }
 
 function buff(val, multiplier){

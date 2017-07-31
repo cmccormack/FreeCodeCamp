@@ -1704,6 +1704,16 @@ main {
         .mapContainer .statusicons .status .ra.ra-player {
           margin-right: 4px;
           color: limegreen; }
+  .mapContainer #dungeonLevelWrapper {
+    position: absolute;
+    top: 36px;
+    left: 0;
+    z-index: 20;
+    font-size: 0.8rem;
+    padding: 0 10px 4px 10px;
+    background-color: #141414;
+    background-color: rgba(20, 20, 20, 0.2);
+    line-height: 1.2; }
   .mapContainer .tilewrapper {
     position: relative;
     margin-left: -1px;
