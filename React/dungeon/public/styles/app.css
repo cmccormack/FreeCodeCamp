@@ -1693,14 +1693,17 @@ main {
     .mapContainer .statusicons .status {
       padding-left: 0;
       padding-right: 0; }
-      .mapContainer .statusicons .status .ra.ra-health {
-        color: #dc0000; }
-      .mapContainer .statusicons .status .ra.ra-sword {
-        color: #BA7333; }
-      .mapContainer .statusicons .status .ra.ra-shield {
-        color: silver; }
-      .mapContainer .statusicons .status .ra.ra-player {
-        color: limegreen; }
+      .mapContainer .statusicons .status .ra {
+        margin-right: 8px; }
+        .mapContainer .statusicons .status .ra.ra-health {
+          color: #dc0000; }
+        .mapContainer .statusicons .status .ra.ra-broken-shield {
+          color: #BA7333; }
+        .mapContainer .statusicons .status .ra.ra-battered-axe {
+          color: silver; }
+        .mapContainer .statusicons .status .ra.ra-player {
+          margin-right: 4px;
+          color: limegreen; }
   .mapContainer .tilewrapper {
     position: relative;
     margin-left: -1px;
@@ -1730,7 +1733,8 @@ main {
       position: absolute;
       z-index: 10; }
     .mapContainer .tile.floor.visited.fog {
-      background-color: #666; }
+      background-color: #666;
+      border: none; }
     .mapContainer .tile.wall.visited.fog {
       background-color: #1f1814; }
     .mapContainer .tile.boss {
@@ -1775,9 +1779,12 @@ main {
     .mapContainer .statusText ul {
       font-size: 0.8rem; }
       .mapContainer .statusText ul li {
-        color: #888; }
+        color: #888;
+        list-style: none; }
         .mapContainer .statusText ul li:nth-child(-n+1) {
           color: #CCC; }
+        .mapContainer .statusText ul li .li-ra {
+          margin-right: 10px; }
 
 .keys {
   position: relative;

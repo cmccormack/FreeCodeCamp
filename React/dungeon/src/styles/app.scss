@@ -75,16 +75,19 @@ main {
 
       .ra {
 
+        margin-right: 8px;
+
         &.ra-health{
           color: rgb(220,0,0);
         }
-        &.ra-sword{
+        &.ra-broken-shield{
           color: #BA7333;
         }
-        &.ra-shield{
+        &.ra-battered-axe{
           color: silver;
         }
         &.ra-player{
+          margin-right: 4px;
           color: limegreen;
         }
       }
@@ -133,6 +136,7 @@ main {
       }
       &.floor.visited.fog{
         background-color: #666;
+        border: none;
       }
       &.wall.visited.fog{
         background-color: hsl(20,20,10);
@@ -193,11 +197,17 @@ main {
 
     ul {
       font-size: 0.8rem;
+
       li {
         color: #888;
+        list-style: none;
 
         &:nth-child(-n+1){
           color: #CCC;
+        }
+
+        .li-ra {
+          margin-right: 10px;
         }
       }
 

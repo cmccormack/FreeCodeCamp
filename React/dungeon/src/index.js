@@ -94,7 +94,17 @@ var map = {
       value: null,
       func: null
     }
-  ]
+  ],
+  statusIcons: {
+    playerdeath: 'ra ra-angel-wings',
+    mobdeath: 'ra ra-skull', 
+    playerAttack: 'ra ra-sword',
+    mobAttack: 'ra ra-dripping-knife',
+    healing: 'ra ra-health-increase',
+    descend: 'ra ra-hole-ladder',
+    discover: 'ra ra-footprint',
+    start: 'ra ra-campfire'
+  }
 }
 
 const ARROW_KEYS = {
@@ -159,12 +169,12 @@ class App extends React.Component {
     player.pos = player.move(pos)
     if (player.pos === 'exit'){
       map.level += 1
-      writeStatus(`Player has discovered a ladder to a deeper level.  ${map.level===map.MAXLEVEL?final:''}`)
-      writeStatus(`Player has descended to level ${map.level}.`)
+      writeStatus(`Player has discovered a ladder to a deeper level.  ${map.level===map.MAXLEVEL?final:''}`, 'discover')
+      writeStatus(`Player has descended to level ${map.level}.`, 'descend')
       return(this.init())
     }
     if (player.hp <= 0 ){
-      writeStatus('Like, game over, man!!')
+      writeStatus('Like, game over, man!!', 'playerdeath')
       map.level = 1
       this.init()
     } else {
@@ -172,7 +182,7 @@ class App extends React.Component {
     }
 
     if (!map.boss.alive) {
-      writeStatus('The dungeon boss has been defeated!  Player has saved the day once again!')
+      writeStatus('The dungeon boss has been defeated!  Player has saved the day once again!', 'bossdeath')
       player.hp = 0
       map.level = 1
       this.setState({player: player, level: map.level}, this.init)
@@ -195,7 +205,7 @@ class App extends React.Component {
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
-      writeStatus('Player has started a new journey...')
+      writeStatus('Player has started a new journey...', 'start')
       map.level = 1
       player = new Mob(map.rooms[0].random_location(), 0, 0, 0, {}, {}, 1, 'player')
       player.hp = map.player.initialStats.hp
@@ -262,7 +272,7 @@ class App extends React.Component {
             funcs={this.funcs}
             mapTiles={this.state.mapTiles}
             player={this.state.player}
-            statusText={this.state.statusText}
+            text={this.state.statusText}
         />
       </div>
     )
@@ -308,11 +318,7 @@ class Map extends React.Component {
         )}
 
         <Buttons funcs={this.props.funcs} />
-        <div className={'statusText'}>
-          <ul>
-            { this.props.statusText.map((v,i)=><li key={''+i+v}>{v}</li>)}
-          </ul>
-        </div>
+        <StatusText text={this.props.text} />
       </div>
     )
   }
@@ -386,11 +392,11 @@ function Statusicons(props){
           {'HP: '  + props.player.hp + '/' + props.player.maxhp}
         </Col>
         <Col sm={3} className={'status text-center'}>
-          <i className={'ra ra-fw ra-sword'}  />
+          <i className={'ra ra-fw ra-battered-axe'}  />
           {'Atk: ' + props.player.atk}
         </Col>
         <Col sm={3} className={'status text-center'}>
-          <i className={'ra ra-fw ra-shield'} />
+          <i className={'ra ra-fw ra-broken-shield'} />
           {'Def: ' + props.player.def}
         </Col>
         <Col sm={3} className={'status text-center'}>
@@ -400,6 +406,23 @@ function Statusicons(props){
         </Col>
       </Row>
     </Grid>
+  )
+}
+
+function StatusText(props){
+  return (
+    <div className={'statusText'}>
+      <ul>
+        {props.text.map((v,i)=>(
+          <li 
+              className={v[1]}
+              key={`${i}${v[0]}`}
+          >
+            <i className={`li-ra ${map.statusIcons[v[1]]}`} />{v[0]}
+          </li>)
+        )}
+      </ul>
+    </div>
   )
 }
 
@@ -655,20 +678,19 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
   this.icon = icon
 
   this.take_damage = function(mob){
-    var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 0,
+    var dmg = mob.atk - this.def - mob.piercing > 0 ? mob.atk - this.def - mob.piercing : 1,
       strMsg = ''
     
     dmg = randRangeInt(0.5 * dmg, dmg * 1.5)
     strMsg = mob.name + ' attacks ' + sentenceCase(this.name) + '.  ;'
     strMsg += this.name + ' takes ' + dmg + ' damage!'
-    // console.log(strMsg)
-    writeStatus(strMsg)
+    writeStatus(strMsg, this.name==='player' ? 'mobAttack' : 'playerAttack')
     this.hp -= dmg
 
     // Enemy dies if HP < 0, else attacks player
     if (this.hp <= 0){
       console.log(this.name + ' was killed!')
-      writeStatus(this.name + ' was killed!')
+      writeStatus(this.name + ' was killed!', 'mobdeath')
       this.draw('floor enemy')
       if (this.name === 'boss'){
         map.boss.alive = false
@@ -707,7 +729,7 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
     if (this.hp + hp > this.maxhp) {
       hp = this.maxhp - this.hp
     }
-    writeStatus(str + this.name + ' was healed by ' + hp + ' points.')
+    writeStatus(str + this.name + ' was healed by ' + hp + ' points.', 'healing')
     this.hp += hp
   }
   this.modify_combat_stat = function(args){
@@ -831,9 +853,9 @@ function sentenceCase(text){
   return text[0].toUpperCase() + text.slice(1)
 }
 
-function writeStatus(text){
+function writeStatus(text, status){
   text = text.split(';').map((v)=>sentenceCase(v)).join('')
-  map.statusText.unshift(text)
+  map.statusText.unshift([text, status])
 }
 
 function randRangeInt(m, n){
