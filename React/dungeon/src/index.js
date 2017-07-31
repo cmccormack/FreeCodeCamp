@@ -15,7 +15,7 @@ var map = {
   MAXENEMIES: 25,
   FOGRADIUS: 8,
   level: 1,
-  MAXLEVEL: 2,
+  MAXLEVEL: 3,
   player: {
     xpPow: 3.2,
     healthPackMult: 0.6,
@@ -201,7 +201,7 @@ class App extends React.Component {
 
   initializeCharacters(){
     var player = this.state.player,
-      multiplier = 1 + ((map.level-1)/10)
+      multiplier = 1 + ((map.level)/10)
 
     // Only push new player if player does not exist
     if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
@@ -225,14 +225,26 @@ class App extends React.Component {
   initializeItems(){
     var items = generateItems(),
       pos, tile, boss,
-      bstats = map.boss.stats
+      multiplier = 1 + ((map.level)/10),
+      bossstats = map.boss.stats
+
     if (map.level === map.MAXLEVEL){
       for (let i in items){
         if (items[i].name === 'exit') {
           pos = items[i].pos
           tile = map.tiles[pos.y][pos.x]
           delete tile.item
-          boss = new Mob(pos, bstats.hp, bstats.atk, bstats.def, null, null, 10, 'boss', 'ra ra-death-skull')
+          boss = new Mob(
+            pos,
+            buff(bossstats.hp, multiplier),
+            buff(bossstats.atk, multiplier),
+            buff(bossstats.def, multiplier),
+            null,
+            null,
+            10,
+            'boss',
+            'ra ra-death-skull'
+          )
           boss.draw('boss item floor')
         }
       }
@@ -531,7 +543,16 @@ function generateEnemiesByMap(mult){
   for (let i = 0; i < map.MAXENEMIES; i+=1){
     type = map.enemies[(Math.floor(Math.random() * map.enemies.length-1))+1]
     tile = floorTiles.splice(randRangeInt(0, floorTiles.length-1), 1)[0]
-    enemy = new Mob(tile.pos, buff(type.hp), buff(type.atk), buff(type.def), null, null, 1, type.name)
+    enemy = new Mob(
+      tile.pos,
+      buff(type.hp, mult), 
+      buff(type.atk, mult), 
+      buff(type.def, mult), 
+      null, 
+      null, 
+      1, 
+      type.name
+    )
     if (enemy.hasNeighbors('player', 'enemy', 'wall')){
       i-=1
     } else {
@@ -540,10 +561,6 @@ function generateEnemiesByMap(mult){
     }
   }
   return enemies
-
-  function buff(val){
-    return Math.round(val * mult)
-  }
 }
 
 function generateItems(){
@@ -898,4 +915,8 @@ function getTiles(tileType){
     return [].concat.apply([], map.tiles.map((row)=>row.filter((i)=>i.class.includes(tileType))))
   }
   return map.tiles
+}
+
+function buff(val, multiplier){
+  return Math.round(val * multiplier)
 }
