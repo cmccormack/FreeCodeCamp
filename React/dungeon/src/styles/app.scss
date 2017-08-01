@@ -129,8 +129,8 @@ main {
       }
 
       &.stone {
-        background-color: #333;
-        border: 1px solid #444;
+        background-color: #222;
+        border: 1px solid #333;
       }
 
       &.fog {
@@ -150,7 +150,11 @@ main {
         border: none;
       }
       &.wall.visited.fog{
-        background-color: hsl(20,20,10);
+        background-color: hsl(20,40,15);
+      }
+      &.stone.visited.fog{
+        background-color: #111;
+        border: 1px solid #222;
       }
       &.boss {
         color: purple;

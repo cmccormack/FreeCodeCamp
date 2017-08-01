@@ -1731,8 +1731,8 @@ main {
       background-color: #AAA;
       border-color: 1px solid #AAA; }
     .mapContainer .tile.stone {
-      background-color: #333;
-      border: 1px solid #444; }
+      background-color: #222;
+      border: 1px solid #333; }
     .mapContainer .tile.fog {
       background-color: #333;
       border: 1px solid #333; }
@@ -1746,7 +1746,10 @@ main {
       background-color: #666;
       border: none; }
     .mapContainer .tile.wall.visited.fog {
-      background-color: #1f1814; }
+      background-color: #362117; }
+    .mapContainer .tile.stone.visited.fog {
+      background-color: #111;
+      border: 1px solid #222; }
     .mapContainer .tile.boss {
       color: purple; }
     .mapContainer .tile.player {
