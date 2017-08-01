@@ -134,7 +134,8 @@ class App extends React.Component {
       mapTiles: [], 
       player: {},
       statusText: map.statusText,
-      showFog: true
+      showFog: true,
+      newGame: true
     }
   }
 
@@ -177,7 +178,7 @@ class App extends React.Component {
     if (player.hp <= 0 ){
       writeStatus('Like, game over, man!!', 'playerdeath')
       map.level = 1
-      this.init()
+      this.setState({newGame: true}, this.init)
     } else {
       this.update()
     }
@@ -186,7 +187,7 @@ class App extends React.Component {
       writeStatus('The dungeon boss has been defeated!  Player has saved the day once again!', 'bossdeath')
       player.hp = 0
       map.level = 1
-      this.setState({player: player, level: map.level}, this.init)
+      this.setState({player: player, newGame: true}, this.init)
       map.boss.alive = true
     }
   }
@@ -205,7 +206,7 @@ class App extends React.Component {
       multiplier = 1 + ((map.level)/10)
 
     // Only push new player if player does not exist
-    if (Object.keys(this.state.player).length === 0 || this.state.player.hp <= 0){
+    if (this.state.newGame){
       writeStatus('Player has started a new journey...', 'start')
       map.level = 1
       player = new Mob(map.rooms[0].random_location(), 0, 0, 0, {}, {}, 1, 'player')
@@ -218,7 +219,7 @@ class App extends React.Component {
       player.pos = map.rooms[0].random_location()
     }
     player.draw('player floor')
-    this.setState({player:player}, this.update)
+    this.setState({player:player, newGame: false}, this.update)
 
     return generateEnemiesByMap(multiplier)
   }
@@ -269,7 +270,6 @@ class App extends React.Component {
   handleFogClick(){
     if (!this.state.showFog){
       generateFog()
-      // updateFog(this.state.player.pos, this.state.showFog)
     } else {
       getTiles().map((tile)=>{
         tile.class=removeClasses(tile.class, 'fog')
