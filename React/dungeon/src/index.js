@@ -269,17 +269,17 @@ class App extends React.Component {
   handleFogClick(){
     if (!this.state.showFog){
       generateFog()
-      updateFog(this.state.player.pos)
+      // updateFog(this.state.player.pos, this.state.showFog)
     } else {
       getTiles().map((tile)=>{
         tile.class=removeClasses(tile.class, 'fog')
       })
     }
-    this.setState({showFog: !this.state.showFog})
+    this.setState({showFog: !this.state.showFog}, this.update)
   }
 
   update(){
-    this.state.showFog && updateFog(this.state.player.pos)
+    updateFog(this.state.player.pos, this.state.showFog)
     this.setState({ 
       mapTiles: map.tiles.slice(0),
       statusText: map.statusText
@@ -603,16 +603,21 @@ function generateFog(){
   getTiles().forEach((tile)=>{tile.class = toggleClasses(tile.class, 'fog')})
 }
 
-function updateFog({x,y}){
+function updateFog({x,y}, showFog){
   console.log('Updating Fog')
-  var visibleTiles = getTiles('visible'),
-    radius = map.FOGRADIUS,
-    tile
 
-  visibleTiles.map((v)=>{
-    v.class = removeClasses(v.class, 'visible')
-    v.class = addClasses(v.class, 'fog')
-  })
+  var visibleTiles, tile, radius = map.FOGRADIUS
+
+  if (showFog){
+    visibleTiles = getTiles('visible'),
+
+    visibleTiles.map((v)=>{
+      v.class = removeClasses(v.class, 'visible')
+      v.class = addClasses(v.class, 'fog')
+    })
+  }
+
+  console.log(showFog)
 
   for (let row=(-radius); row <= radius; row++){
     for (let col=(-radius); col <= radius; col++){
@@ -621,7 +626,7 @@ function updateFog({x,y}){
         if (validPos(row + y, col + x)){
           tile = map.tiles[row + y][col + x]
           tile.class = addClasses(tile.class, 'visited visible')
-          tile.class = removeClasses(tile.class, 'fog')
+          if(showFog) tile.class = removeClasses(tile.class, 'fog')
         }
       }
     }
