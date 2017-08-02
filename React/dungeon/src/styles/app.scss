@@ -68,6 +68,39 @@ main {
     border-radius: 4px;
     margin-bottom: 12px;
     color: #CCC;
+    position: relative;
+
+    #dungeonLevelWrapper {
+      position: absolute;
+      top: 36px;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      font-size: 0.8rem;
+      padding: 4px 0 4px 10px;
+      background-color: rgb(20,20,20);
+      background-color: rgba(20,20,20,0.2);
+      line-height: 1.2;
+    }
+
+    #fogToggleWrapper {
+      position: absolute;
+      top: 36px;
+      right: 0;
+      width: 70px;
+      z-index: 20;
+      font-size: 0.8rem;
+      padding: 4px 10px 4px;
+      line-height: 1.2;
+
+      i {
+        font-style: .8rem;
+      }
+    }
+
+    #statusiconstable {
+      width: 100%;
+    }
 
     .status{
       padding-left: 0;
@@ -94,18 +127,7 @@ main {
     }
   }
 
-  #dungeonLevelWrapper {
-    position: absolute;
-    top: 36px;
-    left: 0;
-    z-index: 20;
-    font-size: 0.8rem;
-    padding: 0 10px 4px 10px;
-    background-color: rgb(20,20,20);
-    background-color: rgba(20,20,20,0.2);
-    line-height: 1.2;
-
-  }
+  
   .tilewrapper {
     position: relative;
     margin-left: -1px;
@@ -182,17 +204,21 @@ main {
 
     }
   .buttons {
+    display: inline-block;
     margin-top: 12px;
     background-color: rgba(2,2,2,0.2);
     box-shadow: 3px 3px 6px #222;
     border-radius: 4px;
     height: 50px;
     width: 100%;
+    float: none;
 
     .btn {
       transition: none;
       background-color: rgba(68,68,68,0.2);
       height: 40px;
+      vertical-align: middle;
+      margin: 6px 0 0 6px;
 
       &:hover {
         background-color: rgba(68,68,68,0.6);
@@ -212,6 +238,7 @@ main {
 
     ul {
       font-size: 0.8rem;
+      padding-left: 16px;
 
       li {
         color: #888;
@@ -232,10 +259,10 @@ main {
 
 // Keyboard Keys CSS - https://jsfiddle.net/BinaryMoon/8UqLv/
 .keys {
-  // width: 150px;
   position: relative;
   line-height: 3;
-  // background-color: rgba(200, 0, 0, 0.5);
+  display: inline-block;
+  float: right;
 }
 .key {
   // position: absolute;

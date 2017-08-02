@@ -2,7 +2,7 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Col, Row, Grid } from 'react-bootstrap'
+// import { Col, Row, Grid } from 'react-bootstrap'
 
 var map = {
   rooms: [],
@@ -271,7 +271,7 @@ class App extends React.Component {
     if (!this.state.showFog){
       generateFog()
     } else {
-      getTiles().map((tile)=>{
+      getTiles().forEach((tile)=>{
         tile.class=removeClasses(tile.class, 'fog')
       })
     }
@@ -331,7 +331,11 @@ class Map extends React.Component {
           className={'mapContainer'} 
           style={mapContainerStyle}
       >
-        <Statusicons player={this.props.player} />
+        <Statusicons 
+            fog={this.props.fog}
+            funcs={this.props.funcs}
+            player={this.props.player} 
+        />
         
         {this.props.mapTiles.map((row,y)=>
           row.map((tile,x) => (
@@ -401,30 +405,46 @@ function TileComponent(props) {
 }
 
 function Statusicons(props){
+  console.log(props)
   return (
-
-    <Grid className={'statusicons unselectable'}>
-      <Row>
-        <Col sm={3} className={'status text-center'}>
-          <i className={'ra ra-fw ra-health'} />
-          {'HP: '  + props.player.hp + '/' + props.player.maxhp}
-        </Col>
-        <Col sm={3} className={'status text-center'}>
-          <i className={'ra ra-fw ra-battered-axe'}  />
-          {'Atk: ' + props.player.atk}
-        </Col>
-        <Col sm={3} className={'status text-center'}>
-          <i className={'ra ra-fw ra-broken-shield'} />
-          {'Def: ' + props.player.def}
-        </Col>
-        <Col sm={3} className={'status text-center'}>
-          {`(${props.player.level})`}
-          <i className={'ra ra-fw ra-player'} />
-          {'EXP: ' + [props.player.xp,props.player.tnl].join('/')}
-        </Col>
-      </Row>
+    <div className={'statusicons unselectable'}>
       <div id='dungeonLevelWrapper'><span id='dungeonLevel'>{`Level: ${map.level}`}</span></div>
-    </Grid>
+      <div 
+          className='text-right'
+          id='fogToggleWrapper' 
+      >
+        <span id='fogToggleSpan'>
+          {'Fog?  '}
+          <i 
+              className={props.fog ? 'fa fa-check-square-o' : 'fa fa-square-o'}
+              onClick={props.funcs.handleFogClick}
+          />
+        </span>
+      </div>
+      <table id={'statusiconstable'}>
+        <tbody>
+          <tr>
+            <td className={'status text-center'}>
+              <i className={'ra ra-fw ra-health'} />
+              {'HP: '  + props.player.hp + '/' + props.player.maxhp}
+            </td>
+            <td className={'status text-center'}>
+              <i className={'ra ra-fw ra-battered-axe'}  />
+              {'Atk: ' + props.player.atk}
+            </td>
+            <td className={'status text-center'}>
+              <i className={'ra ra-fw ra-broken-shield'} />
+              {'Def: ' + props.player.def}
+            </td>
+            <td className={'status text-center'}>
+              {`(${props.player.level})`}
+              <i className={'ra ra-fw ra-player'} />
+              {'EXP: ' + [props.player.xp,props.player.tnl].join('/')}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   )
 }
 
@@ -448,7 +468,7 @@ function StatusText(props){
 function Buttons(props) {
 
   return (
-    <div className='buttons btn-group unselectable'>
+    <div className='buttons unselectable'>
       <button 
           className='btn btn-outline-secondary'
           onClick={props.funcs.handleGenerateClick}
@@ -460,12 +480,6 @@ function Buttons(props) {
         <div className="key" id="ArrowUp"><span><i className={'fa fa-arrow-up'} /></span></div>
         <div className="key" id="ArrowRight"><span><i className={'fa fa-arrow-right'} /></span></div>
       </div>
-      <button
-          className='btn btn-outline-secondary'
-          onClick={props.funcs.handleFogClick}
-          style={{width: '150px'}}
-          type='button'
-      >{props.fog ? 'Hide Fog' : 'Show Fog'}</button>
     </div>
   )
 }
@@ -606,12 +620,11 @@ function generateFog(){
 function updateFog({x,y}, showFog){
   console.log('Updating Fog')
 
-  var visibleTiles, tile, radius = map.FOGRADIUS
+  var tile, radius = map.FOGRADIUS
 
   if (showFog){
-    visibleTiles = getTiles('visible'),
 
-    visibleTiles.map((v)=>{
+    getTiles('visible').forEach((v)=>{
       v.class = removeClasses(v.class, 'visible')
       v.class = addClasses(v.class, 'fog')
     })
