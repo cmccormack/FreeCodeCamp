@@ -1717,7 +1717,8 @@ main {
       width: 100%; }
     .mapContainer .statusicons .status {
       padding-left: 0;
-      padding-right: 0; }
+      padding-right: 0;
+      width: 25%; }
       .mapContainer .statusicons .status .ra {
         margin-right: 8px; }
         .mapContainer .statusicons .status .ra.ra-health {
@@ -1744,15 +1745,19 @@ main {
       background-color: #a35229;
       border: 1px solid #444;
       z-index: 3; }
+      .mapContainer .tile.wall.visible, .mapContainer .tile.wall.all-seeing {
+        box-shadow: 2px 2px 2px dimgray; }
     .mapContainer .tile.floor, .mapContainer .tile.boss {
       background-color: #AAA;
       border-color: 1px solid #AAA; }
     .mapContainer .tile.stone {
       background-color: #222;
-      border: 1px solid #333; }
+      border: 1px solid #333;
+      z-index: 4; }
     .mapContainer .tile.fog {
       background-color: #333;
-      border: 1px solid #333; }
+      border: 1px solid #333;
+      z-index: 15; }
     .mapContainer .tile.enemy {
       background-color: #C41;
       border: 1px solid darkred;
