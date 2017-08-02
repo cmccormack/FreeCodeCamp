@@ -405,7 +405,9 @@ function TileComponent(props) {
 }
 
 function Statusicons(props){
-  console.log(props)
+  const lChev = <i className='chevron fa fa-chevron-left' />
+  const rChev = <i className='chevron fa fa-chevron-right' />
+
   return (
     <div className={'statusicons unselectable'}>
       <div id='dungeonLevelWrapper'><span id='dungeonLevel'>{`Level: ${map.level}`}</span></div>
@@ -437,7 +439,7 @@ function Statusicons(props){
               {'Def: ' + props.player.def}
             </td>
             <td className={'status text-center'}>
-              {`(${props.player.level})`}
+              {lChev}{props.player.level}{rChev}
               <i className={'ra ra-fw ra-player'} />
               {'EXP: ' + [props.player.xp,props.player.tnl].join('/')}
             </td>

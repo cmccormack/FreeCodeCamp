@@ -1729,6 +1729,8 @@ main {
         .mapContainer .statusicons .status .ra.ra-player {
           margin-right: 4px;
           color: limegreen; }
+      .mapContainer .statusicons .status .chevron {
+        font-size: .7rem; }
   .mapContainer .tilewrapper {
     position: relative;
     margin-left: -1px;
