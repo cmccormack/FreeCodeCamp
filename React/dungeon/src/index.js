@@ -103,7 +103,8 @@ var map = {
     healing: 'ra ra-health-increase',
     descend: 'ra ra-hole-ladder',
     discover: 'ra ra-footprint',
-    start: 'ra ra-campfire'
+    start: 'ra ra-campfire',
+    item: 'ra ra-key'
   }
 }
 
@@ -273,6 +274,7 @@ class App extends React.Component {
     } else {
       getTiles().forEach((tile)=>{
         tile.class=removeClasses(tile.class, 'fog')
+        tile.class=addClasses(tile.class, 'all-seeing')
       })
     }
     this.setState({showFog: !this.state.showFog}, this.update)
@@ -407,10 +409,11 @@ function TileComponent(props) {
 function Statusicons(props){
   const lChev = <i className='chevron fa fa-chevron-left' />
   const rChev = <i className='chevron fa fa-chevron-right' />
+  const level = map.level === map.MAXLEVEL ? 'Final Level!' : `Level: ${map.level}`
 
   return (
     <div className={'statusicons unselectable'}>
-      <div id='dungeonLevelWrapper'><span id='dungeonLevel'>{`Level: ${map.level}`}</span></div>
+      <div id='dungeonLevelWrapper'><span id='dungeonLevel'>{level}</span></div>
       <div 
           className='text-right'
           id='fogToggleWrapper' 
@@ -616,7 +619,10 @@ function generateItems(){
 
 function generateFog(){
   console.log('Generating Fog')
-  getTiles().forEach((tile)=>{tile.class = toggleClasses(tile.class, 'fog')})
+  getTiles().forEach((tile)=>{
+    tile.class = addClasses(tile.class, 'fog')
+    tile.class = removeClasses(tile.class, 'all-seeing')
+  })
 }
 
 function updateFog({x,y}, showFog){
@@ -787,9 +793,10 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
     writeStatus(str + this.name + ' was healed by ' + hp + ' points.', 'healing')
     this.hp += hp
   }
-  this.modify_combat_stat = function(args){
+  this.modify_combat_stat = function(args, item){
     var [stat, val] = args
     this[stat] += val
+    writeStatus(`Player found a stronger ${item}!   [${stat}+${val}]`, 'item')
   }
 
   this.move = function(pos){
@@ -799,7 +806,8 @@ function Mob (startpos, hp, atk, def, wpn, armor, level, name, icon){
 
     if (new_map_tile.hasOwnProperty('item')){
       if (new_map_tile.item.func){
-        this[new_map_tile.item.func](new_map_tile.item.val)
+        
+        this[new_map_tile.item.func](new_map_tile.item.val, new_map_tile.item.name)
         new_map_tile.class = toggleClasses(new_map_tile.class, 'item')
         delete new_map_tile.item
       } else {
