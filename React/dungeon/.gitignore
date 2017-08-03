@@ -21,4 +21,5 @@ yarn-error.log*
 *.map
 *.log
 
+*.tiff
 ../../FCC.txt
