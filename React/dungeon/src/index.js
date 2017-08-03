@@ -96,6 +96,7 @@ var map = {
     }
   ],
   statusIcons: {
+    bossdeath: 'ra ra-skull-trophy',
     playerdeath: 'ra ra-angel-wings',
     mobdeath: 'ra ra-skull', 
     playerAttack: 'ra ra-sword',
