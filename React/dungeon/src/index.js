@@ -266,7 +266,7 @@ class App extends React.Component {
   }
 
   handleGenerateClick(){
-    this.init()
+    this.setState({newGame: true}, this.init)
   }
 
   handleFogClick(){
@@ -479,7 +479,7 @@ function Buttons(props) {
           className='btn btn-outline-secondary'
           onClick={props.funcs.handleGenerateClick}
           type='button'
-      >{'Generate New Dungeon'}</button>
+      >{'Start New Journey'}</button>
       <div className="keys">
         <div className="key" id="ArrowLeft"><span><i className={'fa fa-arrow-left'} /></span></div>
         <div className="key" id="ArrowDown"><span><i className={'fa fa-arrow-down'} /></span></div>
@@ -627,7 +627,7 @@ function generateFog(){
 }
 
 function updateFog({x,y}, showFog){
-  console.log('Updating Fog')
+  // console.log('Updating Fog')
 
   var tile, radius = map.FOGRADIUS
 
@@ -638,8 +638,6 @@ function updateFog({x,y}, showFog){
       v.class = addClasses(v.class, 'fog')
     })
   }
-
-  console.log(showFog)
 
   for (let row=(-radius); row <= radius; row++){
     for (let col=(-radius); col <= radius; col++){
