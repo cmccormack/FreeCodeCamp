@@ -1,14 +1,14 @@
-$body-bg: #DDD;
+$body-bg: rgba(240,240,240,.95);
 $text-shadow: #444;
 $white-shadow: #EEE;
-// $body-bg-img: "../images/bg.jpg";
-$body-bg-grad: linear-gradient(rgba(120,120,120,.6), rgba(120,120,120,.6));
+$body-bg-img: "../images/bg.png";
+$body-bg-grad: linear-gradient($body-bg, $body-bg);
 $fog-bg: #333;
 $fog-border: #333;
 
 body {
   background-color: $body-bg;
-  // background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
+  background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
