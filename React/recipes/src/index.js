@@ -1,4 +1,4 @@
-/*eslint no-console: "off"*/
+/*eslint no-console: 'off'*/
 
 import { 
   InputGroup,
@@ -12,89 +12,16 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 
 var recipeTemplate = {
-    recipeName: '',
-    time: {
-      prep: '',
-      cook: ''
-    },
-    ingredients: [],
-    directions: []
+  recipeName: '',
+  time: {
+    prep: '',
+    cook: ''
   },
-  recipes = [
-    {
-      recipeName: 'Duck-shaped Pickles',
-      time: {
-        prep: '10',
-        cook: '10'
-      },
-      ingredients: [
-        ['pickles', true],
-        ['salt', true],
-        ['sugar', false],
-        ['cumin', false],
-        ['celery salt', true],
-        ['black peppercorn, crushed', true],
-        ['knife', true]
-      ],
-      directions: [
-        ['Cut pickles into duck-shaped pieces'],
-        ['Place pieces in a large bowl and add 1 tsp of each seasoning'],
-        ['Toss until well coated'],
-        ['Enjoy!']
-      ]
-    },
-    {
-      recipeName: 'Smoked Chicken Thighs',
-      time: {
-        prep: '10',
-        cook: '120'
-      },
-      ingredients: [
-        ['6 chicken thighs', true],
-        ['4 tablespoons soy sauce', true],
-        ['1 teaspoon sesame oil', true],
-        ['3 garlic cloves', true],
-        ['3 scallions', true],
-        ['1/2 tablespoon thyme', true],
-        ['1 teaspoon allspice', true],
-        ['1 teaspoon pepper', true],
-        ['1/2 teaspoon cinnamon', true],
-        ['1/2 teaspoon red pepper', true]
-      ],
-      directions: [
-        'Mix soy sauce with sesame oil and lightly rub into chicken.',
-        'In a food processor, combine garlic cloves, scallions, thyme, allspice, pepper, cinnamon, and red pepper until smooth. Rub onto and underneath skin of chicken thighs.',
-        'Seal chicken in a plastic bag, place in fridge, and let marinate for at least 4 hours.',
-        'Preheat smoker to 225 degrees Fahrenheit and add cherry wood chips.',
-        'Remove chicken from fridge 30 minutes prior to cooking. Remove from marinade and place chicken in smoker.',
-        'Smoke for 2 hours, rotating throughout cooking. Chicken thighs will be done once the internal temperature of the meat has reached 165 degrees Fahrenheit.'
-      ]
-    },
-    {
-      recipeName: 'Restaurant Style Ranch Dressing',
-      time: {
-        prep: '10',
-        cook: '0'
-      },
-      ingredients: [
-        ['2/3 cup sour cream (add more to increase thickness)', false],
-        ['2/3 cup mayonnaise', false],
-        ['2/3 cup buttermilk', false],
-        ['1 tsp buttermilk ranch salad dressing mix', false],
-        ['1/2 tsp garlic powder', true],
-        ['1/2 tsp onion powder', true],
-        ['1 tsp dried parsley flakes', true],
-        ['1/4 tsp salt', true],
-        ['1/8 tsp black pepper', true],
-        ['1/4 tsp paprika (optional)', true],
-        ['cayenne (optional)', true],
-        ['season salt (optional)', true]
-      ],
-      directions: [
-        'Mix all ingredients well and chill for about an hour.'
-      ]
-    }
-  ]
+  ingredients: [],
+  directions: []
+}
+
+var recipes
 
 
 
@@ -405,7 +332,7 @@ class EditRecipeModal extends React.Component {
   render() {
 
     const tooltip = (
-      <Tooltip id="tooltip">{'Separate ingredients using semicolon `;`'}</Tooltip>
+      <Tooltip id='tooltip'>{'Separate ingredients using semicolon `;`'}</Tooltip>
     )
     return (
       <Modal show={this.props.showModal}>
@@ -434,11 +361,11 @@ class EditRecipeModal extends React.Component {
 
                 return (
                   <Col 
-                      className="input-group" 
+                      className='input-group' 
                       key={item}
                       sm={6}
                   >
-                    <span className="input-group-addon">{item}</span>
+                    <span className='input-group-addon'>{item}</span>
                     <input
                         className='form-control'
                         defaultValue={this.props.recipe.time[timetype]}
@@ -447,7 +374,7 @@ class EditRecipeModal extends React.Component {
                         placeholder={i*10+10}
                         type='number'
                     />
-                    <span className="input-group-addon">{'minutes'}</span>
+                    <span className='input-group-addon'>{'minutes'}</span>
                   </Col>
                 )
               })}
@@ -460,7 +387,7 @@ class EditRecipeModal extends React.Component {
               >
                 <OverlayTrigger 
                     overlay={tooltip}
-                    placement="left" 
+                    placement='left' 
                 >
                   <span className='input-group-addon'>{'Ingredients'}</span>
                 </OverlayTrigger>
@@ -593,23 +520,26 @@ class ViewRecipeModal extends React.Component {
 
 
 
-function writeLocalStorage(){
-  window.localStorage.setItem('recipes', JSON.stringify(recipes))
+function writeLocalStorage(prop, val){
+  window.localStorage.setItem(prop, JSON.stringify(val))
 }
 
 function updateDom() {
   ReactDOM.render( <RecipeBox />, document.getElementById('root'))
-  writeLocalStorage()
+  writeLocalStorage('recipes', recipes)
 }
 
 (function readLocalStorage(){
-  if (window.localStorage.hasOwnProperty('recipes')) {
-    if (window.localStorage.recipes !== '[]') {
-      recipes = JSON.parse(window.localStorage.recipes)
-    }
+  if (window.localStorage.hasOwnProperty('recipes') && window.localStorage.recipes !== '[]') {
+    recipes = JSON.parse(window.localStorage.recipes)
+    updateDom()
+  }
+  else {
+    fetch('https://mackville.net/react/recipes/recipes.json')
+    .then((response)=>response.json()).then(json=>{
+      recipes = json
+      updateDom()
+    })
   }
 })()
 
-
-
-ReactDOM.render(<RecipeBox />, document.getElementById('root'))
