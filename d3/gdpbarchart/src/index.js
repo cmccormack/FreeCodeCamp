@@ -2,7 +2,6 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import axios from 'axios'
 
 
 var globals = {
@@ -50,9 +49,24 @@ function TitleBar(props){
 }
 
 function ChartBody(props){
+
+  var chart = {
+    className: 'chart',
+    width: 900,
+    height: 600,
+    style: {
+      backgroundColor: '#EEE',
+      boxShadow: '-8px 8px 32px #444'
+    }
+  }
+
   var data = props.data
-  console.log(data)
-  return <div />
+  
+  return (
+    <svg {...chart} >
+      {null}
+    </svg>
+  )
 }
 
 window.onload = function(){
