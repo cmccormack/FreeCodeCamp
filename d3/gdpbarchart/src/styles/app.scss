@@ -42,7 +42,7 @@ footer {
 
 
 .title {
-  margin: 70px 0 30px;
+  margin: 80px 0 40px;
   width: 100%;
 }
 
@@ -53,7 +53,12 @@ main {
   position: relative;
 }
  
-
+.chart {
+  display: block;
+  background-color: #EEE;
+  box-shadow: -8px 8px 32px #444;
+  margin: auto;
+}
 
 
 // a {
