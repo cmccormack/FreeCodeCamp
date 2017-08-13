@@ -186,7 +186,10 @@ class Rect extends React.Component {
   }
 
   handleMouseOut(){
-    this.setState({fill: this.fillColor})
+    this.setState({
+      fill: this.fillColor,
+      showToolTip: false
+    })
   }
 
   buildToolTip(){
@@ -216,8 +219,11 @@ class Rect extends React.Component {
 function Tooltip(props){
   console.log(props)
   return (
-    <div className='tooltip'>
-
+    <div 
+        className='tooltip'
+        style={{left: props.pos.x, top: props.pos.y}}
+    >
+      {JSON.stringify(props.datum)}
     </div>
   )
 }

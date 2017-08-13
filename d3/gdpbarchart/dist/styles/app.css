@@ -42,6 +42,12 @@ main {
   margin: auto; }
   .canvas rect .mousein {
     fill: black; }
+  .canvas .tooltip {
+    position: absolute;
+    border: 1px solid black;
+    background-color: rgba(200, 200, 200, 0.5);
+    width: 200px;
+    height: 200px; }
 
 .text-shadow {
   text-shadow: -3px 3px 8px #444; }
