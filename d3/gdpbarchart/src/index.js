@@ -137,13 +137,13 @@ function Chart(props) {
   return (
     <g>
       {data.map((v,i)=>{
-         i % 5=== 0 ? console.log(`${v[1]}\t${chart.yScale(v[1])}`) : null
         return (
           <Rect
-              fill={`hsl(${chart.color(v[1])}, 50%, 50%)`}
+              datum={v}
+              fill={Math.floor(chart.color(v[1]))}
               height={`${chart.height - chart.yScale(v[1])}px`}
               key={v[0]+v[1]}
-              width={`${barWidth}px`}
+              width={`${barWidth+0.5}px`}
               x={chart.x + (i*barWidth)}
               y={chart.y - chart.height + chart.yScale(v[1])}
           />
@@ -153,15 +153,72 @@ function Chart(props) {
   )
 }
 
-function Rect(props){
-  // console.log('In Rect Component')
+class Rect extends React.Component {
 
-  var {fill, height, width, x, y} = props
-  var test = {fill, height, width, x, y}
+  constructor(props){
+    super(props)
+
+    this.highlightColor = `hsl(${this.props.fill}, 50%, 80%)`
+    this.fillColor = `hsl(${this.props.fill}, 50%, 50%)`
+    const {x, y, height, width} = props
+    this.attr = {x,y,height,width}
+    this.state = {
+      fill: this.fillColor,
+      showToolTip: false,
+      tooltipPos: {x: 0, y: 0}
+    }
+    this.handleMouseOver = this.handleMouseOver.bind(this)
+    this.handleMouseOut = this.handleMouseOut.bind(this)
+  }
+
+  shouldComponentUpdate(nextProps, nextState){
+    return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  handleMouseOver(e){
+    var {x, y} = {x:e.screenX, y:e.screenY}
+    console.log(x, y)
+    this.setState({
+      fill: this.highlightColor,
+      showToolTip: true,
+      tooltipPos: {x, y}
+    })
+  }
+
+  handleMouseOut(){
+    this.setState({fill: this.fillColor})
+  }
+
+  buildToolTip(){
+
+  }
+
+  render (){
+    return (
+      <g>
+        <rect 
+            {...this.attr}
+            fill={this.state.fill}
+            onMouseOut={this.handleMouseOut}
+            onMouseOver={this.handleMouseOver}
+        />
+        { this.state.showToolTip && 
+          <Tooltip 
+              datum={this.props.datum}
+              pos={this.state.tooltipPos} 
+          /> }
+      </g>
+      
+    )
+  }
+}
+
+function Tooltip(props){
+  console.log(props)
   return (
-    <rect 
-        {...test}
-    />
+    <div className='tooltip'>
+
+    </div>
   )
 }
 

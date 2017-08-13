@@ -58,6 +58,13 @@ main {
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
   margin: auto;
+
+  rect {
+    .mousein {
+      fill: black;
+    }
+  }
+  
 }
 
 

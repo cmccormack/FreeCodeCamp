@@ -40,6 +40,8 @@ main {
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
   margin: auto; }
+  .canvas rect .mousein {
+    fill: black; }
 
 .text-shadow {
   text-shadow: -3px 3px 8px #444; }
