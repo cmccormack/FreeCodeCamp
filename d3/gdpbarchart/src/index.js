@@ -3,6 +3,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { scaleTime, scaleLinear } from 'd3-scale'
+import { axisBottom, axisLeft, axisRight } from 'd3-axis'
+import { timeYear } from 'd3-time'
+import { select } from 'd3-selection'
+
 
 
 var globals = {
@@ -28,7 +32,6 @@ class App extends React.Component {
       })
       .then((response)=>response.json())
       .then((json)=>{
-        console.log(json)
         this.setState({
           data: json.data,
           description: json.description,
@@ -60,6 +63,7 @@ function TitleBar(props){
 }
 
 function CanvasBody(props){
+  console.log('In CanvasBody Componenet')
 
   var canvas = {
       className: 'canvas',
@@ -71,7 +75,6 @@ function CanvasBody(props){
       }
     }
 
-  console.log(props.data ? props.data : 'No Data')
   return (
     <svg {...canvas}>
       {props.data && 
@@ -85,44 +88,80 @@ function CanvasBody(props){
 
 function Chart(props) {
   console.log('In Chart Component')
-  console.log(props.data)
   var chart = {
     marginTop: 40,
-    marginRight: 40,
-    marginBottom: 40,
-    marginLeft: 40,
+    marginRight: 50,
+    marginBottom: 50,
+    marginLeft: 50,
   },
   data = props.data,
-  barWidth = 0,
-  x = scaleTime().domain([new Date(data[0][0]), new Date(data[data.length-1][0])]).nice(),
-  y = scaleLinear().domain([data[data.length - 1][1],0]),
-  color = scaleLinear().domain([0, data[data.length-1][1]]).range([190, 230])
-    
+  barWidth = 0
+
+  chart.xScale = scaleTime().domain([new Date(data[0][0]), new Date(data[data.length-1][0])]).nice()
+  chart.yScale = scaleLinear().domain([0, data[data.length-1][1]])
+  chart.color = scaleLinear().domain([0, data[data.length-1][1]]).range([190, 230])
+
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
   chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
   chart.x = chart.marginLeft
   chart.y = props.canvas.height - chart.marginBottom
 
-  x.range([chart.x, chart.width])
-  y.range([chart.height, 0])
+  chart.xScale.range([chart.x, chart.width + chart.x])
+  chart.yScale.range([chart.height, 0])
+  
   barWidth = chart.width / data.length
+
+  var xAxis = axisBottom(chart.xScale).ticks(timeYear.every(5)),
+    yAxis = axisLeft(chart.yScale),
+    yAxisRight = axisRight(chart.yScale)
+
+  // console.log(xAxis)
+
+  select('.canvas').append('g')
+    .attr('class', 'x axis')
+    .attr('transform', `translate(0, ${chart.y})`)
+    .call(xAxis)
+  
+  select('.canvas').append('g')
+    .attr('class', 'y axis')
+    .attr('transform', `translate(${chart.x}, ${chart.marginTop})`)
+    .call(yAxis)
+
+  select('.canvas').append('g')
+    .attr('class', 'y axis')
+    .attr('transform', `translate(${chart.x + chart.width}, ${chart.marginTop})`)
+    .call(yAxisRight)
+  
   console.log(`chart.x: ${chart.x}, chart.y: ${chart.y}, chart.width: ${chart.width}, chart.height: ${chart.height}`)
 
   return (
     <g>
       {data.map((v,i)=>{
-        console.log(`value: ${v[1]}, scaleLinear: ${y(v[1])}`)
+         i % 5=== 0 ? console.log(`${v[1]}\t${chart.yScale(v[1])}`) : null
         return (
-          <rect 
-              fill={`hsl(${color(v[1])}, 50%, 50%)`}
-              height={`${ y(v[1]) }px`}
+          <Rect
+              fill={`hsl(${chart.color(v[1])}, 50%, 50%)`}
+              height={`${chart.height - chart.yScale(v[1])}px`}
               key={v[0]+v[1]}
               width={`${barWidth}px`}
               x={chart.x + (i*barWidth)}
-              y={chart.y - y(v[1])}
-          />)
+              y={chart.y - chart.height + chart.yScale(v[1])}
+          />
+        )
       })}
     </g>
+  )
+}
+
+function Rect(props){
+  // console.log('In Rect Component')
+
+  var {fill, height, width, x, y} = props
+  var test = {fill, height, width, x, y}
+  return (
+    <rect 
+        {...test}
+    />
   )
 }
 
