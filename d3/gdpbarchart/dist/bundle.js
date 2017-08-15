@@ -13366,23 +13366,39 @@ function CanvasBody(props) {
   console.log('In CanvasBody Componenet');
 
   var canvas = {
-    className: 'canvas',
     width: 900,
-    height: 600,
-    style: {
-      backgroundColor: '#EEE',
-      boxShadow: '-8px 8px 32px #444'
-    }
+    height: 600
   };
 
   return _react2.default.createElement(
-    'svg',
-    canvas,
-    props.data && _react2.default.createElement(Chart, {
-      canvas: canvas,
-      data: props.data,
-      handleMouse: props.handleMouse
-    })
+    'div',
+    {
+      className: 'canvas-body text-center',
+      style: { width: canvas.width }
+    },
+    _react2.default.createElement(
+      'div',
+      { className: 'chart-title display-5' },
+      'Gross Domestic Product'
+    ),
+    _react2.default.createElement(
+      'svg',
+      {
+        className: 'canvas',
+        height: 600,
+        width: 900
+      },
+      props.data && _react2.default.createElement(Chart, {
+        canvas: canvas,
+        data: props.data,
+        handleMouse: props.handleMouse
+      })
+    ),
+    _react2.default.createElement(
+      'div',
+      { className: 'chart-desc' },
+      props.desc
+    )
   );
 }
 
@@ -13392,7 +13408,7 @@ function Chart(props) {
     marginTop: 40,
     marginRight: 50,
     marginBottom: 50,
-    marginLeft: 50
+    marginLeft: 70
   },
       data = props.data,
       barWidth = 0;
@@ -13439,7 +13455,25 @@ function Chart(props) {
         x: chart.x + i * barWidth,
         y: chart.y - chart.height + chart.yScale(v[1])
       });
-    })
+    }),
+    _react2.default.createElement(
+      'text',
+      {
+        transform: 'translate(-530, 500), rotate(-90)',
+        x: chart.marginLeft,
+        y: chart.y
+      },
+      'US Gross Domestic Product (in billions)'
+    ),
+    _react2.default.createElement(
+      'text',
+      {
+        transform: 'translate(350, 45)',
+        x: chart.marginLeft,
+        y: chart.y
+      },
+      'Year'
+    )
   );
 }
 

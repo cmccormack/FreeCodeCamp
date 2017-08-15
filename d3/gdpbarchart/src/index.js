@@ -28,7 +28,6 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    console.log('In componentDidMount')
     // Grab data from API and store in state once App mounts
     fetch(globals.url)
       .then((response)=>{
@@ -82,7 +81,6 @@ function TitleBar(props){
 }
 
 function CanvasBody(props){
-  console.log('In CanvasBody Componenet')
 
   var canvas = {
       width: 900,
@@ -117,7 +115,6 @@ function CanvasBody(props){
 }
 
 function Chart(props) {
-  console.log('In Chart Component')
   var chart = {
     marginTop: 40,
     marginRight: 50,
@@ -145,8 +142,6 @@ function Chart(props) {
     yAxis = axisLeft(chart.yScale),
     yAxisRight = axisRight(chart.yScale)
 
-  // console.log(xAxis)
-
   select('.canvas').append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0, ${chart.y})`)
@@ -162,8 +157,6 @@ function Chart(props) {
     .attr('transform', `translate(${chart.x + chart.width}, ${chart.marginTop})`)
     .call(yAxisRight)
   
-  console.log(`chart.x: ${chart.x}, chart.y: ${chart.y}, chart.width: ${chart.width}, chart.height: ${chart.height}`)
-
   return (
     <g>
       {data.map((v,i)=>{
@@ -217,12 +210,14 @@ class Rect extends React.Component {
   shouldComponentUpdate(nextProps, nextState){
     return this.props === nextProps && this.state===nextState ? false : true
   }
-
+  
   handleMouseOver(e){
+    this.setState({fill: this.highlightColor})
     this.props.handleMouse(true, {x:e.pageX, y:e.pageY}, this.props.datum)
   }
-
+  
   handleMouseOut(e){
+    this.setState({fill: this.fillColor})
     this.props.handleMouse(false, {x:e.pageX, y:e.pageY}, this.props.datum)
   }
 
@@ -258,7 +253,7 @@ function Tooltip(props){
     <div 
         className='tt'
         style={{
-          left: props.pos.x-500,
+          left: props.pos.x-550,
           top: props.pos.y-150,
           display: props.display ? 'block' : 'none'
         }}
@@ -271,6 +266,5 @@ function Tooltip(props){
 
 
 window.onload = function(){
-  console.log('Window Loaded')
   ReactDOM.render(<App />, document.getElementById('root'))
 }
