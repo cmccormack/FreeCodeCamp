@@ -195,11 +195,11 @@ class Rect extends React.Component {
   }
 
   handleMouseOver(e){
-    this.props.handleMouse(true, {x:e.clientX, y:e.clientY}, this.props.datum)
+    this.props.handleMouse(true, {x:e.pageX, y:e.pageY}, this.props.datum)
   }
 
   handleMouseOut(e){
-    this.props.handleMouse(false, {x:e.clientX, y:e.clientY}, this.props.datum)
+    this.props.handleMouse(false, {x:e.pageX, y:e.pageY}, this.props.datum)
   }
 
   buildToolTip(){
