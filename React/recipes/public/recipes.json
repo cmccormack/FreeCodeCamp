@@ -71,5 +71,24 @@
       directions: [
         'Mix all ingredients well and chill for about an hour.'
       ]
+    },
+    {
+      recipeName: 'Slow Cooker Mexican Chicken',
+      time: {
+        prep: '10',
+        cook: '420'
+      },
+      ingredients: [
+        ['2lbs Boneless Skinless Chicken Thighs', false],
+        ['12oz Can Rotel Tomatos', false],
+        ['1 pouch taco seasoning', false],
+        ['1 jar southwest style salsa', false],
+        ['1 can black beans, drained', false],
+        ['1 package dirty rice', false],
+      ],
+      directions: [
+        'Add all ingredients to crock pot and stir.  Cook for 6.5 hours on low.',
+        'Add dirty rice and cook for another 30-45 minutes.'
+      ]
     }
   ]
