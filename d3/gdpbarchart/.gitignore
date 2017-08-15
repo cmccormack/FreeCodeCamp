@@ -6,7 +6,7 @@
 /coverage
 
 # production
-/dist/bundle.js
+dist/bundle.js
 
 # misc
 .DS_Store
