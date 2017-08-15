@@ -53,17 +53,34 @@ main {
   position: relative;
 }
  
-.canvas {
-  display: block;
+.canvas-body{
+
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
   margin: auto;
 
-  rect {
-    .mousein {
-      fill: black;
-    }
-  } 
+  .chart-title {
+    padding: 20px 0 0 0;
+    margin-bottom: -40px;
+  }
+  
+  .canvas {
+    display: block;
+  
+    rect {
+      .mousein {
+        fill: black;
+      }
+    } 
+  }
+
+  .chart-desc {
+    margin: auto;
+    margin-top: 20px;
+    width: 80%;
+    font-size: 12px;
+    padding-bottom: 20px;
+  }
 }
 
 .tt {
@@ -94,8 +111,21 @@ main {
   }
 }
 
+
+.display-4 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
 .display-6 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 300;
   line-height: 1.1;
 }

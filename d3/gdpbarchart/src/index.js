@@ -85,24 +85,34 @@ function CanvasBody(props){
   console.log('In CanvasBody Componenet')
 
   var canvas = {
-      className: 'canvas',
       width: 900,
       height: 600,
-      style: {
-        backgroundColor: '#EEE',
-        boxShadow: '-8px 8px 32px #444'
-      }
     }
 
   return (
-    <svg {...canvas}>
-      {props.data && 
-      <Chart 
-          canvas={canvas} 
-          data={props.data}
-          handleMouse={props.handleMouse}
-      />}
-    </svg>
+    <div 
+        className={'canvas-body text-center'}
+        style={{width: canvas.width}}
+    >
+      <div className={'chart-title display-5'}>
+        {'Gross Domestic Product'}
+      </div>
+      <svg
+          className={'canvas'}
+          height={600}
+          width={900}
+      >
+        {props.data && 
+        <Chart 
+            canvas={canvas} 
+            data={props.data}
+            handleMouse={props.handleMouse}
+        />}
+      </svg>
+      <div className={'chart-desc'}>
+        {props.desc}
+      </div>
+    </div>
   )
 }
 
@@ -112,7 +122,7 @@ function Chart(props) {
     marginTop: 40,
     marginRight: 50,
     marginBottom: 50,
-    marginLeft: 50,
+    marginLeft: 70,
   },
   data = props.data,
   barWidth = 0
@@ -170,6 +180,20 @@ function Chart(props) {
           />
         )
       })}
+      <text 
+          transform={'translate(-530, 500), rotate(-90)'}
+          x={chart.marginLeft}
+          y={chart.y}
+      >
+        {'US Gross Domestic Product (in billions)'}
+      </text>
+      <text 
+          transform={'translate(350, 45)'}
+          x={chart.marginLeft}
+          y={chart.y}
+      >
+        {'Year'}
+      </text>
     </g>
   )
 }
