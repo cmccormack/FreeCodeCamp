@@ -13300,7 +13300,6 @@ var App = function (_React$Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      console.log('In componentDidMount');
       // Grab data from API and store in state once App mounts
       fetch(globals.url).then(function (response) {
         console.log('Fetch ' + (response.ok ? 'success!' : 'failure...'));
@@ -13363,7 +13362,6 @@ function TitleBar(props) {
 }
 
 function CanvasBody(props) {
-  console.log('In CanvasBody Componenet');
 
   var canvas = {
     width: 900,
@@ -13403,7 +13401,6 @@ function CanvasBody(props) {
 }
 
 function Chart(props) {
-  console.log('In Chart Component');
   var chart = {
     marginTop: 40,
     marginRight: 50,
@@ -13431,15 +13428,11 @@ function Chart(props) {
       yAxis = (0, _d3Axis.axisLeft)(chart.yScale),
       yAxisRight = (0, _d3Axis.axisRight)(chart.yScale);
 
-  // console.log(xAxis)
-
   (0, _d3Selection.select)('.canvas').append('g').attr('class', 'x axis').attr('transform', 'translate(0, ' + chart.y + ')').call(xAxis);
 
   (0, _d3Selection.select)('.canvas').append('g').attr('class', 'y axis').attr('transform', 'translate(' + chart.x + ', ' + chart.marginTop + ')').call(yAxis);
 
   (0, _d3Selection.select)('.canvas').append('g').attr('class', 'y axis').attr('transform', 'translate(' + (chart.x + chart.width) + ', ' + chart.marginTop + ')').call(yAxisRight);
-
-  console.log('chart.x: ' + chart.x + ', chart.y: ' + chart.y + ', chart.width: ' + chart.width + ', chart.height: ' + chart.height);
 
   return _react2.default.createElement(
     'g',
@@ -13509,11 +13502,13 @@ var Rect = function (_React$Component2) {
   }, {
     key: 'handleMouseOver',
     value: function handleMouseOver(e) {
+      this.setState({ fill: this.highlightColor });
       this.props.handleMouse(true, { x: e.pageX, y: e.pageY }, this.props.datum);
     }
   }, {
     key: 'handleMouseOut',
     value: function handleMouseOut(e) {
+      this.setState({ fill: this.fillColor });
       this.props.handleMouse(false, { x: e.pageX, y: e.pageY }, this.props.datum);
     }
   }, {
@@ -13549,7 +13544,7 @@ function Tooltip(props) {
     {
       className: 'tt',
       style: {
-        left: props.pos.x - 500,
+        left: props.pos.x - 550,
         top: props.pos.y - 150,
         display: props.display ? 'block' : 'none'
       }
@@ -13568,7 +13563,6 @@ function Tooltip(props) {
 }
 
 window.onload = function () {
-  console.log('Window Loaded');
   _reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('root'));
 };
 
