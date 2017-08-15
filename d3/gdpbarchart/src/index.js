@@ -6,6 +6,7 @@ import { scaleTime, scaleLinear } from 'd3-scale'
 import { axisBottom, axisLeft, axisRight } from 'd3-axis'
 import { timeYear } from 'd3-time'
 import { select } from 'd3-selection'
+import { format } from 'd3-format'
 
 
 
@@ -18,8 +19,12 @@ class App extends React.Component {
     super(props)
     this.state = {
       data: '',
-      description: ''
+      description: '',
+      showTooltip: false,
+      tooltipPos: {x:0,y:0},
+      datum: [[],[]]
     }
+    this.handleTooltip = this.handleTooltip.bind(this)
   }
 
   componentDidMount(){
@@ -35,13 +40,21 @@ class App extends React.Component {
         this.setState({
           data: json.data,
           description: json.description,
-          title: 'GDP Bar Chart'
+          title: 'GDP Bar Chart',
         })
       })
   }
 
-  shouldComponentUpdate(nextProps, nextState){
+  shouldComponentUpdate(nextProps, nextState) {
     return this.props === nextProps && this.state===nextState ? false : true
+  }
+
+  handleTooltip(showTooltip, pos, datum) {
+    this.setState({
+      tooltipPos: pos,
+      datum: datum,
+      showTooltip: showTooltip
+    })
   }
 
   render() {
@@ -52,6 +65,12 @@ class App extends React.Component {
         <CanvasBody 
             data={this.state.data}
             desc={this.state.description}
+            handleMouse={this.handleTooltip}
+        />
+        <Tooltip 
+            datum={this.state.datum}
+            display={this.state.showTooltip}
+            pos={this.state.tooltipPos}
         />
       </div>
     )
@@ -81,6 +100,7 @@ function CanvasBody(props){
       <Chart 
           canvas={canvas} 
           data={props.data}
+          handleMouse={props.handleMouse}
       />}
     </svg>
   )
@@ -141,6 +161,7 @@ function Chart(props) {
           <Rect
               datum={v}
               fill={Math.floor(chart.color(v[1]))}
+              handleMouse={props.handleMouse}
               height={`${chart.height - chart.yScale(v[1])}px`}
               key={v[0]+v[1]}
               width={`${barWidth+0.5}px`}
@@ -163,9 +184,7 @@ class Rect extends React.Component {
     const {x, y, height, width} = props
     this.attr = {x,y,height,width}
     this.state = {
-      fill: this.fillColor,
-      showToolTip: false,
-      tooltipPos: {x: 0, y: 0}
+      fill: this.fillColor
     }
     this.handleMouseOver = this.handleMouseOver.bind(this)
     this.handleMouseOut = this.handleMouseOut.bind(this)
@@ -176,20 +195,11 @@ class Rect extends React.Component {
   }
 
   handleMouseOver(e){
-    var {x, y} = {x:e.screenX, y:e.screenY}
-    console.log(x, y)
-    this.setState({
-      fill: this.highlightColor,
-      showToolTip: true,
-      tooltipPos: {x, y}
-    })
+    this.props.handleMouse(true, {x:e.clientX, y:e.clientY}, this.props.datum)
   }
 
-  handleMouseOut(){
-    this.setState({
-      fill: this.fillColor,
-      showToolTip: false
-    })
+  handleMouseOut(e){
+    this.props.handleMouse(false, {x:e.clientX, y:e.clientY}, this.props.datum)
   }
 
   buildToolTip(){
@@ -205,11 +215,6 @@ class Rect extends React.Component {
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
         />
-        { this.state.showToolTip && 
-          <Tooltip 
-              datum={this.props.datum}
-              pos={this.state.tooltipPos} 
-          /> }
       </g>
       
     )
@@ -217,13 +222,25 @@ class Rect extends React.Component {
 }
 
 function Tooltip(props){
-  console.log(props)
+
+  var months = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ]
+  let date = new Date(props.datum[0]),
+    year = date.getFullYear(),
+    month = months[date.getMonth()]
+
   return (
     <div 
-        className='tooltip'
-        style={{left: props.pos.x, top: props.pos.y}}
+        className='tt'
+        style={{
+          left: props.pos.x-500,
+          top: props.pos.y-150,
+          display: props.display ? 'block' : 'none'
+        }}
     >
-      {JSON.stringify(props.datum)}
+      <div style={{fontWeight: 600}}>{`${format('$,.2f')(props.datum[1])} Billion`}</div>
+      <div>{`${month} ${year}`}</div>
     </div>
   )
 }
