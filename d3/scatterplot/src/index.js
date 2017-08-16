@@ -2,24 +2,26 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { scaleTime, scaleLinear } from 'd3-scale'
+import { scaleTime, scaleLinear, scaleOrdinal } from 'd3-scale'
 import { axisBottom, axisLeft, axisRight } from 'd3-axis'
-import { timeYear } from 'd3-time'
+import { timeMin } from 'd3-time'
 import { select } from 'd3-selection'
 import { format } from 'd3-format'
+import { extent } from 'd3-array'
 
 
 
 var globals = {
-  url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json'
+  url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/cyclist-data.json'
 }
 
 class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      data: '',
-      description: ''
+      data: [],
+      description: '',
+      tooltipPos: {x:0,y:0}
     }
     this.handleTooltip = this.handleTooltip.bind(this)
   }
@@ -35,9 +37,9 @@ class App extends React.Component {
       .then((response)=>response.json())
       .then((json)=>{
         this.setState({
-          data: json.data,
-          description: json.description,
-          title: 'GDP Bar Chart',
+          data: json,
+          description: 'Doping in Professional Bicycle Racing',
+          title: 'D3 Bicycling Doping Scatter Plot'
         })
       })
   }
@@ -64,11 +66,12 @@ class App extends React.Component {
             desc={this.state.description}
             handleMouse={this.handleTooltip}
         />
+        {this.state.showTooltip && 
         <Tooltip 
             datum={this.state.datum}
             display={this.state.showTooltip}
             pos={this.state.tooltipPos}
-        />
+        />}
       </div>
     )
   }
@@ -111,12 +114,11 @@ function Chart(props) {
     marginBottom: 80,
     marginLeft: 50,
   },
-  data = props.data,
-  barWidth = 0
+  data = props.data
 
-  chart.xScale = scaleTime().domain([new Date(data[0][0]), new Date(data[data.length-1][0])]).nice()
-  chart.yScale = scaleLinear().domain([0, data[data.length-1][1]])
-  chart.color = scaleLinear().domain([0, data[data.length-1][1]]).range([190, 230])
+  chart.xScale = scaleTime().domain(extent(data, (d)=>new Date(d.Seconds))).nice()
+  chart.yScale = scaleLinear().domain(extent(data, (d)=>d.Place))
+  // chart.color = scaleLinear().domain([0, data[data.length-1][1]]).range([190, 230])
 
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
   chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
@@ -125,10 +127,8 @@ function Chart(props) {
 
   chart.xScale.range([chart.x, chart.width + chart.x])
   chart.yScale.range([chart.height, 0])
-  
-  barWidth = chart.width / data.length
 
-  var xAxis = axisBottom(chart.xScale).ticks(timeYear.every(5)),
+  var xAxis = axisBottom(chart.xScale),
     yAxis = axisLeft(chart.yScale),
     yAxisRight = axisRight(chart.yScale)
 
@@ -154,16 +154,15 @@ function Chart(props) {
   return (
     <g>
       {data.map((v,i)=>{
+        console.log(v)
         return (
-          <Rect
+          <Circle
+              cx={chart.xScale(v.Seconds)}
+              cy={chart.yScale(v.Place)}
               datum={v}
-              fill={Math.floor(chart.color(v[1]))}
               handleMouse={props.handleMouse}
-              height={`${chart.height - chart.yScale(v[1])}px`}
-              key={v[0]+v[1]}
-              width={`${barWidth+0.5}px`}
-              x={chart.x + (i*barWidth)}
-              y={chart.y - chart.height + chart.yScale(v[1])}
+              key={v.Name + v.Year}
+              r={10}
           />
         )
       })}
@@ -171,17 +170,21 @@ function Chart(props) {
   )
 }
 
-class Rect extends React.Component {
+
+class Circle extends React.Component {
 
   constructor(props){
     super(props)
 
-    this.highlightColor = `hsl(${this.props.fill}, 50%, 80%)`
-    this.fillColor = `hsl(${this.props.fill}, 50%, 50%)`
-    const {x, y, height, width} = props
-    this.attr = {x,y,height,width}
+    this.highlightColor = `hsl(${20}, 50%, 80%)`
+    this.fillColor = `hsl(${20}, 50%, 50%)`
+
+    const {cx, cy, r} = props
+    this.attr = {cx, cy, r}
+
     this.state = {
       fill: this.fillColor
+
     }
     this.handleMouseOver = this.handleMouseOver.bind(this)
     this.handleMouseOut = this.handleMouseOut.bind(this)
@@ -206,26 +209,19 @@ class Rect extends React.Component {
   render (){
     return (
       <g>
-        <rect 
+        <circle 
             {...this.attr}
             fill={this.state.fill}
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
         />
       </g>
-      
     )
   }
 }
 
-function Tooltip(props){
 
-  var months = ['January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ]
-  let date = new Date(props.datum[0]),
-    year = date.getFullYear(),
-    month = months[date.getMonth()]
+function Tooltip(props){
 
   return (
     <div 
@@ -236,8 +232,8 @@ function Tooltip(props){
           display: props.display ? 'block' : 'none'
         }}
     >
-      <div style={{fontWeight: 600}}>{`${format('$,.2f')(props.datum[1])} Billion`}</div>
-      <div>{`${month} ${year}`}</div>
+      <div style={{fontWeight: 600}}>{`${props.datum.Time}`}</div>
+      <div>{`${props.datum.Year}`}</div>
     </div>
   )
 }
