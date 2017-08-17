@@ -57,13 +57,7 @@ main {
   display: block;
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
-  margin: auto;
-
-  rect {
-    .mousein {
-      fill: black;
-    }
-  } 
+  margin: auto; 
 }
 
 .tt {
@@ -77,13 +71,6 @@ main {
   border: 2px solid gray;
   border-radius: 8px;
 }
-
-
-// a {
-//   &:hover {
-//     text-decoration: none;
-//   }
-// }
 
 .text-shadow {
   text-shadow: -3px 3px 8px $text-shadow;

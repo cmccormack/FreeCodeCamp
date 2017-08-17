@@ -40,8 +40,6 @@ main {
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
   margin: auto; }
-  .canvas rect .mousein {
-    fill: black; }
 
 .tt {
   display: none;
