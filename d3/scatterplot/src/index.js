@@ -48,9 +48,8 @@ class App extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleTooltip(showTooltip, pos, datum) {
+  handleTooltip(showTooltip, datum) {
     this.setState({
-      tooltipPos: pos,
       datum: datum,
       showTooltip: showTooltip
     })
@@ -116,7 +115,23 @@ function Chart(props) {
       xAxis: {
         marginLeft: 15,
         marginRight: 150
-      }
+      },
+      key: [
+        {
+          name: 'doping',
+          cx: 600,
+          cy: 320,
+          color: 20,
+          desc: 'Doping Allegations'
+        },
+        {
+          name: 'noDoping',
+          cx: 600,
+          cy: 350,
+          color: 120,
+          desc: 'No Doping Allegations'
+        }
+      ]
     },
     data = props.data,
     maxTime = max(data, (d)=>d.Seconds),
@@ -138,8 +153,6 @@ function Chart(props) {
     yAxis = axisLeft(chart.yScale),
     yAxisRight = axisRight(chart.yScale)
 
-  // console.log(xAxis)
-
   select('.canvas').append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0, ${chart.y + 10})`)
@@ -154,15 +167,14 @@ function Chart(props) {
     .attr('class', 'y axis')
     .attr('transform', `translate(${chart.x + chart.width}, ${0})`)
     .call(yAxisRight)
-  
-  console.log(`chart.x: ${chart.x}, chart.y: ${chart.y}, chart.width: ${chart.width}, chart.height: ${chart.height}`)
 
   return (
     <g>
       {data.map((v)=>{
         return (
           <Circle
-              className={'circle circle-shadow'}
+              className={'circle'}
+              color={v.Doping ? chart.key[0].color : chart.key[1].color}
               cx={chart.xScale(new Date((v.Seconds - minTime)*1000))}
               cy={chart.yScale(v.Place)}
               datum={v}
@@ -170,6 +182,26 @@ function Chart(props) {
               key={v.Name + v.Year}
               r={5}
           />
+        )
+      })}
+      {chart.key.map((v)=>{
+        return (
+          <g key={v.name}>
+            <circle
+                className={'circle'}
+                cx={v.cx}
+                cy={v.cy}
+                fill={`hsl(${v.color}, 80%, 40%)`}
+                r={5}
+            />
+            <text
+                fontSize={12}
+                x={v.cx+15}
+                y={v.cy+4}
+            >
+              {v.desc}
+            </text>
+          </g>
         )
       })}
       <text 
@@ -196,9 +228,9 @@ class Circle extends React.Component {
   constructor(props){
     super(props)
 
-    this.color = this.props.datum.Doping ? 20 : 120
-    this.highlightColor = `hsl(${this.color}, 80%, 60%)`
-    this.fillColor = `hsl(${this.color}, 80%, 40%)`
+    
+    this.highlightColor = `hsl(${this.props.color}, 80%, 60%)`
+    this.fillColor = `hsl(${this.props.color}, 80%, 40%)`
     const {cx, cy, r, className} = props
     this.attr = {cx, cy, r, className}
 
@@ -219,13 +251,12 @@ class Circle extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleMouseOver(e){
-    this.props.handleMouse(true, {x:e.pageX, y:e.pageY}, this.props.datum)
+  handleMouseOver(){
+    this.props.handleMouse(true, this.props.datum)
     this.setState({fill: this.highlightColor})
   }
 
-  handleMouseOut(e){
-    this.props.handleMouse(false, {x:e.pageX, y:e.pageY}, this.props.datum)
+  handleMouseOut(){
     this.setState({fill: this.fillColor})
   }
 
@@ -261,13 +292,26 @@ function Tooltip(props){
     <div 
         className='tt'
         style={{
-          left: props.pos.x-510,
-          top: props.pos.y-150,
-          display: props.display ? 'block' : 'none'
+          left: 150,
+          top: 150,
+          display: props.display ? 'block' : 'none',
+          fontSize: '12px'
         }}
     >
-      <div style={{fontWeight: 600}}>{`${props.datum.Time}`}</div>
-      <div>{`${props.datum.Year}`}</div>
+      <div>
+        <a 
+            href={props.datum.URL}
+            style={{fontWeight: 600}}
+        >
+          {props.datum.Name}
+        </a>
+        {' - '}
+        {props.datum.Nationality}
+      </div>
+      <div>
+        {`${props.datum.Year}, Place: ${props.datum.Place}, Time: ${props.datum.Time}`}
+      </div>
+      <div style={{marginTop: '5px'}}>{props.datum.Doping}</div>
     </div>
   )
 }
