@@ -47,10 +47,18 @@ main {
   left: 0;
   top: 0;
   padding: 5px 10px 5px 10px;
-  min-width: 200px;
+  min-width: 150px;
+  max-width: 200px;
   background-color: rgba(220, 220, 220, 0.8);
   border: 2px solid gray;
-  border-radius: 8px; }
+  border-radius: 6px;
+  box-shadow: -2px 2px 8px #444; }
+
+a {
+  color: #333; }
+  a:hover {
+    text-decoration: none;
+    color: #000; }
 
 .text-shadow {
   text-shadow: -3px 3px 8px #444; }
