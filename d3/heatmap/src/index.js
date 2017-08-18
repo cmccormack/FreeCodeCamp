@@ -2,12 +2,12 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { scaleTime, scaleLinear } from 'd3-scale'
+import { scaleTime, scaleLinear, scaleOrdinal, scaleBand} from 'd3-scale'
 import { axisBottom, axisLeft, axisRight } from 'd3-axis'
-import { timeSecond } from 'd3-time'
+import { timeYear } from 'd3-time'
 import { select } from 'd3-selection'
 import { timeFormat } from 'd3-time-format'
-import { extent, max, min } from 'd3-array'
+import { extent} from 'd3-array'
 
 
 
@@ -108,55 +108,55 @@ function CanvasBody(props){
 
 function Chart(props) {
   console.log('In Chart Component')
+
   var chart = {
       marginTop: 40,
       marginRight: 50,
       marginBottom: 80,
-      marginLeft: 50,
+      marginLeft: 100,
       xAxis: {
         marginLeft: 15,
         marginRight: 150
       },
-      key: [
-        {
-          name: 'doping',
-          cx: 600,
-          cy: 320,
-          color: 20,
-          desc: 'Doping Allegations'
-        },
-        {
-          name: 'noDoping',
-          cx: 600,
-          cy: 350,
-          color: 120,
-          desc: 'No Doping Allegations'
-        }
-      ]
     },
-    data = props.data,
-    maxTime = max(data, (d)=>d.Seconds),
-    minTime = min(data, (d)=>d.Seconds)
+    data = props.data.map((v)=>{
+      v.date = new Date(v.year, v.month)
+      return v
+    }),
+    years = Array.from(new Set(props.data.map((v)=>v.year))),
+    bar,
+    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'
+    ]
+    // minTime, maxTime = extent(data, (v)=>v.date)
 
-  chart.xScale = scaleTime().domain([new Date((maxTime+15-minTime)*1000), new Date(0)])
-  chart.xScale.ticks(timeSecond.every(30))
-  chart.yScale = scaleLinear().domain(extent(data, (d)=>d.Place))
+    console.log(months)
+
+  chart.xScale = scaleTime().domain(extent(years))
+  chart.xScale.ticks(timeYear.every(10))
+  chart.yScale = scaleBand().domain(months)
 
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
   chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
   chart.x = chart.marginLeft
   chart.y = props.canvas.height - chart.marginBottom
 
-  chart.xScale.range([chart.xAxis.marginLeft + chart.x, chart.width + chart.x - chart.xAxis.marginRight])
+  bar = {
+    width: chart.width / years.length,
+    height: chart.height / months
+  }
+
+  chart.xScale.range([chart.x, chart.width + chart.x])
   chart.yScale.range([chart.marginTop, chart.height+chart.marginTop])
 
-  var xAxis = axisBottom(chart.xScale).tickFormat(timeFormat('%M:%S')),
-    yAxis = axisLeft(chart.yScale),
-    yAxisRight = axisRight(chart.yScale)
+  var xAxis = axisBottom(chart.xScale).tickFormat(timeFormat('%Y')),
+    yAxis = axisLeft(chart.yScale)
+
+    console.log(chart.xScale(1800))
 
   select('.canvas').append('g')
     .attr('class', 'x axis')
-    .attr('transform', `translate(0, ${chart.y + 10})`)
+    .attr('transform', `translate(0, ${chart.y})`)
     .call(xAxis)
   
   select('.canvas').append('g')
@@ -164,67 +164,29 @@ function Chart(props) {
     .attr('transform', `translate(${chart.x}, ${0})`)
     .call(yAxis)
 
-  select('.canvas').append('g')
-    .attr('class', 'y axis')
-    .attr('transform', `translate(${chart.x + chart.width}, ${0})`)
-    .call(yAxisRight)
-
   return (
     <g>
       {data.map((v)=>{
         return (
-          <Circle
-              className={'circle'}
-              color={v.Doping ? chart.key[0].color : chart.key[1].color}
-              cx={chart.xScale(new Date((v.Seconds - minTime)*1000))}
-              cy={chart.yScale(v.Place)}
+          <Rect
+              className={'rect'}
+              color={20}
               datum={v}
               handleMouse={props.handleMouse}
-              key={v.Name + v.Year}
-              r={5}
+              height={bar.height}
+              key={`${v.month}${v.year}`}
+              width={bar.width}
+              x={chart.xScale(new Date(1000))}
+              y={0}
           />
         )
       })}
-      {chart.key.map((v)=>{
-        return (
-          <g key={v.name}>
-            <circle
-                className={'circle'}
-                cx={v.cx}
-                cy={v.cy}
-                fill={`hsl(${v.color}, 80%, 40%)`}
-                r={5}
-            />
-            <text
-                fontSize={12}
-                x={v.cx+15}
-                y={v.cy+4}
-            >
-              {v.desc}
-            </text>
-          </g>
-        )
-      })}
-      <text 
-          transform={'translate(-500, 350), rotate(-90)'}
-          x={chart.marginLeft}
-          y={chart.y}
-      >
-        {'Ranking'}
-      </text>
-      <text 
-          transform={'translate(230, 50)'}
-          x={chart.marginLeft}
-          y={chart.y}
-      >
-        {'Minutes Behind Fastest Time'}
-      </text>
     </g>
   )
 }
 
 
-class Circle extends React.Component {
+class Rect extends React.Component {
 
   constructor(props){
     super(props)
@@ -274,13 +236,6 @@ class Circle extends React.Component {
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
         />
-        <text
-            fontSize={this.state.fontSize}
-            x={this.props.cx + this.state.tag.marginLeft}
-            y={this.props.cy + this.state.tag.marginTop}
-        >
-          {this.props.datum.Name}
-        </text>
       </g>
     )
   }
