@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { scaleTime, scaleLinear, scaleOrdinal, scaleBand} from 'd3-scale'
-import { axisBottom, axisLeft, axisRight } from 'd3-axis'
+import { axisBottom, axisLeft } from 'd3-axis'
 import { timeYear } from 'd3-time'
 import { select } from 'd3-selection'
 import { timeFormat } from 'd3-time-format'
@@ -19,7 +19,11 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      data: [],
+      data: [{
+        year: 0,
+        month: 1,
+        variance: 0
+      }],
       description: '',
       tooltipPos: {x:0,y:0}
     }
@@ -120,20 +124,18 @@ function Chart(props) {
       },
     },
     data = props.data.map((v)=>{
-      v.date = new Date(v.year, v.month)
+      v.date = new Date(v.year, 0)
       return v
     }),
-    years = Array.from(new Set(props.data.map((v)=>v.year))),
+    years = Array.from(new Set(data.map((v)=>v.year))),
     bar,
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', 'December'
     ]
-    // minTime, maxTime = extent(data, (v)=>v.date)
 
-    console.log(months)
 
-  chart.xScale = scaleTime().domain(extent(years))
-  chart.xScale.ticks(timeYear.every(10))
+  chart.xScale = scaleTime().domain(extent(data, (v)=>v.year))
+  chart.xScale.ticks(timeYear.every(1))
   chart.yScale = scaleBand().domain(months)
 
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
@@ -142,8 +144,8 @@ function Chart(props) {
   chart.y = props.canvas.height - chart.marginBottom
 
   bar = {
-    width: chart.width / years.length,
-    height: chart.height / months
+    width: chart.width / Array.from(new Set(years)).length,
+    height: chart.height / months.length
   }
 
   chart.xScale.range([chart.x, chart.width + chart.x])
@@ -152,7 +154,7 @@ function Chart(props) {
   var xAxis = axisBottom(chart.xScale).tickFormat(timeFormat('%Y')),
     yAxis = axisLeft(chart.yScale)
 
-    console.log(chart.xScale(1800))
+  var x = 0
 
   select('.canvas').append('g')
     .attr('class', 'x axis')
@@ -166,18 +168,19 @@ function Chart(props) {
 
   return (
     <g>
-      {data.map((v)=>{
+      {data.map((v,i)=>{
+        x += (i + 1) % 12 === 0 ? 1 : 0
         return (
           <Rect
               className={'rect'}
-              color={20}
+              color={Math.floor(Math.random()*360)}
               datum={v}
               handleMouse={props.handleMouse}
               height={bar.height}
               key={`${v.month}${v.year}`}
               width={bar.width}
-              x={chart.xScale(new Date(1000))}
-              y={0}
+              x={x * bar.width + chart.marginLeft}
+              y={((i % 12) * bar.height) + chart.marginTop}
           />
         )
       })}
@@ -193,9 +196,9 @@ class Rect extends React.Component {
 
     
     this.highlightColor = `hsl(${this.props.color}, 80%, 60%)`
-    this.fillColor = `hsl(${this.props.color}, 80%, 40%)`
-    const {cx, cy, r, className} = props
-    this.attr = {cx, cy, r, className}
+    this.fillColor = `hsl(${this.props.color}, 50%, 50%)`
+    const {x, y, height, width, className} = props
+    this.attr = {x, y, height, width, className}
 
     this.state = {
       fill: this.fillColor,
@@ -230,7 +233,7 @@ class Rect extends React.Component {
   render (){
     return (
       <g>
-        <circle 
+        <rect 
             {...this.attr}
             fill={this.state.fill}
             onMouseOut={this.handleMouseOut}
