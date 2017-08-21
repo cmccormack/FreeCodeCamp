@@ -288,9 +288,10 @@ function Tooltip(props){
   return (
     <div 
         className='tt'
+        id='tooltip'
         style={{
-          left: props.pos.x-590,
-          top: props.pos.y-180,
+          left: `${props.pos.x}px`,
+          top: `${props.pos.y}px`,
           display: props.display ? 'block' : 'none',
           fontSize: '12px'
         }}
