@@ -2,28 +2,22 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { scaleTime, scaleLinear, scaleOrdinal, scaleBand} from 'd3-scale'
+import { scaleBand, scaleQuantile} from 'd3-scale'
 import { axisBottom, axisLeft } from 'd3-axis'
-import { timeYear } from 'd3-time'
 import { select } from 'd3-selection'
-import { timeFormat } from 'd3-time-format'
-import { extent} from 'd3-array'
+import { min, max} from 'd3-array'
 
 
 
 var globals = {
-  url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/global-temperature.json'
+  url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/global-temperature.json',
+  colors: [250, 200, 160, 113, 70, 60, 44, 30, 20, 10, 335]
 }
 
 class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      data: [{
-        year: 0,
-        month: 1,
-        variance: 0
-      }],
       description: '',
       tooltipPos: {x:0,y:0}
     }
@@ -41,9 +35,8 @@ class App extends React.Component {
       .then((response)=>response.json())
       .then((json)=>{
         this.setState({
-          data: json.monthlyVariance,
-          baseTemp: json.baseTemperature,
-          description: 'Doping in Professional Bicycle Racing',
+          data: json,
+          description: 'Fix this later',
           title: 'D3 Monthly Global Land-Surface Temperature'
         })
       })
@@ -86,7 +79,7 @@ function TitleBar(props){
 }
 
 function CanvasBody(props){
-  console.log('In CanvasBody Componenet')
+  // console.log('In CanvasBody Componenet')
 
   var canvas = {
       className: 'canvas',
@@ -111,32 +104,30 @@ function CanvasBody(props){
 }
 
 function Chart(props) {
-  console.log('In Chart Component')
+  // console.log('In Chart Component')
 
   var chart = {
       marginTop: 40,
       marginRight: 50,
       marginBottom: 80,
       marginLeft: 100,
-      xAxis: {
-        marginLeft: 15,
-        marginRight: 150
-      },
     },
-    data = props.data.map((v)=>{
+    data = props.data.monthlyVariance.map((v)=>{
       v.date = new Date(v.year, 0)
       return v
     }),
-    years = Array.from(new Set(data.map((v)=>v.year))),
-    bar,
+    baseTemp = props.data.baseTemperature,
+    years = Array.from(new Set(data.map((v)=>v.year))).sort(),
     months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
       'August', 'September', 'October', 'November', 'December'
-    ]
+    ],
+    variance = {
+      data: data.map((v)=>v.variance),
+    },
+    bar
 
-
-  chart.xScale = scaleTime().domain(extent(data, (v)=>v.year))
-  chart.xScale.ticks(timeYear.every(1))
-  chart.yScale = scaleBand().domain(months)
+  variance.min = min(variance.data)
+  variance.max = max(variance.data)
 
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
   chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
@@ -148,38 +139,46 @@ function Chart(props) {
     height: chart.height / months.length
   }
 
+  chart.xScale = scaleBand().domain(years)
   chart.xScale.range([chart.x, chart.width + chart.x])
+
+  chart.yScale = scaleBand().domain(months)
   chart.yScale.range([chart.marginTop, chart.height+chart.marginTop])
 
-  var xAxis = axisBottom(chart.xScale).tickFormat(timeFormat('%Y')),
-    yAxis = axisLeft(chart.yScale)
+  chart.colorScale = scaleQuantile().domain([variance.min + baseTemp, variance.max + baseTemp])
+  chart.colorScale.range(globals.colors)
 
-  var x = 0
+  chart.xAxis = axisBottom(chart.xScale),
+  chart.yAxis = axisLeft(chart.yScale)
 
-  select('.canvas').append('g')
+  chart.xAxis.tickValues(chart.xScale.domain().filter((v)=>v%10===0))
+  
+  if(select('.axis').empty()){
+    select('.canvas').append('g')
     .attr('class', 'x axis')
     .attr('transform', `translate(0, ${chart.y})`)
-    .call(xAxis)
+    .call(chart.xAxis)
   
   select('.canvas').append('g')
     .attr('class', 'y axis')
     .attr('transform', `translate(${chart.x}, ${0})`)
-    .call(yAxis)
+    .call(chart.yAxis)
+  }
+
 
   return (
     <g>
       {data.map((v,i)=>{
-        x += (i + 1) % 12 === 0 ? 1 : 0
         return (
           <Rect
               className={'rect'}
-              color={Math.floor(Math.random()*360)}
+              color={chart.colorScale(v.variance + baseTemp)}
               datum={v}
               handleMouse={props.handleMouse}
               height={bar.height}
               key={`${v.month}${v.year}`}
-              width={bar.width}
-              x={x * bar.width + chart.marginLeft}
+              width={bar.width+1}
+              x={chart.marginLeft + (Math.floor(i/12) * bar.width)}
               y={((i % 12) * bar.height) + chart.marginTop}
           />
         )
@@ -196,7 +195,7 @@ class Rect extends React.Component {
 
     
     this.highlightColor = `hsl(${this.props.color}, 80%, 60%)`
-    this.fillColor = `hsl(${this.props.color}, 50%, 50%)`
+    this.fillColor = `hsl(${this.props.color}, 60%, 50%)`
     const {x, y, height, width, className} = props
     this.attr = {x, y, height, width, className}
 
@@ -268,7 +267,7 @@ function Tooltip(props){
         {props.datum.Nationality}
       </div>
       <div>
-        {`${props.datum.Year}, Place: ${props.datum.Place}, Time: ${props.datum.Time}`}
+        {`${props.datum.variance}, Year: ${props.datum.year}, Month: ${props.datum.month}`}
       </div>
       <div style={{marginTop: '5px'}}>{props.datum.Doping}</div>
     </div>
