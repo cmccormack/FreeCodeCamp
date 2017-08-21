@@ -66,8 +66,18 @@ a {
 .white-shadow:hover {
   text-shadow: 0 0 8px #EEE; }
 
+.display-4 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.1; }
+
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1; }
+
 .display-6 {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 300;
   line-height: 1.1; }
 
