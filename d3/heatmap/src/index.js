@@ -11,7 +11,10 @@ import { min, max} from 'd3-array'
 
 var globals = {
   url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/global-temperature.json',
-  colors: [250, 200, 160, 113, 70, 60, 44, 30, 20, 10, 335]
+  colors: [250, 200, 160, 100, 70, 60, 44, 30, 20, 10, 335],
+  months: ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+    'August', 'September', 'October', 'November', 'December'
+  ],
 }
 
 class App extends React.Component {
@@ -21,7 +24,8 @@ class App extends React.Component {
       description: '',
       tooltipPos: {x:0,y:0}
     }
-    this.handleTooltip = this.handleTooltip.bind(this)
+    this.handleMouse = this.handleMouse.bind(this)
+    this.baseTemp = 0
   }
 
   componentDidMount(){
@@ -36,9 +40,10 @@ class App extends React.Component {
       .then((json)=>{
         this.setState({
           data: json,
-          description: 'Fix this later',
-          title: 'D3 Monthly Global Land-Surface Temperature'
+          description: 'Temperatures are in Celsius and reported as anomalies relative to the Jan 1951-Dec 1980 average.  Estimated Jan 1951-Dec 1980 absolute temperature ℃: 8.66 +/- 0.07',
+          title: 'D3 Monthly Global Land-Surface Temperature 1753-2015'
         })
+        this.baseTemp = json.baseTemperature
       })
   }
 
@@ -46,10 +51,12 @@ class App extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleTooltip(showTooltip, datum) {
+  handleMouse(showTooltip, pos, datum) {
+    datum.baseTemp = this.baseTemp
     this.setState({
       datum: datum,
-      showTooltip: showTooltip
+      showTooltip: showTooltip,
+      tooltipPos: pos
     })
   }
 
@@ -61,7 +68,7 @@ class App extends React.Component {
         <CanvasBody 
             data={this.state.data}
             desc={this.state.description}
-            handleMouse={this.handleTooltip}
+            handleMouse={this.handleMouse}
         />
         {this.state.showTooltip && 
         <Tooltip 
@@ -75,7 +82,7 @@ class App extends React.Component {
 }
 
 function TitleBar(props){
-  return <div className='title display-4 text-center text-shadow unselectable'>{props.title}</div>
+  return <div className='title display-5 text-center text-shadow unselectable'>{props.title}</div>
 }
 
 function CanvasBody(props){
@@ -97,6 +104,7 @@ function CanvasBody(props){
       <Chart 
           canvas={canvas} 
           data={props.data}
+          desc={props.desc}
           handleMouse={props.handleMouse}
       />}
     </svg>
@@ -104,10 +112,9 @@ function CanvasBody(props){
 }
 
 function Chart(props) {
-  // console.log('In Chart Component')
 
   var chart = {
-      marginTop: 40,
+      marginTop: 80,
       marginRight: 50,
       marginBottom: 80,
       marginLeft: 100,
@@ -118,9 +125,6 @@ function Chart(props) {
     }),
     baseTemp = props.data.baseTemperature,
     years = Array.from(new Set(data.map((v)=>v.year))).sort(),
-    months = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-      'August', 'September', 'October', 'November', 'December'
-    ],
     variance = {
       data: data.map((v)=>v.variance),
     },
@@ -136,13 +140,13 @@ function Chart(props) {
 
   bar = {
     width: chart.width / Array.from(new Set(years)).length,
-    height: chart.height / months.length
+    height: chart.height / globals.months.length
   }
 
   chart.xScale = scaleBand().domain(years)
   chart.xScale.range([chart.x, chart.width + chart.x])
 
-  chart.yScale = scaleBand().domain(months)
+  chart.yScale = scaleBand().domain(globals.months)
   chart.yScale.range([chart.marginTop, chart.height+chart.marginTop])
 
   chart.colorScale = scaleQuantile().domain([variance.min + baseTemp, variance.max + baseTemp])
@@ -155,19 +159,32 @@ function Chart(props) {
   
   if(select('.axis').empty()){
     select('.canvas').append('g')
-    .attr('class', 'x axis')
-    .attr('transform', `translate(0, ${chart.y})`)
-    .call(chart.xAxis)
+      .attr('class', 'x axis')
+      .attr('transform', `translate(0, ${chart.y})`)
+      .call(chart.xAxis)
   
-  select('.canvas').append('g')
-    .attr('class', 'y axis')
-    .attr('transform', `translate(${chart.x}, ${0})`)
-    .call(chart.yAxis)
+    select('.canvas').append('g')
+      .attr('class', 'y axis')
+      .attr('transform', `translate(${chart.x}, ${0})`)
+      .call(chart.yAxis)
   }
 
+  var desc = props.desc.split(/\.\s+/)
 
   return (
     <g>
+      <text 
+          x={100}
+          y={chart.marginTop-40}
+      >
+        {desc[0] + '.'}
+      </text>
+      <text 
+          x={200}
+          y={chart.marginTop-20}
+      >
+        {desc[1] + '.'}
+      </text>
       {data.map((v,i)=>{
         return (
           <Rect
@@ -175,7 +192,7 @@ function Chart(props) {
               color={chart.colorScale(v.variance + baseTemp)}
               datum={v}
               handleMouse={props.handleMouse}
-              height={bar.height}
+              height={bar.height+1}
               key={`${v.month}${v.year}`}
               width={bar.width+1}
               x={chart.marginLeft + (Math.floor(i/12) * bar.width)}
@@ -183,6 +200,25 @@ function Chart(props) {
           />
         )
       })}
+      <text 
+          transform={'translate(-480, 420), rotate(-90)'}
+          x={chart.marginLeft}
+          y={chart.y}
+      >
+        {'Month'}
+      </text>
+      <text 
+          transform={'translate(250, 50)'}
+          x={chart.marginLeft}
+          y={chart.y}
+      >
+        {'Year'}
+      </text>
+      <Legend 
+          scale={chart.colorScale}
+          x={465}
+          y={chart.y + 35}
+      />
     </g>
   )
 }
@@ -216,12 +252,15 @@ class Rect extends React.Component {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleMouseOver(){
-    this.props.handleMouse(true, this.props.datum)
+  handleMouseOver(e){
+    var pos = {x: e.pageX, y:e.pageY}
+    this.props.handleMouse(true, pos, this.props.datum)
     this.setState({fill: this.highlightColor})
   }
 
-  handleMouseOut(){
+  handleMouseOut(e){
+    var pos = {x: e.pageX, y:e.pageY}
+    this.props.handleMouse(false, pos, this.props.datum)
     this.setState({fill: this.fillColor})
   }
 
@@ -250,28 +289,69 @@ function Tooltip(props){
     <div 
         className='tt'
         style={{
-          left: 150,
-          top: 150,
+          left: props.pos.x-590,
+          top: props.pos.y-180,
           display: props.display ? 'block' : 'none',
           fontSize: '12px'
         }}
     >
-      <div>
-        <a 
-            href={props.datum.URL}
-            style={{fontWeight: 600}}
-        >
-          {props.datum.Name}
-        </a>
-        {' - '}
-        {props.datum.Nationality}
+      <div 
+          className={'text-center'}
+          style={{fontWeight: 'bold'}}
+      >
+        {`${globals.months[props.datum.month-1]}, ${props.datum.year}`}
       </div>
-      <div>
-        {`${props.datum.variance}, Year: ${props.datum.year}, Month: ${props.datum.month}`}
-      </div>
-      <div style={{marginTop: '5px'}}>{props.datum.Doping}</div>
+      <div>{`Base Temp: ${props.datum.baseTemp}`}</div>
+      <div>{`Variance: ${props.datum.variance}`}</div>
+      <hr style={{margin: '0', border: '1px solid black'}} />
+      <div>{`Temp: ${(props.datum.baseTemp + props.datum.variance).toFixed(2)}`}</div>
     </div>
   )
+}
+
+function Legend(props) {
+
+  var block = {
+    width: 35,
+    height: 20
+  },
+  colors = globals.colors,
+  quantiles = [0].concat(props.scale.quantiles().map((v)=>Math.floor(v*10)/10))
+
+  return (
+    <g 
+        id='legend'
+        x={props.x}
+        y={props.y}
+    >
+      {quantiles.map((v,i)=>{
+
+        return (
+          <g key={v}>
+            <rect 
+                fill={`hsl(${colors[i]}, 60%, 50%)`}
+                height={block.height}
+                width={block.width}
+                x={props.x + (i*block.width)}
+                y={props.y}
+            />
+            <text
+                style={{
+                  fill: 'black',
+                  fontSize: '10px',
+                  fontFamily: 'monospace'
+                  }}
+                x={props.x + (i*block.width)}
+                y={props.y+30}
+            >
+              {v}
+            </text>
+          </g>
+        )
+      })}
+    </g>
+  )
+
 }
 
 
