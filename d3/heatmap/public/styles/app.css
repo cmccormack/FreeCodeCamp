@@ -52,7 +52,9 @@ main {
   background-color: rgba(220, 220, 220, 0.8);
   border: 2px solid gray;
   border-radius: 6px;
-  box-shadow: -2px 2px 8px #444; }
+  box-shadow: -2px 2px 8px #444;
+  font-size: 12px;
+  z-index: 2; }
 
 a {
   color: #333; }
