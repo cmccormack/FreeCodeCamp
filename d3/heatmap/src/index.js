@@ -21,11 +21,11 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      description: '',
-      tooltipPos: {x:0,y:0}
+      description: ''
     }
     this.handleMouse = this.handleMouse.bind(this)
     this.baseTemp = 0
+    this.tooltip = document.getElementsByClassName('tt')[0]
   }
 
   componentDidMount(){
@@ -53,11 +53,8 @@ class App extends React.Component {
 
   handleMouse(showTooltip, pos, datum) {
     datum.baseTemp = this.baseTemp
-    this.setState({
-      datum: datum,
-      showTooltip: showTooltip,
-      tooltipPos: pos
-    })
+    var props = {showTooltip, pos, datum}
+    ReactDOM.render(<Tooltip {...props} />, document.getElementById('tooltip'))
   }
 
   render() {
@@ -70,12 +67,6 @@ class App extends React.Component {
             desc={this.state.description}
             handleMouse={this.handleMouse}
         />
-        {this.state.showTooltip && 
-        <Tooltip 
-            datum={this.state.datum}
-            display={this.state.showTooltip}
-            pos={this.state.tooltipPos}
-        />}
       </div>
     )
   }
@@ -286,14 +277,12 @@ class Rect extends React.Component {
 function Tooltip(props){
 
   return (
-    <div 
+    <div
         className='tt'
-        id='tooltip'
         style={{
-          left: `${props.pos.x}px`,
-          top: `${props.pos.y}px`,
-          display: props.display ? 'block' : 'none',
-          fontSize: '12px'
+          left: `${props.pos.x - 150}px`,
+          top: `${props.pos.y - 100}px`,
+          display: props.showTooltip ? 'block' : 'none'
         }}
     >
       <div 
