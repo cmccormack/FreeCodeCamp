@@ -13,7 +13,14 @@ module.exports = {
   },
   module: {
     rules: [
-        { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+        { 
+          test: /\.js$/, 
+          exclude: /node_modules/,
+          loaders: [
+            "babel-loader",
+            "eslint-loader"
+          ]
+        }
     ],
     loaders: [
       { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
