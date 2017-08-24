@@ -49,11 +49,9 @@ class App extends React.Component {
   }
 
   handleTooltip(showTooltip, pos, datum) {
-    this.setState({
-      tooltipPos: pos,
-      datum: datum,
-      showTooltip: showTooltip
-    })
+    datum.baseTemp = this.baseTemp
+    var props = {showTooltip, pos, datum}
+    ReactDOM.render(<Tooltip {...props} />, document.getElementById('tooltip'))
   }
 
   render() {
@@ -65,11 +63,6 @@ class App extends React.Component {
             data={this.state.data}
             desc={this.state.description}
             handleMouse={this.handleTooltip}
-        />
-        <Tooltip 
-            datum={this.state.datum}
-            display={this.state.showTooltip}
-            pos={this.state.tooltipPos}
         />
       </div>
     )
@@ -167,7 +160,7 @@ function Chart(props) {
               handleMouse={props.handleMouse}
               height={`${chart.height - chart.yScale(v[1])}px`}
               key={v[0]+v[1]}
-              width={`${barWidth+0.5}px`}
+              width={`${barWidth+1}px`}
               x={chart.x + (i*barWidth)}
               y={chart.y - chart.height + chart.yScale(v[1])}
           />
@@ -253,9 +246,9 @@ function Tooltip(props){
     <div 
         className='tt'
         style={{
-          left: props.pos.x-550,
-          top: props.pos.y-150,
-          display: props.display ? 'block' : 'none'
+          left: props.pos.x-210,
+          top: props.pos.y-70,
+          display: props.showTooltip ? 'block' : 'none'
         }}
     >
       <div style={{fontWeight: 600}}>{`${format('$,.2f')(props.datum[1])} Billion`}</div>
