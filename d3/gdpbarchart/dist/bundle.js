@@ -13322,11 +13322,9 @@ var App = function (_React$Component) {
   }, {
     key: 'handleTooltip',
     value: function handleTooltip(showTooltip, pos, datum) {
-      this.setState({
-        tooltipPos: pos,
-        datum: datum,
-        showTooltip: showTooltip
-      });
+      datum.baseTemp = this.baseTemp;
+      var props = { showTooltip: showTooltip, pos: pos, datum: datum };
+      _reactDom2.default.render(_react2.default.createElement(Tooltip, props), document.getElementById('tooltip'));
     }
   }, {
     key: 'render',
@@ -13340,11 +13338,6 @@ var App = function (_React$Component) {
           data: this.state.data,
           desc: this.state.description,
           handleMouse: this.handleTooltip
-        }),
-        _react2.default.createElement(Tooltip, {
-          datum: this.state.datum,
-          display: this.state.showTooltip,
-          pos: this.state.tooltipPos
         })
       );
     }
@@ -13444,7 +13437,7 @@ function Chart(props) {
         handleMouse: props.handleMouse,
         height: chart.height - chart.yScale(v[1]) + 'px',
         key: v[0] + v[1],
-        width: barWidth + 0.5 + 'px',
+        width: barWidth + 1 + 'px',
         x: chart.x + i * barWidth,
         y: chart.y - chart.height + chart.yScale(v[1])
       });
@@ -13544,9 +13537,9 @@ function Tooltip(props) {
     {
       className: 'tt',
       style: {
-        left: props.pos.x - 550,
-        top: props.pos.y - 150,
-        display: props.display ? 'block' : 'none'
+        left: props.pos.x - 210,
+        top: props.pos.y - 70,
+        display: props.showTooltip ? 'block' : 'none'
       }
     },
     _react2.default.createElement(
