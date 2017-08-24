@@ -1,9 +1,6 @@
 const path = require('path')
 const isProd = process.env.NODE_ENV
 
-console.log(__dirname)
-
-console.log(process.env.NODE_ENV)
 module.exports = {
   devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   entry: './src/index.js',
@@ -17,8 +14,8 @@ module.exports = {
           test: /\.js$/, 
           exclude: /node_modules/,
           loaders: [
-            "babel-loader",
-            "eslint-loader"
+            'babel-loader',
+            'eslint-loader'
           ]
         }
     ],
@@ -28,6 +25,6 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: "./dist",
+    contentBase: './dist',
   }
 }
