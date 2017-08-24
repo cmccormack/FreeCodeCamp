@@ -18,3 +18,5 @@
 *.log
 
 *.tiff
+
+/dist/bundle.js
