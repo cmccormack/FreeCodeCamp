@@ -20,10 +20,8 @@ class App extends React.Component {
     super(props)
     this.state = {
       data: [],
-      description: '',
-      tooltipPos: {x:0,y:0}
+      description: ''
     }
-    this.handleTooltip = this.handleTooltip.bind(this)
   }
 
   componentDidMount(){
@@ -42,18 +40,19 @@ class App extends React.Component {
           title: 'D3 Bicycling Doping Scatter Plot'
         })
       })
+
+    // Add a span element for the tooltip div to attach within the root element
+    var tooltip = document.createElement('span')
+    tooltip.id='tooltip'
+    document.getElementById('root').appendChild(tooltip)
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     return this.props === nextProps && this.state===nextState ? false : true
   }
 
-  handleTooltip(showTooltip, datum) {
-    this.setState({
-      datum: datum,
-      showTooltip: showTooltip
-    })
-  }
+
 
   render() {
 
@@ -63,14 +62,7 @@ class App extends React.Component {
         <CanvasBody 
             data={this.state.data}
             desc={this.state.description}
-            handleMouse={this.handleTooltip}
         />
-        {this.state.showTooltip && 
-        <Tooltip 
-            datum={this.state.datum}
-            display={this.state.showTooltip}
-            pos={this.state.tooltipPos}
-        />}
       </div>
     )
   }
@@ -99,7 +91,6 @@ function CanvasBody(props){
       <Chart 
           canvas={canvas} 
           data={props.data}
-          handleMouse={props.handleMouse}
       />}
     </svg>
   )
@@ -178,7 +169,6 @@ function Chart(props) {
               cx={chart.xScale(new Date((v.Seconds - minTime)*1000))}
               cy={chart.yScale(v.Place)}
               datum={v}
-              handleMouse={props.handleMouse}
               key={v.Name + v.Year}
               r={5}
           />
@@ -252,7 +242,8 @@ class Circle extends React.Component {
   }
 
   handleMouseOver(){
-    this.props.handleMouse(true, this.props.datum)
+    let props = {showTooltip: true, datum:this.props.datum}
+    ReactDOM.render(<Tooltip {...props} />, document.getElementById('tooltip'))
     this.setState({fill: this.highlightColor})
   }
 
@@ -275,6 +266,8 @@ class Circle extends React.Component {
         />
         <text
             fontSize={this.state.fontSize}
+            onMouseOut={this.handleMouseOut}
+            onMouseOver={this.handleMouseOver}
             x={this.props.cx + this.state.tag.marginLeft}
             y={this.props.cy + this.state.tag.marginTop}
         >
@@ -294,7 +287,7 @@ function Tooltip(props){
         style={{
           left: 150,
           top: 150,
-          display: props.display ? 'block' : 'none',
+          display: props.showTooltip ? 'block' : 'none',
           fontSize: '12px'
         }}
     >
@@ -302,6 +295,7 @@ function Tooltip(props){
         <a 
             href={props.datum.URL}
             style={{fontWeight: 600}}
+            target={'_blank'}
         >
           {props.datum.Name}
         </a>
