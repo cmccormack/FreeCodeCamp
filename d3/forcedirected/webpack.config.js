@@ -1,9 +1,8 @@
+/*eslint-env node*/
+
 const path = require('path')
 const isProd = process.env.NODE_ENV
 
-console.log(__dirname)
-
-console.log(process.env.NODE_ENV)
 module.exports = {
   devtool: isProd ? 'source-map' : 'cheap-module-source-map',
   entry: './src/index.js',
@@ -14,20 +13,23 @@ module.exports = {
   module: {
     rules: [
         { 
-          test: /\.js$/, 
+          enforce: 'pre',
+          test: /\.jsx?$/, 
           exclude: /node_modules/,
           loaders: [
-            "babel-loader",
-            "eslint-loader"
+            'eslint-loader'
+          ]
+        },
+        { 
+          test: /\.jsx?$/, 
+          exclude: /node_modules/,
+          loaders: [
+            'babel-loader',
           ]
         }
-    ],
-    loaders: [
-      { test: /\.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.jsx$/, loader: 'babel-loader', exclude: /node_modules/ }
     ]
   },
   devServer: {
-    contentBase: "./dist",
+    contentBase: './dist',
   }
 }
