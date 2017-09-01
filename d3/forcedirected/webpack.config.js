@@ -6,6 +6,7 @@ const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const isProd = process.env.NODE_ENV
+const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
 
 // ExtractTextPlugin does not work with HotModuleReplacement
 const cssDev = ['style-loader','css-loader', 'sass-loader']
@@ -16,8 +17,10 @@ const cssProd = ExtractTextPlugin.extract({
 })
 
 module.exports = {
-  devtool: isProd ? 'source-map' : 'cheap-module-source-map',
-  entry: './src/index.js',
+  devtool: sourceMapConfig,
+  entry: {
+    app: './src/index.js'
+  },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js'
@@ -25,7 +28,7 @@ module.exports = {
   module: {
     rules: [
         { 
-          enforce: 'pre',
+          enforce: 'pre', // Replaces preLoaders from webpack v1
           test: /\.jsx?$/i, 
           exclude: /node_modules/,
           use: [
@@ -40,16 +43,18 @@ module.exports = {
           ]
         },
         {
-          test: /\.scss$/,
+          test: /\.s?css$/,
           use: isProd ? cssProd : cssDev
         },
         {
-          test: /\.(png|ico|jpe?g|gif|svg)$/i,
+          test: /\.(png|ico|jpe?g|gif)$/i,
           use: [
             'file-loader?name=images/[name].[ext]',
             'image-webpack-loader'
           ]
-        }
+        },
+        { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000' },
+        { test: /\.(ttf|eot)$/, loader: 'file-loader' }
     ]
   },
   devServer: {                // Settings for webpack-dev-server
