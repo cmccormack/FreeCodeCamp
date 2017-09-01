@@ -71,7 +71,7 @@ module.exports = {
     }),
 
     new ExtractTextPlugin({
-      filename: './styles/app.css',
+      filename: './styles/[name].css',
       disable: !isProd,
       allChunks: true
     }),
