@@ -5,6 +5,11 @@ import ReactDOM from 'react-dom'
 
 import './styles/app.scss'
 
+
+import 'bootstrap/dist/css/bootstrap.css'
+import { Button } from 'react-bootstrap'
+// import 'bootstrap/dist/css/bootstrap-theme.css'
+
 window.onload = function(){
   console.log('Window Loaded')
   ReactDOM.render(<App />, document.getElementById('root'))
@@ -60,6 +65,9 @@ class App extends React.Component {
             data={this.state.data}
             desc={this.state.description}
         />
+        <Button bsStyle='primary'>
+          {'Test'}
+        </Button>
       </div>
     )
   }
