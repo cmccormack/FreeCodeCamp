@@ -2,12 +2,9 @@
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import { scaleTime, scaleLinear } from 'd3-scale'
-// import { axisBottom, axisLeft, axisRight } from 'd3-axis'
-// import { timeSecond } from 'd3-time'
-// import { select } from 'd3-selection'
-// import { timeFormat } from 'd3-time-format'
-// import { extent, max, min } from 'd3-array'
+
+import css from './styles/app.scss'
+import images from 'images/'
 
 window.onload = function(){
   console.log('Window Loaded')
@@ -37,7 +34,7 @@ class App extends React.Component {
       .then((json)=>{
         this.setState({
           data: json,
-          description: 'Bouncy Flags!',
+          description: 'Bouncy Flags!!!!',
           title: 'National Contiguity using D3 Force Directed Graph'
         }, ()=>{console.log(this.state.data)})
       })
