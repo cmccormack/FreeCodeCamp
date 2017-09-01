@@ -12,7 +12,7 @@ const cssDev = ['style-loader','css-loader', 'sass-loader']
 const cssProd = ExtractTextPlugin.extract({
   fallback: 'style-loader',
   use: ['css-loader', 'sass-loader'],
-  publicPath: 'dist/'
+  publicPath: '../'
 })
 
 module.exports = {
@@ -46,26 +46,20 @@ module.exports = {
         {
           test: /\.(png|ico|jpe?g|gif|svg)$/i,
           use: [
-            {
-              loader: 'file-loader',
-              options: {
-                name:'[name].[ext]',
-                publicPath: '/images/',
-                outputPath: './images/',
-                useRelativePath: isProd
-              }
-            }
+            'file-loader?name=images/[name].[ext]',
+            'image-webpack-loader'
           ]
         }
     ]
   },
-  devServer: {
-    contentBase: './dist',
-    compress: true,
-    stats: 'normal',
-    open: true,
-    hot: true
+  devServer: {                // Settings for webpack-dev-server
+    contentBase: './dist',    // Tells the server where to serve content from
+    compress: true,           // Enable gzip compression for everything served
+    stats: 'minimal',         // Only output when errors or new compilation happen
+    open: true,               // The dev server will open the browser when ran
+    hot: true                 // Enable webpack's Hot Module Replacement feature
   },
+
   plugins: [
     new HtmlWebpackPlugin({
       title: 'National Contiguity using Force Directed Graph with d3 - Christopher McCormack',
