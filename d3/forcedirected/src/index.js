@@ -3,8 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import css from './styles/app.scss'
-import images from 'images/'
+import './styles/app.scss'
 
 window.onload = function(){
   console.log('Window Loaded')
@@ -36,7 +35,7 @@ class App extends React.Component {
           data: json,
           description: 'Bouncy Flags!!!!',
           title: 'National Contiguity using D3 Force Directed Graph'
-        }, ()=>{console.log(this.state.data)})
+        }, ()=>{console.log(this.state.data)}) 
       })
   }
 
