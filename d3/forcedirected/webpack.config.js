@@ -4,6 +4,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const bootstrapEntryPoints = require('./webpack.bootstrap.config')
 
 const isProd = process.env.NODE_ENV
 const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
@@ -16,14 +17,19 @@ const cssProd = ExtractTextPlugin.extract({
   publicPath: '../'
 })
 
+const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev
+
+
+
 module.exports = {
   devtool: sourceMapConfig,
   entry: {
-    app: './src/index.js'
+    app: './src/index.js',
+    bootstrap: bootstrapConfig
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: '[name].bundle.js'
   },
   module: {
     rules: [
@@ -53,8 +59,8 @@ module.exports = {
             'image-webpack-loader'
           ]
         },
-        { test: /\.(woff2?|svg)$/, loader: 'url-loader?limit=10000' },
-        { test: /\.(ttf|eot)$/, loader: 'file-loader' }
+        { test: /\.(woff2?|svg)$/, use: 'url-loader?limit=10000&name=fonts/[name].[ext]' },
+        { test: /\.(ttf|eot)$/, use: 'file-loader?name=fonts/[name].[ext]' }
     ]
   },
   devServer: {                // Settings for webpack-dev-server

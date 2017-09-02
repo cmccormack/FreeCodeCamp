@@ -3,12 +3,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+import Header from './components/Header/Header.js'
+
 import './styles/app.scss'
-
-
-import 'bootstrap/dist/css/bootstrap.css'
-import { Button } from 'react-bootstrap'
-// import 'bootstrap/dist/css/bootstrap-theme.css'
+// import 'bootstrap/dist/css/bootstrap.css'
 
 window.onload = function(){
   console.log('Window Loaded')
@@ -60,14 +58,17 @@ class App extends React.Component {
 
     return (
       <div>
+        <Header 
+            brand={'Chris McCormack'}
+            icon={{icon:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'}}
+            url={'https://mackville.net'}
+        />
         <TitleBar title={this.state.title} />
         <CanvasBody 
             data={this.state.data}
             desc={this.state.description}
         />
-        <Button bsStyle='primary'>
-          {'Test'}
-        </Button>
+        <div style={{width: '100px', height: '800px', backgroundColor: 'pink'}} />
       </div>
     )
   }
