@@ -1,10 +1,12 @@
 /*eslint-env node*/
 
 const path = require('path')
+const glob = require('glob-all')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const bootstrapEntryPoints = require('./webpack.bootstrap.config')
+const PurifyCSSPlugin = require('purifycss-webpack')
 
 const isProd = process.env.NODE_ENV
 const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
@@ -14,7 +16,11 @@ const cssDev = ['style-loader','css-loader', 'sass-loader']
 const cssProd = ExtractTextPlugin.extract({
   fallback: 'style-loader',
   use: ['css-loader', 'sass-loader'],
-  publicPath: '../'
+  publicPath: '../',
+  // options: {
+  //   localIdentName: 'purify_[hash:base64:5]',
+  //   modules: true
+  // }
 })
 
 const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev
@@ -76,9 +82,9 @@ module.exports = {
       title: 'National Contiguity using Force Directed Graph with d3 - Christopher McCormack',
       style: './styles/app.scss',
       minify: {
-        collapseWhitespace: true
+        collapseWhitespace: false
       },
-      template: './src/index.ejs'
+      template: './src/index.html'
     }),
 
     new ExtractTextPlugin({
@@ -86,8 +92,24 @@ module.exports = {
       disable: !isProd,
       allChunks: true
     }),
-
+    
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    
+    new webpack.NamedModulesPlugin(),
+
+    // Currently not working, doesn't load all CSS needed
+    // new PurifyCSSPlugin({
+    //   paths: glob.sync([
+    //     path.join(__dirname, 'src/*.html'),
+    //     path.join(__dirname, 'src/*.js'),
+    //     path.join(__dirname, 'src/**/*.html'),
+    //     path.join(__dirname, 'src/**/*.js'),
+    //     path.join(__dirname, 'src/**/*.scss'),
+    //     path.join(__dirname, 'src/**/*.css')
+    //   ]),
+    //   purifyOptions: {
+    //     whitelist: ['*purify*']
+    //   }
+    // })
   ]
 }
