@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import Header from './components/Header/Header.js'
+import { Header, Footer} from './components/Layout/layout'
 
 import './styles/app.scss'
 // import 'bootstrap/dist/css/bootstrap.css'
@@ -68,7 +68,9 @@ class App extends React.Component {
             data={this.state.data}
             desc={this.state.description}
         />
+        
         <div style={{width: '100px', height: '800px', backgroundColor: 'pink'}} />
+        <Footer />
       </div>
     )
   }
