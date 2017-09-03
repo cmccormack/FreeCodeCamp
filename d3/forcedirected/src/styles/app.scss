@@ -91,6 +91,25 @@ a {
   }
 }
 
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default;
+}
+
+
+// Bootstrap additions
+
 .display-4 {
   font-size: 3.5rem;
   font-weight: 300;
@@ -109,17 +128,17 @@ a {
   line-height: 1.1;
 }
 
-.text-ellipsis {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.unselectable {
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    cursor: default;
+.dropdown-menu {
+  background-color: #222 !important;
+  border-color: #080808 !important;
+  &>li>a{
+    color: #999 !important;
+    &:hover{
+      color: #fff !important;
+      background-color: #000 !important;
+    }
+  }
+  &>.divider {
+    background-color: #000 !important;
+  }
 }
