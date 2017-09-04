@@ -1,12 +1,12 @@
 /*eslint-env node*/
 
 const path = require('path')
-const glob = require('glob-all')
+// const glob = require('glob-all')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const bootstrapEntryPoints = require('./webpack.bootstrap.config')
-const PurifyCSSPlugin = require('purifycss-webpack')
+// const PurifyCSSPlugin = require('purifycss-webpack')
 
 const isProd = process.env.NODE_ENV
 const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
