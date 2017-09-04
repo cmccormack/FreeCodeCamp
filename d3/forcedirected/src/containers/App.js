@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { Header, Footer } from '../components/Layout/index.js'
+import { Header, Footer, Title } from '../components/Layout'
 import CanvasBody from '../components/CanvasBody'
 
 class App extends React.Component {
@@ -47,22 +47,30 @@ class App extends React.Component {
   render() {
     console.log('In App Render')
 
+    const options = {
+      header: {
+        brand: 'Chris McCormack',
+        icon: {icon:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'},
+        url:'https://mackville.net'
+      },
+      title: {
+        align: 'center',
+        size: 5,
+        shadow: '-3px 3px 8px #444'
+      },
+      canvas: {
+        data: this.state.data,
+        desc: this.state.description,
+        height: 600,
+        width: 900
+      }
+    }
+
     return (
       <div>
-        <Header 
-            brand={'Chris McCormack'}
-            icon={{icon:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'}}
-            url={'https://mackville.net'}
-        />
-        {console.log(this.state.description)}
-        <TitleBar title={this.state.title} />
-        <CanvasBody 
-            data={this.state.data}
-            desc={this.state.description}
-            height={600}
-            width={900}
-        />
-        
+        <Header {...options.header} />
+        <Title {...options.title}>{this.state.title}</Title>
+        <CanvasBody {...options.canvas} />
         <div style={{width: '100px', height: '800px', backgroundColor: 'pink'}} />
         <Footer />
       </div>
@@ -70,8 +78,6 @@ class App extends React.Component {
   }
 }
 
-function TitleBar(props){
-  return <div className='title display-5 text-center text-shadow unselectable'>{props.title}</div>
-}
+
 
 export default App
