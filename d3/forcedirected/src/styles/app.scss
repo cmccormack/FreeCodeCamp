@@ -108,26 +108,19 @@ a {
 }
 
 
-// Bootstrap additions
+// *** Bootstrap additions ***
 
-.display-4 {
-  font-size: 3.5rem;
-  font-weight: 300;
-  line-height: 1.1;
-}
+// Bootstrap 4 Display Headings
+*[class^='display-']{ font-weight: 300; line-height: 1.1; }
+.display-1 { font-size: 6rem; }
+.display-2 { font-size: 5.5rem; }
+.display-3 { font-size: 4.5rem; }
+.display-4 { font-size: 3.5rem; }
+.display-5 { font-size: 2.5rem; }
+.display-6 { font-size: 1.5rem; }
 
-.display-5 {
-  font-size: 2.5rem;
-  font-weight: 300;
-  line-height: 1.1;
-}
 
-.display-6 {
-  font-size: 1.5rem;
-  font-weight: 300;
-  line-height: 1.1;
-}
-
+// Inverse dropdown menu
 .dropdown-menu {
   background-color: #222 !important;
   border-color: #080808 !important;
