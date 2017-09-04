@@ -15,7 +15,7 @@ function CanvasBody(props){
   return (
     <svg {...canvas}>
       <text 
-          className={'display-1'}
+          className={'display-1 text-shadow'}
           x={300}
           y={50}
       >
