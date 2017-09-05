@@ -9,6 +9,8 @@ import NavItem from '../NavItem'
 
 function Header(props) {
 
+  let {url, icon, brand} = props
+
   return (
     <Navbar
         collapseOnSelect
@@ -17,28 +19,20 @@ function Header(props) {
     >
       <Navbar.Header>
         <Navbar.Brand>
-          <a href={props.url}>
+          <a href={url}>
             <i
-                className={props.icon.icon}
+                className={icon.class}
                 style={{
                   marginRight: '5px',
-                  lineHeight: props.icon.height
+                  lineHeight: icon.height
                 }}
             />
-            <span>{props.brand}</span>
+            <span>{brand}</span>
           </a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
-        <Nav>
-          <NavItem
-              eventKey={1}
-              href='#'
-          >
-            {'Link'}
-          </NavItem>
-        </Nav>
         <Nav pullRight>
           <NavItem
               eventKey={1}
