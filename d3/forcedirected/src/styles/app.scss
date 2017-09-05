@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400");
 
 $body-bg: rgba(240,240,240,.95);
 $text-shadow: #444;
@@ -113,7 +114,7 @@ a {
 // *** Bootstrap additions ***
 
 // Bootstrap 4 Display Headings
-*[class^='display-']{ font-weight: 300; line-height: 1.1; }
+*[class*='display-']{ font-family: 'Roboto', sans-serif; font-weight: 300; line-height: 1.1; }
 .display-1 { font-size: 6rem; }
 .display-2 { font-size: 5.5rem; }
 .display-3 { font-size: 4.5rem; }
