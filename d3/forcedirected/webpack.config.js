@@ -9,7 +9,8 @@ const bootstrapEntryPoints = require('./webpack.bootstrap.config')
 // const PurifyCSSPlugin = require('purifycss-webpack')
 
 const isProd = process.env.NODE_ENV
-const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
+// const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
+const sourceMapConfig = isProd ? '' : 'cheap-module-source-map'
 
 // ExtractTextPlugin does not work with HotModuleReplacement
 const cssDev = ['style-loader','css-loader', 'sass-loader']
@@ -80,9 +81,10 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'National Contiguity using Force Directed Graph with d3 - Christopher McCormack',
-      style: './styles/app.scss',
+      style: './src/styles/app.scss',
+      favicon: './src/images/favicon.ico',
       minify: {
-        collapseWhitespace: false
+        collapseWhitespace: true
       },
       template: './src/index.html'
     }),
