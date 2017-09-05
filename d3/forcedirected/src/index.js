@@ -1,11 +1,11 @@
 /*eslint no-console: "off"*/
 
+import './styles/app.scss'
+
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import App from './containers/App'
-
-import './styles/app.scss'
 
 window.onload = function(){
   console.log('Window Loaded')
@@ -15,14 +15,6 @@ window.onload = function(){
 var globals = {
   url: 'https://raw.githubusercontent.com/DealPete/forceDirected/master/countries.json'
 }
-
-
-
-
-
-
-
-
 
 
 
