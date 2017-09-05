@@ -1,17 +1,16 @@
 import React from 'react'
 import 'font-awesome/css/font-awesome.css'
-import { 
-  Navbar,
-  Nav,
-  MenuItem,
-  NavItem,
-  NavDropdown
-} from 'react-bootstrap'
+// import {Navbar, Nav, MenuItem, NavItem, NavDropdown} from 'react-bootstrap'
 
-function Header (props) {
+// Replaced NavItem from modules due to bug in NavItem
+import { Navbar, Nav, MenuItem, NavDropdown } from 'react-bootstrap'
+import NavItem from '../NavItem'
 
-  return(
-    <Navbar 
+
+function Header(props) {
+
+  return (
+    <Navbar
         collapseOnSelect
         fixedTop
         inverse
@@ -21,7 +20,10 @@ function Header (props) {
           <a href={props.url}>
             <i
                 className={props.icon.icon}
-                style={{marginRight: '5px', lineHeight: props.icon.height}}
+                style={{
+                  marginRight: '5px',
+                  lineHeight: props.icon.height
+                }}
             />
             <span>{props.brand}</span>
           </a>
@@ -30,19 +32,37 @@ function Header (props) {
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav>
-          <NavItem eventKey={1} href="#">{'Link'}</NavItem>
-          <NavItem eventKey={2} href="#">{'Link'}</NavItem>
-          <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+          <NavItem
+              eventKey={1}
+              href='#'
+          >
+            {'Link'}
+          </NavItem>
+        </Nav>
+        <Nav pullRight>
+          <NavItem
+              eventKey={1}
+              href='/'
+          >
+            {'Portfolio'}
+          </NavItem>
+          <NavItem
+              eventKey={2}
+              href='/#contact'
+          >
+            {'Contact'}
+          </NavItem>
+          <NavDropdown
+              eventKey={3}
+              id='nav-dropdown-projects'
+              title='Projects'
+          >
             <MenuItem eventKey={3.1}>{'Action'}</MenuItem>
             <MenuItem eventKey={3.2}>{'Another action'}</MenuItem>
             <MenuItem eventKey={3.3}>{'Soemthing else here'}</MenuItem>
             <MenuItem divider />
             <MenuItem eventKey={3.3}>{'Seperated Link'}</MenuItem>
           </NavDropdown>
-        </Nav>
-        <Nav pullRight>
-          <NavItem eventKey={1} href="#">{'Link Right'}</NavItem>
-          <NavItem eventKey={2} href="#">{'Link Right'}</NavItem>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
