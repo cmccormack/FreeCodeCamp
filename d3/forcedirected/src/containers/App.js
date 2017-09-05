@@ -5,6 +5,9 @@ import React from 'react'
 import { Header, Footer, Title } from '../components/Layout'
 import CanvasBody from '../components/CanvasBody'
 
+
+
+
 class App extends React.Component {
   constructor(props){
     super(props)
@@ -71,7 +74,7 @@ class App extends React.Component {
         <Header {...options.header} />
         <Title {...options.title}>{this.state.title}</Title>
         <CanvasBody {...options.canvas} />
-        <div style={{width: '100px', height: '800px', backgroundColor: 'pink'}} />
+        <div style={{width: '100px', height: '800px', backgroundColor: 'yellow'}} />
         <Footer />
       </div>
     )
