@@ -1,7 +1,6 @@
 /*eslint no-console: "off"*/
 
 import React from 'react'
-// import 'bootstrap-sass'
 
 function CanvasBody(props){
   console.log('In CanvasBody Componenet')
@@ -21,6 +20,7 @@ function CanvasBody(props){
       >
         {props.desc}
       </text>
+      {props.children}
     </svg>
   )
 }
