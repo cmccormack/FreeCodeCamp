@@ -78,6 +78,11 @@ main {
   border: 2px solid gray;
   border-radius: 6px;
   box-shadow: -2px 2px 8px #444;
+
+  .tt-header {
+    text-align: 'center';
+    font-weight: 'bold';
+  }
 }
 
 .flag {
