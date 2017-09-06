@@ -74,10 +74,11 @@ main {
   padding: 5px 10px 5px 10px;
   min-width: 150px;
   max-width: 200px;
-  background-color: rgba(220,220,220,0.8);
+  background-color: rgba(220,220,220,0.9);
   border: 2px solid gray;
   border-radius: 6px;
   box-shadow: -2px 2px 8px #444;
+  z-index: 10;
 
   .tt-header {
     text-align: 'center';

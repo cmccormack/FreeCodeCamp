@@ -1,11 +1,12 @@
 /*eslint no-console: 'off'*/
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 
 import '../styles/flags/flags.min.css'
 import '../images/blank.gif'
 
-import { Header, Footer, Title } from '../components/Layout'
+import { Header, Footer, Title, Tooltip } from '../components/Layout'
 import CanvasBody from '../components/CanvasBody'
 import { select, event } from 'd3-selection'
 import { 
@@ -120,6 +121,34 @@ class App extends React.Component {
 }
 
 
+
+function handleMouseout(){
+  ReactDOM.render(
+    <Tooltip showTooltip={false} />
+    , document.getElementById('tooltip')
+  )
+}
+
+function handleMouseover(node) {
+
+  console.log(event)
+  if (!event.active){
+    let offset = {x: -150, y: -50}
+    let props = {
+      showTooltip: true,
+      pos: {x: event.x + offset.x, y: event.y + offset.y}
+    }
+  
+    ReactDOM.render(
+      <Tooltip {...props} >
+        {node.country}
+      </Tooltip>
+      , document.getElementById('tooltip')
+    )
+  }
+}
+
+
 function buildForceGraph(nodes, links, canvas){
   console.log('in buildForceGraph function')
 
@@ -155,7 +184,10 @@ function buildForceGraph(nodes, links, canvas){
           .on('start', dragstarted)
           .on('drag', dragged)
           .on('end', dragended)
+          
       )
+      .on('mouseover', handleMouseover)
+      .on('mouseout', handleMouseout)
 
   node.append('title')
       .text(d=>d.country)
@@ -176,13 +208,20 @@ function buildForceGraph(nodes, links, canvas){
 
     node
       .style('top', d=>`${d.y - 16}px`)
-      .style('left', d=>`${d.x-16}px`)
+      .style('left', d=>`${d.x - 16}px`)
   }
 
   function dragstarted(d) {
+    
+    // Hide Tooltip when drag starts
+    handleMouseout()
+
     if (!event.active) simulation.alphaTarget(0.3).restart()
     d.fx = d.x
     d.fy = d.y
+
+    // Deregester mouseover listeners until drag ends
+    node.on('mouseover', null).on('mouseout', null)
   }
   
   function dragged(d) {
@@ -194,6 +233,9 @@ function buildForceGraph(nodes, links, canvas){
     if (!event.active) simulation.alphaTarget(0)
     d.fx = null
     d.fy = null
+
+    // Register mouseover listeners once dragging ends
+    node.on('mouseover', handleMouseover).on('mouseout', handleMouseout)
   }
 }
 
