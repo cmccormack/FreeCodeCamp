@@ -9,8 +9,10 @@ const bootstrapEntryPoints = require('./webpack.bootstrap.config')
 // const PurifyCSSPlugin = require('purifycss-webpack')
 
 const isProd = process.env.NODE_ENV
-// const sourceMapConfig = isProd ? 'source-map' : 'cheap-module-source-map'
-const sourceMapConfig = isProd ? '' : 'cheap-module-source-map'
+
+const prodSourceMap = 'source-map'
+const devSourceMap = 'cheap-module-source-map'
+const sourceMapConfig = isProd ? prodSourceMap : devSourceMap
 
 // ExtractTextPlugin does not work with HotModuleReplacement
 const cssDev = ['style-loader','css-loader', 'sass-loader']
