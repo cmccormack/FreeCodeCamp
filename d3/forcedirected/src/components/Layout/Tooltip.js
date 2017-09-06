@@ -8,13 +8,15 @@ function Tooltip(props){
     [x, y] = [0,0]
   }
 
+  let showTooltip = props.hasOwnProperty('showTooltip') ? props.showTooltip : false
+
   return (
     <div
         className='tt'
         style={{
             left: `${x}px`,
             top: `${y}px`,
-            display: props.showTooltip ? 'block' : 'none'
+            display: showTooltip ? 'block' : 'none'
         }}
     >
       {props.children}
