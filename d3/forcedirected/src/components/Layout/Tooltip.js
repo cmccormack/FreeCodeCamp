@@ -2,25 +2,22 @@ import React from 'react'
 
 function Tooltip(props){
   
+  if (props.hasOwnProperty('pos')){
+    var {x, y} = props.pos
+  } else {
+    [x, y] = [0,0]
+  }
+
   return (
     <div
         className='tt'
         style={{
-            left: `${props.pos.x}px`,
-            top: `${props.pos.y}px`,
+            left: `${x}px`,
+            top: `${y}px`,
             display: props.showTooltip ? 'block' : 'none'
         }}
     >
-      <div 
-          className={'tt-header text-center'}
-          style={{fontWeight: 'bold'}}
-      >
-        {`${globals.months[props.datum.month-1]}, ${props.datum.year}`}
-      </div>
-      <div>{`Base Temp: ${props.datum.baseTemp}`}</div>
-      <div>{`Variance: ${props.datum.variance}`}</div>
-      <hr style={{margin: '0', border: '1px solid black'}} />
-      <div>{`Temp: ${(props.datum.baseTemp + props.datum.variance).toFixed(2)}`}</div>
+      {props.children}
     </div>
   )
 }
