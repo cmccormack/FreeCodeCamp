@@ -1,12 +1,11 @@
 /*eslint no-console: 'off'*/
 
 import React from 'react'
-import ReactDOM from 'react-dom'
 
 import '../styles/flags/flags.min.css'
 import '../images/blank.gif'
 
-import { Header, Footer, Title, Tooltip } from '../components/Layout'
+import { Header, Footer, Title } from '../components/Layout'
 import CanvasBody from '../components/CanvasBody'
 import { select, event } from 'd3-selection'
 import { 
@@ -44,7 +43,7 @@ class App extends React.Component {
       .then((json)=>{
         this.setState({
           data: json,
-          description: 'Bouncy Flags!!!!',
+          description: '',
           title: 'National Contiguity using D3 Force Directed Graph'
         })
         return json
@@ -56,10 +55,7 @@ class App extends React.Component {
 
   componentDidMount(){
     console.log('In componentDidMount')
-    // Add a span element for the tooltip div to attach within the root element
-    var tooltip = document.createElement('span')
-    tooltip.id='tooltip'
-    document.getElementById('root').appendChild(tooltip)
+
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -122,31 +118,7 @@ class App extends React.Component {
 
 
 
-function handleMouseout(){
-  ReactDOM.render(
-    <Tooltip showTooltip={false} />
-    , document.getElementById('tooltip')
-  )
-}
 
-function handleMouseover(node) {
-
-  console.log(event)
-  if (!event.active){
-    let offset = {x: -150, y: -50}
-    let props = {
-      showTooltip: true,
-      pos: {x: event.x + offset.x, y: event.y + offset.y}
-    }
-  
-    ReactDOM.render(
-      <Tooltip {...props} >
-        {node.country}
-      </Tooltip>
-      , document.getElementById('tooltip')
-    )
-  }
-}
 
 
 function buildForceGraph(nodes, links, canvas){
@@ -186,11 +158,13 @@ function buildForceGraph(nodes, links, canvas){
           .on('end', dragended)
           
       )
-      .on('mouseover', handleMouseover)
-      .on('mouseout', handleMouseout)
+      .on('mouseover', mouseover)
+      .on('mouseout', mouseout)
 
-  node.append('title')
+  node.append('div')
+      .attr('class', 'tt')
       .text(d=>d.country)
+      .style('display', 'none')
 
   simulation
       .nodes(nodes)
@@ -214,7 +188,7 @@ function buildForceGraph(nodes, links, canvas){
   function dragstarted(d) {
     
     // Hide Tooltip when drag starts
-    handleMouseout()
+    // mouseout()
 
     if (!event.active) simulation.alphaTarget(0.3).restart()
     d.fx = d.x
@@ -235,8 +209,40 @@ function buildForceGraph(nodes, links, canvas){
     d.fy = null
 
     // Register mouseover listeners once dragging ends
-    node.on('mouseover', handleMouseover).on('mouseout', handleMouseout)
+    node.on('mouseover', mouseover).on('mouseout', mouseout)
   }
+
+  
+  function mouseover(node, index, arr) {
+
+    var parent = arr[node.index]
+    var child = parent.children[0]
+
+    parent.style.zIndex = 5
+    child.style.display = 'inline'
+
+    let offset = {x: -(child.offsetWidth/2 - parent.offsetWidth/2), y: -8}
+
+    child.style.left = `${offset.x}px`
+    child.style.top = `${offset.y}px`
+
+    
+  }
+
+  function mouseout(node, index, arr){
+
+    var parent = arr[node.index]
+    var child = parent.children[0]
+
+    parent.style.zIndex = 3
+    child.style.display = 'none'
+
+  }
+
+
 }
+
+
+
 
 export default App
