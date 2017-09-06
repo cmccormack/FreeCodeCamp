@@ -2,52 +2,22 @@
 
 import React from 'react'
 
+import '../styles/flags/flags.min.css'
+import '../images/blank.gif'
+
 import { Header, Footer, Title } from '../components/Layout'
 import CanvasBody from '../components/CanvasBody'
-import { select, selectAll, event } from 'd3-selection'
+import { select, event } from 'd3-selection'
 import { 
   forceSimulation,
   forceLink,
   forceManyBody,
   forceCenter,
-  forceCollide,
   forceX,
   forceY
 } from 'd3-force'
 import { drag } from 'd3-drag'
-import { scaleOrdinal, schemeCategory20 } from 'd3-scale'
 
-
-const nodes = [
-  { id: 'mammal', group: 0, label: 'Mammals', level: 1 },
-  { id: 'dog'   , group: 0, label: 'Dogs'   , level: 2 },
-  { id: 'cat'   , group: 0, label: 'Cats'   , level: 2 },
-  { id: 'fox'   , group: 0, label: 'Foxes'  , level: 2 },
-  { id: 'elk'   , group: 0, label: 'Elk'    , level: 2 },
-  { id: 'insect', group: 1, label: 'Insects', level: 1 },
-  { id: 'ant'   , group: 1, label: 'Ants'   , level: 2 },
-  { id: 'bee'   , group: 1, label: 'Bees'   , level: 2 },
-  { id: 'fish'  , group: 2, label: 'Fish'   , level: 1 },
-  { id: 'carp'  , group: 2, label: 'Carp'   , level: 2 },
-  { id: 'pike'  , group: 2, label: 'Pikes'  , level: 2 }
-]
-
-const links = [
-	{ target: 'mammal', source: 'dog' , strength: 0.7 },
-	{ target: 'mammal', source: 'cat' , strength: 0.7 },
-  { target: 'mammal', source: 'fox' , strength: 0.7 },
-  { target: 'mammal', source: 'elk' , strength: 0.7 },
-  { target: 'insect', source: 'ant' , strength: 0.7 },
-  { target: 'insect', source: 'bee' , strength: 0.7 },
-  { target: 'fish'  , source: 'carp', strength: 0.7 },
-  { target: 'fish'  , source: 'pike', strength: 0.7 },
-  { target: 'cat'   , source: 'elk' , strength: 0.1 },
-  { target: 'carp'  , source: 'ant' , strength: 0.1 },
-  { target: 'elk'   , source: 'bee' , strength: 0.1 },
-  { target: 'dog'   , source: 'cat' , strength: 0.1 },
-  { target: 'fox'   , source: 'ant' , strength: 0.1 },
-	{ target: 'pike'  , source: 'cat' , strength: 0.1 }
-]
 
 class App extends React.Component {
   constructor(props){
@@ -133,7 +103,16 @@ class App extends React.Component {
       <div>
         <Header {...options.header} />
         <Title {...options.title}>{this.state.title}</Title>
-        <CanvasBody {...options.canvas} />
+        <div 
+            id={'canvas-wrapper'}
+            style={this.state.canvas}
+        >
+          <div 
+              id={'overlay'} 
+              style={this.state.canvas}
+          />
+          <CanvasBody {...options.canvas} />
+        </div>
         <Footer {...options.footer} />
       </div>
     )
@@ -152,31 +131,26 @@ function buildForceGraph(nodes, links, canvas){
   
   const simulation = forceSimulation()
     .force('link', forceLink().id((d)=>d.index))
-    .force('collide', forceCollide( (d)=>15 ).iterations(16) )
-    .force('charge', forceManyBody().strength(-280))
+    .force('charge', forceManyBody().strength(-500))
     .force('center', forceCenter(width / 2, height / 2))
-    .force('y', forceY(0).strength(0.6))
-    .force('x', forceX(0).strength(0.6))
+    .force('y', forceY(height/2).strength(0.6))
+    .force('x', forceX(width/2).strength(0.6))
 
   const link = svg.append('g')
     .attr('class', 'links')
     .selectAll('line')
     .data(links)
       .enter().append('line')
-        .attr('stroke-width', ()=>2)
+        .attr('stroke-width', ()=>1)
         .style('stroke', '#999')
         .style('opacity', '0.8')
 
-  // selectAll('.line')
-  //   .style({stroke: '#999', opacity: '0.8'})  
-
-  const node = svg.append('g')
+  const node = select('#overlay')
     .attr('class', 'nodes')
-    .selectAll('circle')
+    .selectAll('.node')
     .data(nodes)
-      .enter().append('circle')
-        .attr('r', 10)
-        .attr('fill', ()=>`hsl(${Math.floor(Math.random()*360)}, 50%, 50%)`)
+      .enter().append('div')
+        .attr('class', d=>`flag flag-${d.code}`)
         .call(drag()
           .on('start', dragstarted)
           .on('drag', dragged)
@@ -196,17 +170,17 @@ function buildForceGraph(nodes, links, canvas){
   function ticked() {
     link
         .attr('x1', d=>d.source.x)
-        .attr('y2', d=>d.target.y)
-        .attr('y1', d=>d.source.y)
         .attr('x2', d=>d.target.x)
+        .attr('y1', d=>d.source.y)
+        .attr('y2', d=>d.target.y)
 
     node
-        .attr('cx', d=>d.x)
-        .attr('cy', d=>d.y)
+      .style('top', d=>`${d.y - 16}px`)
+      .style('left', d=>`${d.x-16}px`)
   }
 
   function dragstarted(d) {
-    if (!event.active) simulation.alphaTarget(0.2).restart()
+    if (!event.active) simulation.alphaTarget(0.3).restart()
     d.fx = d.x
     d.fy = d.y
   }

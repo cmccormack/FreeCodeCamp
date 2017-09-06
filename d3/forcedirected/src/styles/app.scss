@@ -55,11 +55,15 @@ main {
   position: relative;
 }
  
-.canvas {
+#canvas-wrapper {
   display: block;
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
   margin: auto; 
+}
+
+.canvas, #overlay {
+  position: absolute;
 }
 
 .tt {
@@ -74,6 +78,11 @@ main {
   border: 2px solid gray;
   border-radius: 6px;
   box-shadow: -2px 2px 8px #444;
+}
+
+.flag {
+  position: absolute;
+  z-index: 3;
 }
 
 a {
