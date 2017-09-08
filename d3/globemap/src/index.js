@@ -14,7 +14,6 @@ window.onload = function(){
 
 var globals = {
   url: {
-    meteorites: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json',
     worldMap: 'https://mackville.net/d3/globemap/world-110m2.json'
   }
 }

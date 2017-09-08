@@ -1,8 +1,9 @@
 /*eslint no-console: 'off'*/
 
 import React from 'react'
+import ReactDOM from 'react-dom'
 
-import { Header, Footer, Title } from './components/Layout'
+import { Header, Footer, Title, Tooltip } from './components/Layout'
 import CanvasBody from './components/CanvasBody'
 
 import { select, event } from 'd3-selection'
@@ -26,28 +27,20 @@ class App extends React.Component {
     console.log('In componentWillMount')
 
     // Grab data from API and store in state once App mounts
-    fetch(this.props.url.worldMap)
-      .then((response)=>{
-        console.log('Fetch ' + (response.ok? 'success!' : 'failure...'))
-        return response
-      })
-      .then((response)=>response.json())
+    let worldMap = fetch(this.props.url.worldMap)
+    worldMap.then((response)=>response.json())
       .then((json)=>{
         this.setState({
-          data: json,
           description: '',
           title: 'Meteorite Landings Across the Globe using D3'
         })
-        return json
-      })
-      .then((json)=>{
         buildWorldMap(json, this.state.canvas)
       })
   }
 
   componentDidMount(){
     console.log('In componentDidMount')
-
+    document.body.insertAdjacentHTML( 'afterbegin', '<div id="tt"></div>' )
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -70,7 +63,6 @@ class App extends React.Component {
         shadow: '-3px 3px 8px #444'
       },
       canvas: {
-        data: this.state.data,
         desc: this.state.description,
         width: this.state.canvas.width,
         height: this.state.canvas.height
@@ -103,6 +95,9 @@ class App extends React.Component {
 function buildWorldMap(topology, canvas){
   console.log('in buildWorldMap function')
 
+  let strikeURL = 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json'
+  let strikeData = fetch(strikeURL)
+
   const {width, height} = canvas
 
   const zoomScale = {
@@ -112,8 +107,13 @@ function buildWorldMap(topology, canvas){
   }
 
   // ================= Zoom functionality =================
-  const zoom_handler = zoom().scaleExtent([1,10])  
-    .on( 'zoom', ()=>paths.attr('transform', event.transform) )
+  const zoom_handler = zoom()
+    .scaleExtent([1,16])
+    .translateExtent([[0-100,0-100],[width+100,height+100]])
+    .on( 'zoom', ()=>{
+      g.attr('transform', event.transform)
+
+      })
   // ======================================================
 
 
@@ -131,11 +131,56 @@ function buildWorldMap(topology, canvas){
 
   const geojson = topojson.feature(topology, topology.objects.countries)
 
-  let paths = svg.selectAll('path')
+  let g = svg.append('g')
+
+  let paths = g.selectAll('path')
     .data(geojson.features).enter()
       .append('path')
         .attr('d', path)
 
+  
+
+
+  const tooltipdiv = document.getElementById('tt')
+  const offset = {x: 10, y: -120}
+  strikeData.then((response)=>response.json())
+  .then((data)=>{
+    g.selectAll('circle')
+    .data(data.features).enter()
+      .append('circle')
+        .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
+        .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])        
+        .attr('r', (d)=>d.properties.mass > 1 ? Math.pow(d.properties.mass, 1/10) : .5)
+        .style('fill', ()=>`hsla(${Math.floor(Math.random()*360)}, 50%, 50%, 0.8)`)
+        .style('border', '1px solid #CCC')
+        .on('mouseover', showtooltip)
+        .on('mouseout', ()=>{ ReactDOM.render(<Tooltip />, tooltipdiv) })
+  })
+
+  function showtooltip(d) {
+    let props = {
+      pos: {
+        x: event.pageX + offset.x,
+        y: event.pageY + offset.y
+      }, 
+      showTooltip: true
+    }
+    ReactDOM.render(
+      <Tooltip {...props}>
+        {
+          <div>
+            <div><strong>{d.properties.name}</strong></div>
+            <div>{`Mass: ${d.properties.mass}`}</div>
+            <div>{`Status: ${d.properties.fall}${d.properties.fall==='Found' ? ' and found' : ''}`}</div>
+            <div>{`Year: ${new Date(d.properties.year).getFullYear()}`}</div>
+            <div>{`Latitude: ${d.properties.reclat}`}</div>
+            <div>{`Longitude: ${d.properties.reclong}`}</div>
+          </div>
+        }
+      </Tooltip>,
+      tooltipdiv 
+    )
+  }
 }
   
 
