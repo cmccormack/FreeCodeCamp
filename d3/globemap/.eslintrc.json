@@ -1,0 +1,56 @@
+{
+    "env": {
+        "browser": true,
+        "es6": true,
+        "commonjs": true
+    },
+    "extends": ["eslint:recommended", "plugin:react/all"],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true,
+            "jsx": true
+        },
+        "sourceType": "module"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": [
+            "off",
+            2
+        ],
+        "react/jsx-indent": [
+            "error",
+            2
+        ],
+        "linebreak-style": [
+            "off",
+            "unix"
+        ],
+        "no-unused-vars": [
+            "warn"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "never"
+        ],
+        "react/jsx-filename-extension": [
+            1,
+            { "extensions": [".js", ".jsx"] }
+        ],
+        "react/prop-types": ["off"],
+        "react/sort-comp": ["warn"],
+        "react/jsx-handler-names": ["warn"],
+        "react/no-multi-comp": ["off"],
+        "react/no-danger": ["warn"],
+        "react/no-set-state": ["off"],
+        "react/forbid-component-props": ["warn"],
+        "react/jsx-max-props-per-line": ["warn"],
+        "react/jsx-sort-props": ["warn"]
+    }
+}
