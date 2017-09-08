@@ -165,6 +165,8 @@ function buildForceGraph(nodes, links, canvas){
       .attr('class', 'tt')
       .text(d=>d.country)
       .style('display', 'none')
+  
+  node.on
 
   simulation
       .nodes(nodes)
