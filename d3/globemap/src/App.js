@@ -135,12 +135,10 @@ function buildWorldMap(topology, canvas){
   // Convert country code data into an object for fast lookups
   countryData.then((countryArr)=>
     countryArr.reduce((obj,item)=>{
-      if (item.id <= 0) console.log(item)
       obj[+item['country-code']]=item
       return obj 
     },{}))
   .then((countryObj)=>{
-    // console.log(countryObj)
     drawPathData(countryObj)
     strikeData.then(drawStrikeData)
   })
