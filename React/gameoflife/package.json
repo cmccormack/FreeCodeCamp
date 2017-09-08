@@ -13,7 +13,8 @@
   "devDependencies": {
     "eslint": "^3.19.0",
     "eslint-plugin-react": "^7.0.1",
-    "react-scripts": "1.0.6"
+    "react-scripts": "1.0.6",
+    "webpack-bundle-analyzer": "^2.9.0"
   },
   "scripts": {
     "sass": "sass --watch src/styles:public/styles",
