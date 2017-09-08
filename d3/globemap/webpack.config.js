@@ -114,7 +114,7 @@ module.exports = {
     // new BundleAnalyzerPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
-    new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
+    // new webpack.IgnorePlugin(/^\.\/locale$/, [/moment$/]),
     new CompressionPlugin({
 			asset: '[path].gz[query]',
 			algorithm: 'gzip',
