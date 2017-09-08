@@ -9,6 +9,7 @@ import CanvasBody from './components/CanvasBody'
 import { select, event } from 'd3-selection'
 import { geoPath, geoTransverseMercator } from 'd3-geo'
 import { zoom } from 'd3-zoom'
+// import { scaleQuantile } from 'd3-scale'
 
 import * as topojson from 'topojson-client'
 
@@ -96,30 +97,25 @@ function buildWorldMap(topology, canvas){
   console.log('in buildWorldMap function')
 
   let strikeURL = 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json'
-  let strikeData = fetch(strikeURL)
+  let countryURL = 'https://mackville.net/d3/globemap/cc-slim-2.json'
+  let strikeData = fetch(strikeURL).then((response)=>response.json())
+  let countryData = fetch(countryURL).then((response)=>response.json())
 
   const {width, height} = canvas
+  const tooltipdiv = document.getElementById('tt')
 
-  const zoomScale = {
-    min: 125,
-    max: 3000,
-    step: 300
-  }
 
   // ================= Zoom functionality =================
   const zoom_handler = zoom()
     .scaleExtent([1,16])
     .translateExtent([[0-100,0-100],[width+100,height+100]])
-    .on( 'zoom', ()=>{
-      g.attr('transform', event.transform)
-
-      })
+    .on( 'zoom', ()=>{ g.attr('transform', event.transform) })
   // ======================================================
 
 
   const projection = geoTransverseMercator()
     .center([0,68])
-    .scale(zoomScale.min)
+    .scale(125)
 
   let path = geoPath().projection(projection)
 
@@ -129,35 +125,62 @@ function buildWorldMap(topology, canvas){
     .attr('height', height)
     .call(zoom_handler)
 
+  const g = svg.append('g')
+  
   const geojson = topojson.feature(topology, topology.objects.countries)
 
-  let g = svg.append('g')
 
-  let paths = g.selectAll('path')
-    .data(geojson.features).enter()
-      .append('path')
-        .attr('d', path)
 
   
+  // Convert country code data into an object for fast lookups
+  countryData.then((countryArr)=>
+    countryArr.reduce((obj,item)=>{
+      if (item.id <= 0) console.log(item)
+      obj[+item['country-code']]=item
+      return obj 
+    },{}))
+  .then((countryObj)=>{
+    // console.log(countryObj)
+    drawPathData(countryObj)
+    strikeData.then(drawStrikeData)
+  })
 
+  function drawPathData(countries){
+    g.selectAll('path')
+    .data(geojson.features).enter()
+      .append('path')
+        .attr('id', (d)=>String(d.id))
+        .attr('d', path)
+        .on('mouseover', (d)=> {showPathTooltip(countries[d.id].name)})
+        .on('mouseout', ()=>{ ReactDOM.render(<Tooltip />, tooltipdiv) })
+  }
 
-  const tooltipdiv = document.getElementById('tt')
-  const offset = {x: 10, y: -120}
-  strikeData.then((response)=>response.json())
-  .then((data)=>{
+  function drawStrikeData(data){
     g.selectAll('circle')
     .data(data.features).enter()
       .append('circle')
         .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
         .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])        
         .attr('r', (d)=>d.properties.mass > 1 ? Math.pow(d.properties.mass, 1/10) : .5)
-        .style('fill', ()=>`hsla(${Math.floor(Math.random()*360)}, 50%, 50%, 0.8)`)
-        .style('border', '1px solid #CCC')
-        .on('mouseover', showtooltip)
+        .style('fill', ()=>`hsla(${Math.floor(Math.random()*360)}, 50%, 40%, 0.6)`)
+        .style('stroke', '#EEE')
+        .style('stroke-width', '.1')
+        .on('mouseover', showStrikeTooltip)
         .on('mouseout', ()=>{ ReactDOM.render(<Tooltip />, tooltipdiv) })
-  })
+  }
 
-  function showtooltip(d) {
+  function showTooltip(tooltipBody, props) {
+    ReactDOM.render(
+      <Tooltip {...props}>
+        {tooltipBody}
+      </Tooltip>,
+      tooltipdiv 
+    )
+  }
+
+  function showStrikeTooltip(d) {
+    const offset = {x: 10, y: -120}
+
     let props = {
       pos: {
         x: event.pageX + offset.x,
@@ -165,20 +188,30 @@ function buildWorldMap(topology, canvas){
       }, 
       showTooltip: true
     }
-    ReactDOM.render(
-      <Tooltip {...props}>
-        {
-          <div>
-            <div><strong>{d.properties.name}</strong></div>
-            <div>{`Mass: ${d.properties.mass}`}</div>
-            <div>{`Status: ${d.properties.fall}${d.properties.fall==='Found' ? ' and found' : ''}`}</div>
-            <div>{`Year: ${new Date(d.properties.year).getFullYear()}`}</div>
-            <div>{`Latitude: ${d.properties.reclat}`}</div>
-            <div>{`Longitude: ${d.properties.reclong}`}</div>
-          </div>
-        }
-      </Tooltip>,
-      tooltipdiv 
+    showTooltip(
+      <div>
+        <div><strong>{d.properties.name}</strong></div>
+        <div>{`Mass: ${d.properties.mass}`}</div>
+        <div>{`Status: ${d.properties.fall}${d.properties.fall==='Found' ? ' and found' : ''}`}</div>
+        <div>{`Year: ${new Date(d.properties.year).getFullYear()}`}</div>
+        <div>{`Latitude: ${d.properties.reclat}`}</div>
+        <div>{`Longitude: ${d.properties.reclong}`}</div>
+      </div>, props
+    )
+  }
+
+  function showPathTooltip(d) {
+    const offset = {x: 10, y: -50}
+
+    let props = {
+      pos: {
+        x: event.pageX + offset.x,
+        y: event.pageY + offset.y
+      }, 
+      showTooltip: true
+    }
+    showTooltip(
+      <div><strong>{d}</strong></div>, props
     )
   }
 }
