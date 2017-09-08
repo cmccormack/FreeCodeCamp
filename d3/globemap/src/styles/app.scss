@@ -15,7 +15,7 @@ body {
   -moz-background-size: cover;
   background-size: cover;
   width: 100%;
-  margin-bottom: 60px;
+  padding-bottom: 80px;
 }
 
 
@@ -58,10 +58,11 @@ main {
  
 .canvas {
   display: block;
+  margin: auto; 
   background-color: #EEE;
   box-shadow: -8px 8px 32px #444;
-  margin: auto; 
 }
+
 
 
 path {
@@ -71,7 +72,8 @@ path {
 }
 
 path:hover {
-  fill: #35B351;
+  // fill: #35B351;
+  fill: rgb(253, 174, 117);
 }
 
 .tt {
