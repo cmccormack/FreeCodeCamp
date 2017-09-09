@@ -9,7 +9,7 @@ import CanvasBody from './components/CanvasBody'
 import { select, event } from 'd3-selection'
 import { geoPath, geoTransverseMercator } from 'd3-geo'
 import { zoom } from 'd3-zoom'
-// import { scaleQuantile } from 'd3-scale'
+import { scaleQuantile } from 'd3-scale'
 
 import * as topojson from 'topojson-client'
 
@@ -23,7 +23,7 @@ class App extends React.Component {
       }
     }
   }
-
+  
   componentWillMount(){
     console.log('In componentWillMount')
 
@@ -47,7 +47,6 @@ class App extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props === nextProps && this.state===nextState ? false : true
   }
-
 
   render() {
     console.log('In App Render')
@@ -129,7 +128,7 @@ function buildWorldMap(topology, canvas){
   
   const geojson = topojson.feature(topology, topology.objects.countries)
 
-
+  
 
   
   // Convert country code data into an object for fast lookups
@@ -150,10 +149,19 @@ function buildWorldMap(topology, canvas){
         .attr('id', (d)=>String(d.id))
         .attr('d', path)
         .on('mouseover', (d)=> {showPathTooltip(countries[d.id].name)})
-        .on('mouseout', ()=>{ ReactDOM.render(<Tooltip />, tooltipdiv) })
+        .on('mouseout', hideTooltip)
   }
 
   function drawStrikeData(data){
+
+    let masses = data.features.map(d=>d.properties.mass)
+    let scaleMasses = scaleQuantile()
+      .domain(masses)
+      .range([1,2,3,4,5,6,7,8,9,10])
+
+
+    console.log(scaleMasses())
+
     g.selectAll('circle')
     .data(data.features).enter()
       .append('circle')
@@ -164,29 +172,29 @@ function buildWorldMap(topology, canvas){
         .style('stroke', '#EEE')
         .style('stroke-width', '.1')
         .on('mouseover', showStrikeTooltip)
-        .on('mouseout', ()=>{ ReactDOM.render(<Tooltip />, tooltipdiv) })
+        .on('mouseout', hideTooltip)
+
+    return data
   }
 
-  function showTooltip(tooltipBody, props) {
-    ReactDOM.render(
-      <Tooltip {...props}>
-        {tooltipBody}
-      </Tooltip>,
-      tooltipdiv 
-    )
-  }
-
-  function showStrikeTooltip(d) {
-    const offset = {x: 10, y: -120}
+  function showTooltip(event, offset, showTooltip, tooltipBody) {
 
     let props = {
       pos: {
         x: event.pageX + offset.x,
         y: event.pageY + offset.y
-      }, 
-      showTooltip: true
+      },
+      showTooltip
     }
-    showTooltip(
+    ReactDOM.render(<Tooltip {...props}>{tooltipBody}</Tooltip>, tooltipdiv )
+  }
+
+  function hideTooltip(){
+    ReactDOM.render(<Tooltip />, tooltipdiv)
+  }
+
+  function showStrikeTooltip(d) {
+    showTooltip(event, {x: 10, y: -120}, true,
       <div>
         <div><strong>{d.properties.name}</strong></div>
         <div>{`Mass: ${d.properties.mass}`}</div>
@@ -194,22 +202,13 @@ function buildWorldMap(topology, canvas){
         <div>{`Year: ${new Date(d.properties.year).getFullYear()}`}</div>
         <div>{`Latitude: ${d.properties.reclat}`}</div>
         <div>{`Longitude: ${d.properties.reclong}`}</div>
-      </div>, props
+      </div>
     )
   }
 
   function showPathTooltip(d) {
-    const offset = {x: 10, y: -50}
-
-    let props = {
-      pos: {
-        x: event.pageX + offset.x,
-        y: event.pageY + offset.y
-      }, 
-      showTooltip: true
-    }
-    showTooltip(
-      <div><strong>{d}</strong></div>, props
+    showTooltip(event, {x: 10, y: -50}, true,
+      <div><strong>{d}</strong></div>
     )
   }
 }
