@@ -16,9 +16,10 @@
 .vscode/
 
 .sass-cache/
+
 *.map
 *.log
-
+*.old
 *.tiff
 
 /dist/bundle.js
