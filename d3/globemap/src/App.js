@@ -20,21 +20,17 @@ class App extends React.Component {
       canvas: {
         width: 1024,
         height: 800
-      }
+      },
+      title: 'Meteorite Landings Across the Globe using D3'
     }
   }
   
   componentWillMount(){
     console.log('In componentWillMount')
 
-    // Grab data from API and store in state once App mounts
-    let worldMap = fetch(this.props.url.worldMap)
-    worldMap.then((response)=>response.json())
+    fetch(this.props.url.worldMap)
+      .then((response)=>response.json())
       .then((json)=>{
-        this.setState({
-          description: '',
-          title: 'Meteorite Landings Across the Globe using D3'
-        })
         buildWorldMap(json, this.state.canvas)
       })
   }
@@ -53,16 +49,26 @@ class App extends React.Component {
 
     const options = {
       header: {
-        brand: 'D3 Meteorite Map Data',
-        icon: {class:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'},
-        url:'https://mackville.net',
+        brand: {
+          title: 'D3 Meteorite Map Data',
+          icon: {class:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'},
+          url:'https://mackville.net'
+        },
+        navItems: [
+          {name: 'Portfolio', url: '/'},
+          {name: 'Contact', url: '/#contact'}
+        ],
         dropdown: {
           title: 'Other D3 Projects',
-          links: [
+          id: 'nav-dropdown-projects',
+          menuItems: [
             {name: 'Bar Chart', url: '../gdpbarchart'},
             {name: 'Scatterplot', url: '../scatterplot'},
             {name: 'Heatmap', url: '../heatmap'},
             {name: 'Force Directed Graph', url: '../forcedirected'},
+          ],
+          footer: [
+            {name: 'FreeCodeCamp', url: 'https://www.freecodecamp.com'}
           ]
         }
       },
@@ -106,6 +112,7 @@ function buildWorldMap(topology, canvas){
 
   let strikeURL = 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json'
   let countryURL = 'https://mackville.net/d3/globemap/cc-slim-2.json'
+
   let strikeData = fetch(strikeURL).then((response)=>response.json())
   let countryData = fetch(countryURL).then((response)=>response.json())
 
@@ -164,9 +171,6 @@ function buildWorldMap(topology, canvas){
   }
 
   function drawStrikeData(data){
-
-    let masses = data.features.map(d=>d.properties.mass===null ? null : Number(d.properties.mass))
-    console.log(masses)
 
     g.selectAll('circle')
     .data(data.features).enter()
