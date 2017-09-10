@@ -26,7 +26,7 @@ const cssProd = ExtractTextPlugin.extract({
       loader: 'css-loader',
       options: {
         camelCase: true,
-        modules: true
+        modules: false
       }
     }, 
     {
@@ -40,7 +40,6 @@ const cssProd = ExtractTextPlugin.extract({
 })
 
 const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev
-
 
 
 module.exports = (env = {}) =>{
@@ -57,13 +56,18 @@ module.exports = (env = {}) =>{
     },
     module: {
       rules: [
-          { 
+          {
             enforce: 'pre', // Replaces preLoaders from webpack v1
             test: /\.jsx?$/i, 
+            include: path.resolve(__dirname, 'src'),
             exclude: /node_modules/,
-            use: [
-              'eslint-loader'
-            ]
+            use: {
+              loader: 'eslint-loader',
+              options: {
+                fix: true,
+                cache: true
+              }
+            }
           },
           { 
             test: /\.jsx?$/i, 
@@ -95,7 +99,11 @@ module.exports = (env = {}) =>{
       compress: true,           // Enable gzip compression for everything served
       stats: 'minimal',         // Only output when errors or new compilation happen
       open: true,               // The dev server will open the browser when ran
-      hot: true                 // Enable webpack's Hot Module Replacement feature
+      hot: true,                // Enable webpack's Hot Module Replacement feature
+      overlay: {                // WDS overlay for capturing warnings and errors
+        errors: true,
+        warnings: true
+      }
     },
 
     plugins: [
