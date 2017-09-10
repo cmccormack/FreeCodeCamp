@@ -1,9 +1,9 @@
+/*eslint no-console: 'off'*/
+
 import React from 'react'
 import 'font-awesome/css/font-awesome.css'
-// import {Navbar, Nav, MenuItem, NavItem, NavDropdown} from 'react-bootstrap'
 
 // Replaced NavItem from modules due to bug in NavItem
-// import { Navbar, Nav, MenuItem, NavDropdown } from 'react-bootstrap'
 import Navbar from 'react-bootstrap/lib/NavBar'
 import Nav from 'react-bootstrap/lib/Nav'
 import MenuItem from 'react-bootstrap/lib/MenuItem'
@@ -14,7 +14,16 @@ import NavItem from '../NavItem'
 
 function Header(props) {
 
-  let {url, icon, brand} = props
+  let {brand, navItems, dropdown} = props
+
+  let eventKeys = {
+    navCollapse: {
+      navItemsCount: 0,
+      navDropdown: {
+        menuItemsCount: 0
+      }
+    }
+  }
 
   return (
     <Navbar
@@ -23,47 +32,62 @@ function Header(props) {
     >
       <Navbar.Header>
         <Navbar.Brand>
-          <a href={url}>
+          <a href={brand.url}>
             <i
-                className={icon.class}
+                className={brand.icon.class}
                 style={{
                   marginRight: '5px',
-                  lineHeight: icon.height
+                  lineHeight: brand.icon.height
                 }}
             />
-            <span>{brand}</span>
+            <span>{brand.title}</span>
           </a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
         <Nav pullRight>
-          <NavItem
-              eventKey={1}
-              href='/'
-          >
-            {'Portfolio'}
-          </NavItem>
-          <NavItem
-              eventKey={2}
-              href='/#contact'
-          >
-            {'Contact'}
-          </NavItem>
+          {navItems.map(item=>{
+            return(
+              <NavItem
+                  eventKey={++eventKeys.navCollapse.navItemsCount}
+                  href={item.url}
+                  key={item.name}
+              >
+                {item.name}
+              </NavItem>
+            )
+          })}
           <NavDropdown
-              eventKey={3}
-              id='nav-dropdown-projects'
-              title='Projects'
+              eventKey={++eventKeys.navCollapse.navItemsCount}
+              id={dropdown.id}
+              title={dropdown.title}
           >
-            <MenuItem eventKey={3.1}>{'Action'}</MenuItem>
-            <MenuItem eventKey={3.2}>{'Another action'}</MenuItem>
-            <MenuItem eventKey={3.3}>{'Something else here'}</MenuItem>
+            {
+              dropdown.menuItems.map((item)=>buildMenuItem(item,eventKeys))
+            }
             <MenuItem divider />
-            <MenuItem eventKey={3.3}>{'Seperated Link'}</MenuItem>
+            {
+              dropdown.footer.map((item)=>buildMenuItem(item,eventKeys))
+            }
           </NavDropdown>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
+  )
+}
+
+function buildMenuItem(item, eventKeys){
+  let dropdown = eventKeys.navCollapse.navDropdown
+  let eventKey = +`${dropdown.self}.${++dropdown.menuItemsCount}`
+  return (
+    <MenuItem 
+        eventKey={eventKey}
+        href={item.url}
+        key={item.name}
+    >
+      {item.name}
+    </MenuItem>
   )
 }
 
