@@ -9,7 +9,7 @@ import CanvasBody from './components/CanvasBody'
 import { select, event } from 'd3-selection'
 import { geoPath, geoTransverseMercator } from 'd3-geo'
 import { zoom } from 'd3-zoom'
-import { scaleQuantile } from 'd3-scale'
+import { scaleThreshold } from 'd3-scale'
 
 import * as topojson from 'topojson-client'
 
@@ -55,7 +55,16 @@ class App extends React.Component {
       header: {
         brand: 'D3 Meteorite Map Data',
         icon: {class:'fa fa-lg fa-fw fa fa-bar-chart', height: '0.7'},
-        url:'https://mackville.net'
+        url:'https://mackville.net',
+        dropdown: {
+          title: 'Other D3 Projects',
+          links: [
+            {name: 'Bar Chart', url: '../gdpbarchart'},
+            {name: 'Scatterplot', url: '../scatterplot'},
+            {name: 'Heatmap', url: '../heatmap'},
+            {name: 'Force Directed Graph', url: '../forcedirected'},
+          ]
+        }
       },
       title: {
         align: 'center',
@@ -128,9 +137,11 @@ function buildWorldMap(topology, canvas){
   
   const geojson = topojson.feature(topology, topology.objects.countries)
 
-  
+  // Used Fibonnacci to better distinguish sizes of impacts
+  let scaleMassSizes = scaleThreshold()
+    .domain([0, 1000, 2000, 5000, 10000, 100000, 1000000, 10000000, 20000000])
+    .range( [1,    1,    2,    3,     5,      8,       13,       21,      34])
 
-  
   // Convert country code data into an object for fast lookups
   countryData.then((countryArr)=>
     countryArr.reduce((obj,item)=>{
@@ -154,21 +165,16 @@ function buildWorldMap(topology, canvas){
 
   function drawStrikeData(data){
 
-    let masses = data.features.map(d=>d.properties.mass)
-    let scaleMasses = scaleQuantile()
-      .domain(masses)
-      .range([1,2,3,4,5,6,7,8,9,10])
-
-
-    console.log(scaleMasses())
+    let masses = data.features.map(d=>d.properties.mass===null ? null : Number(d.properties.mass))
+    console.log(masses)
 
     g.selectAll('circle')
     .data(data.features).enter()
       .append('circle')
         .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
         .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])        
-        .attr('r', (d)=>d.properties.mass > 1 ? Math.pow(d.properties.mass, 1/10) : .5)
-        .style('fill', ()=>`hsla(${Math.floor(Math.random()*360)}, 50%, 40%, 0.6)`)
+        .attr('r', (d)=>scaleMassSizes(d.properties.mass)/2)
+        .style('fill', ()=>`hsla(${Math.floor(Math.random()*360)}, 80%, 40%, .6)`)
         .style('stroke', '#EEE')
         .style('stroke-width', '.1')
         .on('mouseover', showStrikeTooltip)
@@ -212,6 +218,6 @@ function buildWorldMap(topology, canvas){
     )
   }
 }
-  
+
 
 export default App
