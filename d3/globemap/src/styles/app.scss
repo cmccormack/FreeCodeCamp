@@ -19,36 +19,6 @@ body {
 }
 
 
-// Remove below for Codepen
-header {
-  max-width: 1024px;
-  margin: auto;
-  .navbar-brand i {
-    margin-right: 8px;
-  }
-}
-
-footer {
-  max-width: 1024px;
-  height: 56px;
-  margin: auto;
-  display: inline-block;
-  position: fixed !important;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  padding: .5rem 1.5rem;
-  z-index: 50;
-}
-// Remove Above for Codepen
-
-
-.title {
-  margin: 120px 0 80px;
-  width: 100%;
-  color: #333;
-}
-
 main {
   min-width: 320px;
   width: 1024px;
