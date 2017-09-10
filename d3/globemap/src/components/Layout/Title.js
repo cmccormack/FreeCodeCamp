@@ -1,4 +1,5 @@
 import React from 'react'
+import './Title.scss'
 
 function Title(props){
   const style = {
