@@ -162,7 +162,7 @@ function buildWorldMap(canvas){
       .on('mouseover', (d)=> {showPathTooltip(countryObj[d.id].name)})
       .on('mouseout', hideTooltip)
 
-      // Sort Strike Data descending then draw
+  // Sort Strike Data descending then draw
   strikeData.features.sort((a,b)=>b.properties.mass - a.properties.mass)
   g.selectAll('circle')
   .data(strikeData.features).enter()
