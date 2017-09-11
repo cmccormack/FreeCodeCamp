@@ -15,7 +15,7 @@ const isProd = process.env.NODE_ENV
 const useSourceMap = false
 const prodSourceMap = 'cheap-module-source-map'
 const devSourceMap = 'eval-cheap-module-source-map'
-const sourceMapConfig = useSourceMap ? '' : isProd ? prodSourceMap : devSourceMap
+const sourceMapConfig = isProd ? prodSourceMap : devSourceMap
 
 // ExtractTextPlugin does not work with HotModuleReplacement
 const cssDev = ['style-loader','css-loader', 'sass-loader']
@@ -45,7 +45,7 @@ const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoint
 module.exports = (env = {}) =>{
   console.log(env)
   return {
-    devtool: sourceMapConfig,
+    devtool: useSourceMap && sourceMapConfig,
     entry: {
       app: './src/index.js',
       bootstrap: bootstrapConfig
@@ -56,47 +56,54 @@ module.exports = (env = {}) =>{
     },
     module: {
       rules: [
-          {
-            enforce: 'pre', // Replaces preLoaders from webpack v1
-            test: /\.jsx?$/i, 
-            include: path.resolve(__dirname, 'src'),
-            exclude: /node_modules/,
-            use: {
-              loader: 'eslint-loader',
-              options: {
-                fix: true,
-                cache: true
-              }
+        {
+          enforce: 'pre', // Replaces preLoaders from webpack v1
+          test: /\.jsx?$/i, 
+          include: path.resolve(__dirname, 'src'),
+          exclude: /node_modules/,
+          use: {
+            loader: 'eslint-loader',
+            options: {
+              fix: true,
+              cache: true
             }
-          },
-          { 
-            test: /\.jsx?$/i, 
-            exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-              options: {
-                presets: ['es2015', 'react']
-              }
+          }
+        },
+        { 
+          test: /\.jsx?$/i, 
+          include: path.resolve(__dirname, 'src'),
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: ['es2015', 'react', 'env']
             }
-          },
-          {
-            test: /\.s?css$/,
-            use: isProd ? cssProd : cssDev
-          },
-          {
-            test: /\.(png|ico|jpe?g|gif)$/i,
-            use: [
-              'file-loader?name=images/[name].[ext]',
-              'image-webpack-loader'
-            ]
-          },
-          { test: /\.(woff2?|svg)$/, use: 'url-loader?limit=10000&name=fonts/[name].[ext]' },
-          { test: /\.(ttf|eot)$/, use: 'file-loader?name=fonts/[name].[ext]' }
+          }
+        },
+        {
+          test: /\.s?css$/,
+          use: isProd ? cssProd : cssDev
+        },
+        {
+          test: /\.(png|ico|jpe?g|gif)$/i,
+          use: [
+            'file-loader?name=images/[name].[ext]',
+            'image-webpack-loader'
+          ]
+        },
+        { 
+          test: /\.(woff2?|svg)$/,
+          use: 'url-loader?limit=10000&name=fonts/[name].[ext]' 
+        },
+        { 
+          test: /\.(ttf|eot)$/,
+          use: 'file-loader?name=fonts/[name].[ext]' 
+        }
       ]
     },
     devServer: {                // Settings for webpack-dev-server
       contentBase: './dist',    // Tells the server where to serve content from
-      compress: true,           // Enable gzip compression for everything served
+      compress: false,           // Enable gzip compression for everything served
       stats: 'minimal',         // Only output when errors or new compilation happen
       open: true,               // The dev server will open the browser when ran
       hot: true,                // Enable webpack's Hot Module Replacement feature
@@ -133,18 +140,12 @@ module.exports = (env = {}) =>{
         threshold: 10240,
         minRatio: 0.8
       }),
-      new webpack.optimize.UglifyJsPlugin(
-        {
-        compress: {
-          warnings: false,
-          reduce_vars: false,
-        },
-        output: {
-          comments: false,
-        },
-        sourceMap: true,
-      }
-    ),
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.UglifyJsPlugin(),
     ]
   }
 }
