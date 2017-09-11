@@ -14,7 +14,6 @@
     "babel-preset-react": "^6.24.1",
     "bootstrap-loader": "^2.2.0",
     "compression-webpack-plugin": "^1.0.0",
-    "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "eslint": "^4.4.1",
     "eslint-loader": "^1.9.0",
@@ -41,7 +40,7 @@
   },
   "scripts": {
     "dev": "webpack -d --watch",
-    "build": "npm run clean && cross-env NODE_ENV=production webpack --env.production -p --colors --progress",
+    "build": "npm run clean && webpack --env.production -p --colors --progress",
     "start": "webpack-dev-server --env.development --colors --progress",
     "clean": "rimraf ./dist/*",
     "eslint-check": "eslint --print-config .eslintrc.json | eslint-config-prettier-check"
@@ -50,7 +49,6 @@
     "bootstrap-sass": "^3.3.7",
     "bootswatch": "^3.3.7",
     "bootswatch-sass": "^3.2.0",
-    "cross-env": "^5.0.5",
     "d3": "^4.10.0",
     "d3-array": "^1.2.0",
     "d3-drag": "^1.1.1",
