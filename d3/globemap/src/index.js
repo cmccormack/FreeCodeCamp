@@ -14,6 +14,5 @@ window.onload = function(){
 
 var globals = {
   url: {
-    worldMap: 'https://mackville.net/d3/globemap/world-110m2.json'
   }
 }
