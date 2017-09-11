@@ -10,45 +10,27 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const bootstrapEntryPoints = require('./webpack.bootstrap.config')
 const CompressionPlugin = require('compression-webpack-plugin')
 
-const isProd = process.env.NODE_ENV
-
-const useSourceMap = false
+const useSourceMap = true
 const prodSourceMap = 'cheap-module-source-map'
 const devSourceMap = 'eval-cheap-module-source-map'
-const sourceMapConfig = isProd ? prodSourceMap : devSourceMap
 
 // ExtractTextPlugin does not work with HotModuleReplacement
 const cssDev = ['style-loader','css-loader', 'sass-loader']
 const cssProd = ExtractTextPlugin.extract({
   fallback: 'style-loader',
-  use: [
-    {
-      loader: 'css-loader',
-      options: {
-        camelCase: true,
-        modules: false
-      }
-    }, 
-    {
-      loader: 'sass-loader',
-      options: {
-        sourceMap: true
-      }
-    }
-  ],
+  use: ['css-loader', 'sass-loader'],
   publicPath: '../'
 })
 
-const bootstrapConfig = isProd ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev
-
-
 module.exports = (env = {}) =>{
-  console.log(env)
+  console.log('env: ' + JSON.stringify(env) )
+  console.log('Development: ' + env.development)
+  console.log('Production: ' + env.production)
+
   return {
-    devtool: useSourceMap && sourceMapConfig,
     entry: {
       app: './src/index.js',
-      bootstrap: bootstrapConfig
+      bootstrap: env.production ? bootstrapEntryPoints.prod : bootstrapEntryPoints.dev
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
@@ -69,7 +51,7 @@ module.exports = (env = {}) =>{
             }
           }
         },
-        { 
+        {
           test: /\.jsx?$/i, 
           include: path.resolve(__dirname, 'src'),
           exclude: /node_modules/,
@@ -82,7 +64,7 @@ module.exports = (env = {}) =>{
         },
         {
           test: /\.s?css$/,
-          use: isProd ? cssProd : cssDev
+          use: env.production ? cssProd : cssDev
         },
         {
           test: /\.(png|ico|jpe?g|gif)$/i,
@@ -101,9 +83,10 @@ module.exports = (env = {}) =>{
         }
       ]
     },
+    devtool: useSourceMap && env.production ? prodSourceMap : devSourceMap,
     devServer: {                // Settings for webpack-dev-server
       contentBase: './dist',    // Tells the server where to serve content from
-      compress: false,           // Enable gzip compression for everything served
+      compress: true,           // Enable gzip compression for everything served
       stats: 'minimal',         // Only output when errors or new compilation happen
       open: true,               // The dev server will open the browser when ran
       hot: true,                // Enable webpack's Hot Module Replacement feature
@@ -126,7 +109,7 @@ module.exports = (env = {}) =>{
 
       new ExtractTextPlugin({
         filename: './styles/[name].css',
-        disable: !isProd,
+        disable: !env.production,
         allChunks: true
       }),
       // new BundleAnalyzerPlugin(),
@@ -145,7 +128,8 @@ module.exports = (env = {}) =>{
           NODE_ENV: JSON.stringify('production')
         }
       }),
-      new webpack.optimize.UglifyJsPlugin(),
+      // Disabled for now, slows down dev build
+      // new webpack.optimize.UglifyJsPlugin()
     ]
   }
 }
