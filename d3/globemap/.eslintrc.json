@@ -4,7 +4,7 @@
         "es6": true,
         "commonjs": true
     },
-    "extends": ["prettier", "eslint:recommended", "plugin:react/all"],
+    "extends": ["eslint:recommended", "plugin:react/all"],
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
@@ -13,7 +13,6 @@
         "sourceType": "module"
     },
     "plugins": [
-        "prettier",
         "react"
     ],
     "rules": {
