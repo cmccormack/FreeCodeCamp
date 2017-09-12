@@ -18,11 +18,10 @@ body {
 }
 
 
-main {
-  min-width: 320px;
-  width: 1024px;
+.main {
   margin: auto;
   position: relative;
+  max-width: 1024px;
 }
  
 .canvas {
