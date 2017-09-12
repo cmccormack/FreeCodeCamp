@@ -22,8 +22,6 @@ class App extends React.Component {
     super(props)
     this.state = {
       canvas: {
-        width: 1024,
-        height: 800
       },
       title: 'Meteorite Landings Across the Globe using D3'
     }
@@ -35,7 +33,7 @@ class App extends React.Component {
   componentDidMount(){
     console.log('In componentDidMount')
 
-    buildWorldMap(this.state.canvas)
+    buildWorldMap()
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -94,7 +92,7 @@ class App extends React.Component {
     }
 
     return (
-      <div>
+      <div className={'main'}>
         <Header {...options.header} />
         <Title {...options.title}>{this.state.title}</Title>
         <CanvasBody {...options.canvas} />
@@ -105,10 +103,15 @@ class App extends React.Component {
 }
 
 
-function buildWorldMap(canvas){
+
+function buildWorldMap(){
   console.log('in buildWorldMap function')
 
-  const {width, height} = canvas
+  let width = parseInt(select('.main').style('width'))
+  let mapRatio = .75
+  let strikeScale = 3072 // Arbitrary number for scaling impact strikes
+  let height = width * mapRatio
+
   const tooltipdiv = document.getElementById('tt')
 
   // ================= Zoom functionality =================
@@ -121,8 +124,8 @@ function buildWorldMap(canvas){
 
   // Setup scale and position of World Map Projection
   const projection = geoTransverseMercator()
-    .center([0,68])
-    .scale(125)
+    .translate([width/2,height/2])
+    .scale(height / 6.4) // Arbitrary value, looks nice
 
   // Create new geographic path generator using current projection
   const path = geoPath().projection(projection)
@@ -154,7 +157,7 @@ function buildWorldMap(canvas){
 
 
   // Draw Path Data
-  g.selectAll('path')
+  let paths = g.selectAll('path')
   .data(geojson.features).enter()
     .append('path')
       .attr('id', (d)=>String(d.id))
@@ -164,12 +167,12 @@ function buildWorldMap(canvas){
 
   // Sort Strike Data descending then draw
   strikeData.features.sort((a,b)=>b.properties.mass - a.properties.mass)
-  g.selectAll('circle')
+  let circles = g.selectAll('circle')
   .data(strikeData.features).enter()
     .append('circle')
       .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
       .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])        
-      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/3)
+      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(3072/width))
       .style('fill', ()=>`hsl(${Math.floor(Math.random()*360)}, 70%, 50%)`)
       .style('fill-opacity', '.6')
       .style('stroke', '#EEE')
@@ -223,6 +226,33 @@ function buildWorldMap(canvas){
   // Helper function for hiding tooltip
   function hideTooltip(){
     ReactDOM.render(<Tooltip />, tooltipdiv)
+  }
+
+  select(window).on('resize', resize)
+  
+  function resize(){
+
+    // Adjust things when the window size changes
+    width = parseInt(select('.main').style('width'))
+    height = width * mapRatio
+  
+    // Update projection
+    projection
+        .translate([width / 2, height / 2])
+        .scale(height/6.4)
+  
+    // Resize the map container
+    svg
+        .style('width', width + 'px')
+        .style('height', height + 'px')
+  
+    // Resize the map
+    paths.attr('d', path)
+    
+    circles
+      .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
+      .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])
+      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(3072/width))
   }
 }
 
