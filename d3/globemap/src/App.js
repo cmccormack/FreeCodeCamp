@@ -172,17 +172,21 @@ function buildWorldMap(){
     .append('circle')
       .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
       .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])        
-      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(3072/width))
-      .style('fill', ()=>`hsl(${Math.floor(Math.random()*360)}, 70%, 50%)`)
+      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(strikeScale/width))
+      .style('fill', ()=>`hsl(${Math.floor(Math.random()*360)}, 40%, 50%)`)
       .style('fill-opacity', '.6')
-      .style('stroke', '#EEE')
+      .style('stroke', '#555')
       .style('stroke-width', '.1')
       .on('mouseover', function(d){
-        select(this).style('fill-opacity', '.9')
+        select(this)
+          .style('fill-opacity', '.9')
+          .style('stroke-width', '.8')
         showStrikeTooltip(d)}
       )
       .on('mouseout', function(){
-        select(this).style('fill-opacity', '.6')
+        select(this)
+          .style('fill-opacity', '.6')
+          .style('stroke-width', '.1')
         hideTooltip()}
       )
 
@@ -252,7 +256,7 @@ function buildWorldMap(){
     circles
       .attr('cx', (d)=>projection([d.properties.reclong, d.properties.reclat])[0])
       .attr('cy', (d)=>projection([d.properties.reclong, d.properties.reclat])[1])
-      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(3072/width))
+      .attr('r', (d)=>scaleMassSizes(d.properties.mass)/(strikeScale/width))
   }
 }
 
