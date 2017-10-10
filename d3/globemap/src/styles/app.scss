@@ -8,6 +8,7 @@ $body-bg-grad: linear-gradient($body-bg, $body-bg);
 
 
 body {
+  font-family: 'Roboto', sans-serif;
   background-color: $body-bg;
   background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
   -webkit-background-size: cover;
@@ -18,11 +19,10 @@ body {
 }
 
 
-main {
-  min-width: 320px;
-  width: 1024px;
+.main {
   margin: auto;
   position: relative;
+  max-width: 1024px;
 }
  
 .canvas {

@@ -92,7 +92,7 @@ module.exports = (env = {}) =>{
       hot: true,                // Enable webpack's Hot Module Replacement feature
       overlay: {                // WDS overlay for capturing warnings and errors
         errors: true,
-        warnings: true
+        warnings: false
       }
     },
 
