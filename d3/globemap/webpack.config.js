@@ -85,7 +85,7 @@ module.exports = (env = {}) =>{
     },
     devtool: useSourceMap && env.production ? prodSourceMap : devSourceMap,
     devServer: {                // Settings for webpack-dev-server
-      contentBase: './dist',    // Tells the server where to serve content from
+      contentBase: './src',    // Tells the server where to serve content from
       compress: true,           // Enable gzip compression for everything served
       stats: 'minimal',         // Only output when errors or new compilation happen
       open: true,               // The dev server will open the browser when ran
