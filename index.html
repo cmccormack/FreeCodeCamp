@@ -205,26 +205,29 @@
             <div class="well">
               
               <!-- Contact Me Form -->
-              <form id="contact-form" action="#" method="post">
+              <form name="contact-form" 
+                    id="contact-form"
+                    action="send_message_email.php"
+                    method="post">
                 <!-- Form Name Text Input -->
                 <div class="field form-group">
                   <label for="contact_name"><h5>Name</h5></label><br/>
                   <input type="text" class="form-control" id="contact_name" 
-                         placeholder="Name" id="name" 
+                         placeholder="Name" id="name"  name="name"
                          required data-validation-required-message="Please enter your name." />
                 </div>
                 <!-- Form Email Text Input -->
                 <div class="field form-group">
                   <label for="contact_email"><h5>Email Address</h5></label><br/>
                   <input type="text" class="form-control" id="contact_email"
-                         placeholder="Email Address" 
+                         placeholder="Email Address" name="email"
                          required data-validation-required-message="Please enter your email address." />
                 </div>
                 <!-- Form Message Text Area -->
                 <div class="field form-group">
                   <label for="contact_message"><h5>Message</h5></label><br/>
                   <textarea class="form-control" id="contact_message"
-                            placeholder="Message" rows=3
+                            placeholder="Message" rows=3 name="message"
                             required data-validation-required-message="Please enter a message."></textarea>
                 </div>
                 <!-- Form Submit Button -->

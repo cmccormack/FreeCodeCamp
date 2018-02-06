@@ -56,23 +56,28 @@ class App extends React.Component {
 
   render() {
 
+    const { title, data, description } = this.state
     return (
       <div>
-        <TitleBar title={this.state.title} />
+        <TitleBar title={title} />
         <CanvasBody 
-            data={this.state.data}
-            desc={this.state.description}
+            data={data}
+            desc={description}
         />
       </div>
     )
   }
 }
 
-function TitleBar(props){
-  return <div className='title display-4 text-center text-shadow unselectable'>{props.title}</div>
+function TitleBar({title}){
+  return (
+    <div className='title display-4 text-center text-shadow unselectable'>
+      {title}
+    </div>
+  )
 }
 
-function CanvasBody(props){
+function CanvasBody({data}){
   console.log('In CanvasBody Componenet')
 
   var canvas = {
@@ -87,16 +92,16 @@ function CanvasBody(props){
 
   return (
     <svg {...canvas}>
-      {props.data && 
+      {data && 
       <Chart 
           canvas={canvas} 
-          data={props.data}
+          data={data}
       />}
     </svg>
   )
 }
 
-function Chart(props) {
+function Chart({data, canvas}) {
   console.log('In Chart Component')
   var chart = {
       marginTop: 40,
@@ -124,7 +129,6 @@ function Chart(props) {
         }
       ]
     },
-    data = props.data,
     maxTime = max(data, (d)=>d.Seconds),
     minTime = min(data, (d)=>d.Seconds)
 
@@ -132,10 +136,10 @@ function Chart(props) {
   chart.xScale.ticks(timeSecond.every(30))
   chart.yScale = scaleLinear().domain(extent(data, (d)=>d.Place))
 
-  chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
-  chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
+  chart.width = canvas.width - chart.marginLeft - chart.marginRight
+  chart.height = canvas.height - chart.marginTop - chart.marginBottom
   chart.x = chart.marginLeft
-  chart.y = props.canvas.height - chart.marginBottom
+  chart.y = canvas.height - chart.marginBottom
 
   chart.xScale.range([chart.xAxis.marginLeft + chart.x, chart.width + chart.x - chart.xAxis.marginRight])
   chart.yScale.range([chart.marginTop, chart.height+chart.marginTop])
@@ -164,7 +168,7 @@ function Chart(props) {
       {data.map((v)=>{
         return (
           <Circle
-              className={'circle'}
+              className='circle'
               color={v.Doping ? chart.key[0].color : chart.key[1].color}
               cx={chart.xScale(new Date((v.Seconds - minTime)*1000))}
               cy={chart.yScale(v.Place)}
@@ -178,7 +182,7 @@ function Chart(props) {
         return (
           <g key={v.name}>
             <circle
-                className={'circle'}
+                className='circle'
                 cx={v.cx}
                 cy={v.cy}
                 fill={`hsl(${v.color}, 80%, 40%)`}
@@ -195,14 +199,14 @@ function Chart(props) {
         )
       })}
       <text 
-          transform={'translate(-500, 350), rotate(-90)'}
+          transform='translate(-500, 350), rotate(-90)'
           x={chart.marginLeft}
           y={chart.y}
       >
         {'Ranking'}
       </text>
       <text 
-          transform={'translate(230, 50)'}
+          transform='translate(230, 50)'
           x={chart.marginLeft}
           y={chart.y}
       >
@@ -218,31 +222,33 @@ class Circle extends React.Component {
   constructor(props){
     super(props)
 
-    
-    this.highlightColor = `hsl(${this.props.color}, 80%, 60%)`
-    this.fillColor = `hsl(${this.props.color}, 80%, 40%)`
+    const { color, datum } = this.props
+
+    this.highlightColor = `hsl(${color}, 80%, 60%)`
+    this.fillColor = `hsl(${color}, 80%, 40%)`
     const {cx, cy, r, className} = props
     this.attr = {cx, cy, r, className}
 
     this.state = {
+      datum: datum,
       fill: this.fillColor,
       fontSize: 10,
       tag: {
         marginLeft: 10,
         marginTop: 4
       }
-
     }
     this.handleMouseOver = this.handleMouseOver.bind(this)
     this.handleMouseOut = this.handleMouseOut.bind(this)
   }
 
   shouldComponentUpdate(nextProps, nextState){
-    return this.props === nextProps && this.state===nextState ? false : true
+    return this.props === nextProps && this.state === nextState ? false : true
   }
 
   handleMouseOver(){
-    let props = {showTooltip: true, datum:this.props.datum}
+    const { datum } = this.state
+    let props = {showTooltip: true, datum: datum}
     ReactDOM.render(<Tooltip {...props} />, document.getElementById('tooltip'))
     this.setState({fill: this.highlightColor})
   }
@@ -256,22 +262,26 @@ class Circle extends React.Component {
   }
 
   render (){
+
+    const { fill, fontSize, tag, datum } = this.state
+    const { cx, cy } = this.props
+
     return (
       <g>
         <circle 
             {...this.attr}
-            fill={this.state.fill}
+            fill={fill}
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
         />
         <text
-            fontSize={this.state.fontSize}
+            fontSize={fontSize}
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
-            x={this.props.cx + this.state.tag.marginLeft}
-            y={this.props.cy + this.state.tag.marginTop}
+            x={cx + tag.marginLeft}
+            y={cy + tag.marginTop}
         >
-          {this.props.datum.Name}
+          {datum.Name}
         </text>
       </g>
     )
@@ -279,7 +289,7 @@ class Circle extends React.Component {
 }
 
 
-function Tooltip(props){
+function Tooltip({datum, showTooltip}){
 
   return (
     <div 
@@ -287,25 +297,27 @@ function Tooltip(props){
         style={{
           left: 150,
           top: 150,
-          display: props.showTooltip ? 'block' : 'none',
+          display: showTooltip ? 'block' : 'none',
           fontSize: '12px'
         }}
     >
       <div>
         <a 
-            href={props.datum.URL}
+            href={datum.URL}
             style={{fontWeight: 600}}
-            target={'_blank'}
+            target='_blank'
         >
-          {props.datum.Name}
+          { datum.Name }
         </a>
         {' - '}
-        {props.datum.Nationality}
+        {datum.Nationality}
       </div>
       <div>
-        {`${props.datum.Year}, Place: ${props.datum.Place}, Time: ${props.datum.Time}`}
+        {`${datum.Year}, Place: ${datum.Place}, Time: ${datum.Time}`}
       </div>
-      <div style={{marginTop: '5px'}}>{props.datum.Doping}</div>
+      <div style={{marginTop: '5px'}}>
+        {datum.Doping}
+      </div>
     </div>
   )
 }
