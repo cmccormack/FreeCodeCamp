@@ -13,6 +13,7 @@ main,
 footer {
   max-width: 1024px;
   margin: auto;
+  width: 100%;
 }
 
 main {
@@ -106,7 +107,7 @@ label {
 .slider {
   width: 100%;
   display:flex;
-  justify-content:center;.
+  justify-content:center;
   align-items:center;
 }
 
@@ -128,9 +129,11 @@ label {
 #buttons {
   margin-top: 20px;
   margin-bottom: 20px;
+  height: 40px;
   width: 100%;
   display:flex;
   justify-content:center;
+  
 }
 
 /* Start and Stop button styles */
@@ -138,6 +141,7 @@ label {
   width: 120px;
   border-width: 2px;
   border-radius: 10px;
+  cursor:pointer;
 }
 
 .control:hover {
@@ -150,6 +154,7 @@ label {
   padding: 0;
   z-index: 5;
   border-width: 2px;
+  cursor:pointer;
 }
 
 

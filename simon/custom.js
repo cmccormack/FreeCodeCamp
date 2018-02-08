@@ -19,14 +19,16 @@ $('document').ready(function(){
   resetBoard();
 
   // Bind functions to events after document has loaded
-  $('#volume-btn').click(function(){ toggleAudio(); });
-  $('.cell-btn').click( (e) => cellClicked( "#" + $(e.currentTarget).attr('id')) );
-  $('#play').click( () => togglePlay() );
-  $('#strict').click( () => toggleStrictMode() );
-});
+  $('#volume-btn').click(function(){ toggleAudio(); })
+  $('.cell-btn').click( function(e) {
+    cellClicked( "#" + $(e.currentTarget).attr('id')) 
+  })
+  $('#play').click( function() { togglePlay() } )
+  $('#strict').click( function() { toggleStrictMode() })
+})
 
 
-var togglePlay = () => {
+var togglePlay = function() {
 
   // Stop game if currently playing
   if (isPlaying){
@@ -37,7 +39,7 @@ var togglePlay = () => {
 };
 
 
-var startGame = () => {
+var startGame = function() {
   isPlaying = true;
   $("#strict").addClass("disabled");
   displayStatus("");
@@ -50,7 +52,7 @@ var startGame = () => {
 };
 
 
-var stopGame = () => {
+var stopGame = function() {
   $('#play').attr('title', 'Play!');
   $('#play i').addClass('fa-play');
   $('#play i').removeClass('fa-stop');
@@ -59,14 +61,14 @@ var stopGame = () => {
 };
 
 
-var computerTurn = () => {
+function computerTurn () {
 
   moves.push(getRandColor());
   iterateMoves();
 };
 
 
-var iterateMoves = () => {
+function iterateMoves() {
 
   lockBoard();
   displayCounter(moves.length);
@@ -75,7 +77,7 @@ var iterateMoves = () => {
   isPlayerTurn = false;
 
   var i = 0;
-  moveIntervalId = setInterval( () => {
+  moveIntervalId = setInterval( function() {
     if (i === moves.length) {
       resetDisplay();
       clearInterval(moveIntervalId);
@@ -89,11 +91,11 @@ var iterateMoves = () => {
 };
 
 
-var displayMove = (move, sound) => {
+function displayMove(move, sound) {
   
   resetDisplay();
 
-  setTimeout( () => {
+  setTimeout( function() {
     if (sound) { playSound(move + '-audio'); }
     color = $(move);
     color.css('opacity', '1');
@@ -101,20 +103,20 @@ var displayMove = (move, sound) => {
 };
 
 
-var playerTurn = () => {
+function playerTurn() {
 
   unlockBoard();
 
   // Reset player turn if timeout
-  playerIntervalId = setTimeout( () => {
+  playerIntervalId = setTimeout( function() {
     playSound("#buzzer-audio");
     displayCounter("!!");
-    setTimeout( () => iterateMoves(), 1500);
+    setTimeout( function() { iterateMoves() }, 1500);
   }, timeoutSpeed);
 };
 
 
-var cellClicked = cellid => {
+function cellClicked(cellid) {
 
   clearInterval(playerIntervalId);
   $(cellid).blur();
@@ -131,9 +133,9 @@ var cellClicked = cellid => {
     if (isStrict){
       togglePlay();
       resetBoard();
-      setTimeout( () => { togglePlay(); }, 1000);
+      setTimeout( function() { togglePlay(); }, 1000);
     } 
-    else { setTimeout( () => { iterateMoves(); }, 1000); }
+    else { setTimeout( function() { iterateMoves(); }, 1000); }
     return;
   }
 
@@ -155,7 +157,7 @@ var cellClicked = cellid => {
 };
 
 
-var playerWin = () => {
+function playerWin() {
 
   togglePlay();
   lockBoard();
@@ -166,7 +168,7 @@ var playerWin = () => {
   $("#strict").addClass("disabled");
 
   var i = 0,
-  winIntervalId = setInterval( () => {
+  winIntervalId = setInterval( function() {
     if (i === 18){
       resetBoard();
       clearInterval(winIntervalId);
@@ -182,15 +184,37 @@ var playerWin = () => {
 
 
 // Utility Functions
-var getRandColor = () => btnArray[Math.floor(Math.random() * btnArray.length)];
-var playSound = id => { if(audio) { $(id).get(0).play(); }};
-var displayCounter = count => $("#counter").val(count<=9?'0'+count:count);
-var displayStatus = status => $("#status").text(status);
-var resetDisplay = () => { $('.cell-btn', '#display').removeAttr('style'); };
-var lockBoard = () => $('#display').addClass('disabled');
-var unlockBoard = () => $('#display').removeClass('disabled');
+var getRandColor = function() {
+  return btnArray[Math.floor(Math.random() * btnArray.length)];
+}
 
-var resetBoard = () => {
+var playSound = function(id) {
+  if(audio) {
+    $(id).get(0).play()
+  }
+}
+
+var displayCounter = function(count) {
+  $("#counter").val(count<=9?'0'+count:count)
+}
+
+var displayStatus = function(status) {
+  $("#status").text(status)
+}
+
+var resetDisplay = function() {
+  $('.cell-btn', '#display').removeAttr('style')
+}
+
+var lockBoard = function() {
+  $('#display').addClass('disabled')
+}
+
+var unlockBoard = function(){
+  $('#display').removeClass('disabled')
+}
+
+var resetBoard = function() {
   $('#display').removeClass('disabled');
   $('#strict').removeClass('disabled');
   $("#play").removeClass("disabled");
@@ -202,17 +226,16 @@ var resetBoard = () => {
   isPlayerTurn = false;
   playerCnt = 0;
   moves = [];
-  
-  resetDisplay();
-};
 
-var toggleAudio = () => {
+  resetDisplay();
+}
+
+var toggleAudio = function() {
   if (audio) { audio = false; } else { audio = true; }
   $("#volume-btn i").toggleClass("fa-volume-up fa-volume-off");
-};
+}
 
-
-var toggleStrictMode = () => {
+var toggleStrictMode = function() {
   $('#strict-i').toggleClass('fa-chain-broken fa-chain');
   if (isStrict){
     isStrict = false;
