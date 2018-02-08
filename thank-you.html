@@ -11,6 +11,12 @@
   <!-- <link rel="stylesheet" type="text/css" href="portfolio.css"> -->
 
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <style>
+    #counter {
+      font-weight: 400;
+    }
+  </style>
 </head>
 
 <body>
@@ -19,8 +25,23 @@
       <div class='col-xs-12 text-center'>
         <h1>Thank you for contacting me!</h1>
         <h2>I will be in touch with you very soon.</h2>
+        <h4>You will be redirected to the homepage in <span id="counter">5</span> seconds...</h4>
       </div>
     </div>
   </div>
+
+  <script>
+    var count = 5 // seconds
+    var counter = document.getElementById("counter")
+    var interval = setInterval(function(){
+      count -= 1
+      if (count === -1) {
+        window.location.replace("index.html")
+        clearInterval(interval)
+      } else {
+        counter.textContent = count
+      }
+    }, 1000)
+  </script>
 </body>
 </html>
