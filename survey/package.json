@@ -1,0 +1,25 @@
+{
+  "name": "survey",
+  "version": "1.0.0",
+  "description": "Survey Form - FreeCodeCamp Responsive Web Design Project",
+  "main": "\"\"",
+  "scripts": {
+    "sass": "node-sass --output-style expanded --watch styles.scss styles.css",
+    "live": "live-server"
+  },
+  "keywords": [
+    "FCC",
+    "FreeCodeCamp",
+    "Survey",
+    "Form"
+  ],
+  "author": "Christopher McCormack https://mackville.net",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "live-server": "^1.2.0"
+  },
+  "dependencies": {
+    "node-sass": "^4.9.0"
+  }
+}
