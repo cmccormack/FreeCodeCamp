@@ -11,7 +11,17 @@ body {
   padding: 0;
 }
 
+body .home-link {
+  text-decoration: none;
+  color: inherit !important;
+}
+
+body .home-link:hover {
+  text-decoration: underline;
+}
+
 header {
+  flex: 0 0 auto;
   display: flex;
   flex-direction: row;
   background-color: #399;
@@ -39,8 +49,8 @@ main #title {
 main #form-card {
   padding: 1rem;
   max-width: 640px;
-  height: 800px;
   margin: auto;
+  margin-bottom: 60px;
   background-color: papayawhip;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14), 0 4px 1px -2px rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.2);
   display: flex;
@@ -65,21 +75,73 @@ main #form-card #survey-form {
 main #form-card #survey-form .form-row {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   padding: 10px;
-  width: 400px;
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+@media (max-width: 600px) {
+  main #form-card #survey-form .form-row {
+    display: inline-block;
+  }
 }
 
 main #form-card #survey-form .form-row .input-label {
-  width: 200px;
+  width: 50%;
   flex: 0 0 auto;
+  text-align: right;
+  margin-right: 20px;
+}
+
+@media (max-width: 600px) {
+  main #form-card #survey-form .form-row .input-label {
+    display: block;
+    text-align: left;
+    width: 100%;
+    margin-bottom: 5px;
+  }
 }
 
 main #form-card #survey-form .form-row .input {
-  flex: 1 0 auto;
+  width: 50%;
+  text-align: left;
+}
+
+@media (max-width: 600px) {
+  main #form-card #survey-form .form-row .input {
+    text-align: left;
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
+main #form-card #survey-form .buttons button {
+  border: unset;
+  border-radius: 2px;
+  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.4);
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 10px;
+  width: 100px;
+}
+
+main #form-card #survey-form .buttons button:active {
+  box-shadow: -1px 1px 0px rgba(0, 0, 0, 0.4);
+}
+
+main #form-card #survey-form .buttons button:focus {
+  outline: none;
+}
+
+main #form-card #survey-form #career-radios, main #form-card #survey-form #concepts-checkboxes {
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  list-style-type: none;
 }
 
 footer {
+  flex: 0 0 auto;
   background-color: #399;
   padding: 12px;
   color: #FFF;
@@ -94,7 +156,6 @@ footer {
   }
 }
 
-footer a {
-  text-decoration: none;
-  color: #FFF;
+.flex-row-center {
+  justify-content: center;
 }
