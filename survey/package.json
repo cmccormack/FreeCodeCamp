@@ -2,7 +2,7 @@
   "name": "survey",
   "version": "1.0.0",
   "description": "Survey Form - FreeCodeCamp Responsive Web Design Project",
-  "main": "\"\"",
+  "main": "",
   "scripts": {
     "sass": "node-sass --output-style expanded --watch styles.scss styles.css",
     "live": "live-server"
