@@ -13,26 +13,124 @@
   <body>
     <header>
       <span id="header-badge">Survey Form</span>
-      <span id="links">Other Links</span>
+      <span id="links"><a class="home-link" href="https://mackville.net/#portfolio">Portfolio</a></span>
     </header>
     
     <main>
       <h1 id="title">Survey Form</h1>
 
       <div id="form-card">
-        <p id="description">Let me know how I can improve Mackville.net!</p>
+        <p id="description">Favorite Web Development Concepts</p>
         
         <form id="survey-form">
 
           <div class="form-row">
-            <label class="input-label" for="name">* Enter your name:</label>
-            <input class="input" id="name" type="text" required />
+            <label class="input-label" id="name-label" for="name">* Enter your name:</label>
+            <div class="input">
+              <input id="name" type="text" size="30" placeholder="Samuel Langhorne Clemens" required />
+            </div>
           </div>
           <div class="form-row">
-            <label class="input-label" for="email">* Enter your email:</label>
-            <input class="input" id="name" type="email" validate required />
+            <label class="input-label" id="email-label" for="email">* Enter your email:</label>
+            <div class="input">
+              <input id="email" type="email" size="30" placeholder="mark@twain.com" validate required />
+            </div>
           </div>
-          <button type="submit">Submit!</button>
+          <div class="form-row">
+            <label class="input-label" id="number-label" for="number">Years in Web Development:</label>
+            <div class="input">
+              <input id="number" type="number" min="1" max="100"size="4" placeholder="14"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="input-label">Level of Experience: </span>
+            <div class="input">
+              <select id="dropdown">
+                <option>Novice</option>
+                <option>Advance Beginner</option>
+                <option selected>Intermediate</option>
+                <option>Senior</option>
+                <option>Expert</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="input-label">Likelihood to Obtain/Maintain a Career in Web Design:</span>
+            <div class="input">
+              <ul id="career-radios">
+                <li>
+                  <input id="firstChoice" type="radio" name="career-radios" value="definitely"/>
+                  <label for="firstChoice">Definitely!</label>
+                </li>
+                <li>
+                  <input id="secondChoice" type="radio" name="career-radios" value="almost_certainly"/>
+                  <label for="secondChoice">Almost Certainly!</label>
+                </li>
+                <li>
+                  <input id="thirdChoice" type="radio" name="career-radios" value="maybe" />
+                  <label for="thirdChoice">Maybe...</label>
+                </li>
+                <li>
+                  <input id="fourthChoice" type="radio" name="career-radios" value="not_likely" />
+                  <label for="fourthChoice">Not Likely</label>
+                </li>
+                <li>
+                  <input id="fifthChoice" type="radio" name="career-radios" value="dont_like" />
+                  <label for="fifthChoice">I Don't Like Web Design</label>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+          <div class="form-row">
+            <span class="input-label">Select Your Favorite Concepts Below:</span>
+            <div class="input">
+              <ul id="concepts-checkboxes">
+                <li>
+                  <input id="html" value="html" type="checkbox" />
+                  <label for="html">HTML</label>
+                </li>
+                <li>
+                  <input id="css" value="css" type="checkbox" />
+                  <label for="css">CSS</label>
+                </li>
+                <li>
+                  <input id="javascript" value="javascript" type="checkbox" />
+                  <label for="javascript">JavaScript</label>
+                </li>
+                <li>
+                  <input id="jquery" value="jquery" type="checkbox" />
+                  <label for="jquery">jQuery</label>
+                </li>
+                <li>
+                  <input id="react" value="react" type="checkbox" />
+                  <label for="react">React</label>
+                </li>
+                <li>
+                  <input id="vue" value="vue" type="checkbox" />
+                  <label for="vue">Vue</label>
+                </li>
+                <li>
+                  <input id="angular" value="angular" type="checkbox" />
+                  <label for="angular">Angular</label>
+                </li>
+                <li>
+                  <input id="node" value="node" type="checkbox" />
+                  <label for="node">Node.js</label>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <span class="input-label">Additional Comments:</span>
+            <textarea class="input" cols="30" rows="8"></textarea>
+          </div>
+
+          <div class="form-row buttons flex-row-center">
+            <button id="reset" type="reset">Clear</button>
+            <button id="submit" type="submit">Submit!</button>
+          </div>
         </form>
       </div>
 
@@ -40,8 +138,8 @@
 
     <footer>
       <span id="created-by">Created By&nbsp;</span>
-      <span id="footer-link">
-        <a href="https://mackville.net">Christopher McCormack</a>
+      <span>
+        <a class="home-link" href="https://mackville.net">Christopher McCormack</a>
       </span>
     </footer>
 
