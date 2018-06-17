@@ -22,58 +22,60 @@
     </nav>
   </header>
 
-  <div id="main-container">
-    
+  
+  <main id="main-doc">
     <nav id="navbar">
-      <div id="nav-header">
+      <nav id="nav-header">
         <span>Python Documentation</span>
-      </div>
+      </nav>
       <ul id="nav-list">
         <li>
-          <a class="link" href="#">Introduction</a>
+          <a class="nav-link" href="#introduction">Introduction</a>
         </li>
         <li>
-          <a class="link" href="#">What you should already know</a>
+          <a class="nav-link" href="#Python_2_vs_3">Python 2 vs 3</a>
         </li>
         <li>
-          <a class="link" href="#">Python 2 vs 3</a>
+          <a class="nav-link" href="#">Hello World</a>
         </li>
         <li>
-          <a class="link" href="#">Hello World</a>
+          <a class="nav-link" href="#">Variables</a>
         </li>
         <li>
-          <a class="link" href="#">Variables</a>
+          <a class="nav-link" href="#">Declaring Variables</a>
         </li>
         <li>
-          <a class="link" href="#">Declaring Variables</a>
+          <a class="nav-link" href="#">Variable Scope</a>
         </li>
         <li>
-          <a class="link" href="#">Variable Scope</a>
-        </li>
-        <li>
-          <a class="link" href="#">Global Variables</a>
+          <a class="nav-link" href="#">Global Variables</a>
         </li>
       </ul>
     </nav>
-    <main id="main-doc">
-      <span class="main-section" id="introduction">
-        <div class="section-header">
-          Introduction
-        </div>
-        <div class="section-body">
-          <p>Python is an easy to learn, powerful programming language. It has efficient high-level data structures and a simple but effective  approach to object-oriented programming. Python’s elegant syntax and dynamic typing, together with its interpreted nature, make it an ideal language for scripting and rapid application development in many areas on most platforms.</p>
-          <p>The Python interpreter and the extensive standard library are freely available in source or binary form for all major platforms from the Python Web site, <a href="https://www.python.org/">https://www.python.org/</a>, and may be freely distributed. The same site also contains distributions of and pointers to many free third party Python modules, programs and tools, and additional documentation.</p>
-          <p>The Python interpreter is easily extended with new functions and data types implemented in C or C++ (or other languages callable from C). Python is also suitable as an extension language for customizable applications.</p>
-        </div>
-      </section>
-    </main>
+    <section class="main-section" id="introduction">
+      <header class="section-header">Introduction</header>
+      <div class="section-body">
+        <p>Python is an easy to learn, powerful programming language. It has efficient high-level data structures and a simple but effective  approach to object-oriented programming. Python’s elegant syntax and dynamic typing, together with its interpreted nature, make it an ideal language for scripting and rapid application development in many areas on most platforms.</p>
+        <p>The Python interpreter and the extensive standard library are freely available in source or binary form for all major platforms from the Python Web site, <a href="https://www.python.org/">https://www.python.org/</a>, and may be freely distributed. The same site also contains distributions of and pointers to many free third party Python modules, programs and tools, and additional documentation.</p>
+        <p>The Python interpreter is easily extended with new functions and data types implemented in C or C++ (or other languages callable from C). Python is also suitable as an extension language for customizable applications.</p>
+      </div>
+    </section>
+    <section class="main-section" id="Python_2_vs_3">
+      <header class="section-header">Python 2 vs 3</header>
+      <div class="section-body">
+        <p>Before looking into potential opportunities related to — and the key programmatic differences between — Python 2 and Python 3, let’s take a look into the background of the more recent major releases of Python.</p>
+        <span class="subheading">Python 2</span>
+        <p>Published in late 2000, Python 2 signalled a more transparent and inclusive language development process than earlier versions of Python with the implementation of PEP (Python Enhancement Proposal), a technical specification that either provides information to Python community members or describes a new feature of the language.</p>
 
-  </div>
+        <p>Additionally, Python 2 included many more programmatic features including a cycle-detecting garbage collector to automate memory management, increased Unicode support to standardize characters, and list comprehensions to create a list based on existing lists. As Python 2 continued to develop, more features were added, including unifying Python’s types and classes into one hierarchy in Python version 2.2.</p>
+      </div>
+    </section>
+  </main>
 
   <footer>
     <span id="created-by">Created By&nbsp;</span>
     <span>
-      <a class="link" href="https://mackville.net">Christopher McCormack</a>
+      <a class="nav-link" href="https://mackville.net">Christopher McCormack</a>
     </span>
   </footer>
 

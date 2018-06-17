@@ -22,9 +22,8 @@ body {
   }
 }
 
-header {
+#header {
 
-  height: 40px;
   nav {
     position: fixed;
     top: 0;
@@ -66,65 +65,85 @@ header {
   }
 }
 
-#main-container {
+
+#navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  margin: 42px 0;
+  width: 300px;
+
+  @media (max-width: 800px) {
+    position: static;
+    width: 100%;
+    margin: auto;
+    text-align: center;
+  }
+  
+  #nav-header {
+    text-align: center;
+    font-weight: 300;
+    font-size: 1.4rem;
+    padding: 1rem;
+  }
+  
+  #nav-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+
+    @media (max-width: 800px) {
+      height: 150px;
+      box-shadow: inset 1px 1px 4px darken($primary, 10%);
+    }
+    
+    li {
+      border-top: 1px solid $primary;
+      padding: .8rem;
+      padding-left: 2rem;
+      list-style: none;
+
+      &:first-child {
+        border-top: none;
+      }
+    }
+  }
+}
+
+main {
   flex: 1 0 auto;
-  display: flex;
-  flex-direction: row;
+  margin-top: 40px;
+  margin-left: 300px;
+  padding: 2.4rem;
   
   @media (max-width: 800px) {
     flex-direction: column;
-    padding: 1.2rem;
-  }
-  
-  #navbar {
-    flex: 1 0 auto;
-    width: 300px;
-
-    @media (max-width: 800px) {
-      width: 100%;
-      text-align: center;
-      flex: 0 1 auto;
-    }
-    
-    #nav-header {
-      text-align: center;
-      font-weight: 300;
-      font-size: 1.4rem;
-      padding: 1rem;
-    }
-    
-    #nav-list {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      overflow-y: auto;
-
-      @media (max-width: 800px) {
-        height: 150px;
-        border: 1px solid black;
-      }
-      
-      li {
-        border-top: 1px solid black;
-        padding: .8rem;
-        padding-left: 2rem;
-        list-style: none;
-
-      }
-      &:last-child {
-        border-bottom: 1px solid black;
-      }
-    }
-    
+    margin: 0 1.2rem;
+    margin-bottom: 2rem;
   }
 
-  main {
-    width: 100%;
-    padding: 1.2rem;
+  // Handles offset for fixed navbar
+  section[id]:before { 
+    display: block; 
+    content: " "; 
+    margin-top: -42px; 
+    height: 42px; 
+    visibility: hidden; 
+  }
 
-    .section-header {
-      font-size: 1.4rem;
-      font-weight: 700;
+  .section-header {
+    font-size: 1.4rem;
+    font-weight: 700;
+    padding: 1.2rem 0;
+  }
+  .section-body {
+    text-align: justify;
+    margin-left: 1rem;
+
+    .subheading {
+      font-weight: 400;
+      font-size: 1.2rem;
     }
   }
 }
@@ -132,6 +151,7 @@ header {
 
 footer {
   flex: 0 0 auto;
+  margin-top: auto;
   background-color: $primary;
   padding: 12px;
   color: #FFF;
@@ -139,6 +159,7 @@ footer {
   display: flex;
   justify-content: center;
   font-size: .8rem;
+  z-index: 1000;
 
   @media (max-width: 400px) {
     font-size: .7rem;
