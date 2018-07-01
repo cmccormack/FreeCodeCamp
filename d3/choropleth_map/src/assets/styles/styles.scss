@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+$body-bg-img: "../images/bg.png";
+$body-bg: rgba(240,240,240,.90);
+$body-bg-grad: linear-gradient($body-bg, $body-bg);
+$nav-bg-color: #333;
+$nav-color: #EEE;
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: $body-bg-grad, url($body-bg-img) no-repeat;
+  background-position: center;
+  background-size: cover;
+  font-family: "Roboto", sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header {
+  background-color: $nav-bg-color;
+  color: $nav-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  
+  nav {
+    max-width: 70%;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    
+    #header-badge {
+      flex: 1 0 auto;
+      padding: 1rem;
+      font-size: 1.2rem;
+    }
+
+    #header-links {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 1rem;
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+    }
+  }
+}
+
+main {
+  display: flex;
+  flex: 1 0 auto;
+}
+
+footer {
+  flex: 0 0 auto;
+  margin-top: auto;
+  background-color: $nav-bg-color;
+  padding: 12px;
+  color: $nav-color;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  font-size: .8rem;
+  z-index: 1000;
+
+  @media (max-width: 400px) {
+    font-size: .7rem;
+    padding: 8px;
+
+    #created-by {
+      display: none;
+    }
+  }
+}
+
+.navlink {
+  color: inherit;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+
+
+.z-depth-0 {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important
+}
+
+.z-depth-1 {
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2)
+}
+
+.z-depth-1-half {
+    -webkit-box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14),0 1px 7px 0 rgba(0,0,0,0.12),0 3px 1px -1px rgba(0,0,0,0.2);
+    box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14),0 1px 7px 0 rgba(0,0,0,0.12),0 3px 1px -1px rgba(0,0,0,0.2)
+}
+
+.z-depth-2 {
+    -webkit-box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14),0 1px 10px 0 rgba(0,0,0,0.12),0 2px 4px -1px rgba(0,0,0,0.3)
+}
+
+.z-depth-3 {
+    -webkit-box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.2);
+    box-shadow: 0 8px 17px 2px rgba(0,0,0,0.14),0 3px 14px 2px rgba(0,0,0,0.12),0 5px 5px -3px rgba(0,0,0,0.2)
+}
+
+.z-depth-4 {
+    -webkit-box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14),0 6px 30px 5px rgba(0,0,0,0.12),0 8px 10px -7px rgba(0,0,0,0.2);
+    box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14),0 6px 30px 5px rgba(0,0,0,0.12),0 8px 10px -7px rgba(0,0,0,0.2)
+}
+
+.z-depth-5 {
+    -webkit-box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14),0 9px 46px 8px rgba(0,0,0,0.12),0 11px 15px -7px rgba(0,0,0,0.2);
+    box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14),0 9px 46px 8px rgba(0,0,0,0.12),0 11px 15px -7px rgba(0,0,0,0.2)
+}
