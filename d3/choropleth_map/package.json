@@ -16,6 +16,7 @@
   "author": "Christopher McCormack https://mackville.net",
   "license": "ISC",
   "dependencies": {
+    "classnames": "^2.2.6",
     "parcel-bundler": "^1.9.3",
     "prop-types": "^15.6.2",
     "react": "^16.4.1",
