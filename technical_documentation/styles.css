@@ -67,7 +67,7 @@ body .link:hover, body .nav-link:hover {
 #navbar {
   position: fixed;
   left: 0;
-  top: 0;
+  top: -40px;
   margin: 42px 0;
   width: 300px;
 }
@@ -86,6 +86,7 @@ body .link:hover, body .nav-link:hover {
   font-weight: 300;
   font-size: 1.4rem;
   padding: 1rem;
+  margin-top: 40px;
 }
 
 #navbar #nav-list {
@@ -148,7 +149,7 @@ main .section-body {
 }
 
 main .section-body .subheading {
-  font-weight: 400;
+  font-weight: 700;
   font-size: 1.2rem;
 }
 
@@ -177,6 +178,23 @@ footer {
 
 .flex-row-center {
   justify-content: center;
+}
+
+code {
+  background-color: #c6ece6;
+  display: block;
+  padding: 1rem;
+  margin: 1.6rem 1rem;
+  border-radius: 6px;
+  white-space: pre;
+  line-height: 2;
+}
+
+mark {
+  background-color: #c6ece6;
+  padding: .1rem;
+  border-radius: 3px;
+  font-family: monospace;
 }
 
 .z-depth-0 {
