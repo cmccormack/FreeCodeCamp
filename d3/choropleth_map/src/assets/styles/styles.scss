@@ -33,7 +33,7 @@ header {
   justify-content: center;
   
   nav {
-    max-width: 70%;
+    max-width: 1024px;
     flex: 1;
     display: flex;
     flex-direction: row;
@@ -48,11 +48,43 @@ header {
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 1rem;
+      padding: 0;
       ul {
+        display: flex;
+        flex-direction: row;
         list-style-type: none;
         margin: 0;
         padding: 0;
+
+        .navitem {
+          
+          .navlink {
+            display: block;
+            padding: 1rem;
+  
+            &:hover {
+              background-color: darken($nav-bg-color, 10%);
+            }
+          }
+        }
+      }
+
+      .dropdown {
+        position: relative;
+        
+        .navlist {
+          position: absolute;
+          white-space: nowrap;
+          right: 0;
+          background-color: $nav-bg-color;
+          display: flex;
+          flex-direction: column;
+          z-index: 50;
+          border: 1px solid black;
+          border-bottom-left-radius: 5px;
+          border-bottom-right-radius: 5px;
+          padding: .8rem 0;
+        }
       }
     }
   }
@@ -88,10 +120,6 @@ footer {
 .navlink {
   color: inherit;
   text-decoration: none;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 
 
@@ -129,4 +157,16 @@ footer {
 .z-depth-5 {
     -webkit-box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14),0 9px 46px 8px rgba(0,0,0,0.12),0 11px 15px -7px rgba(0,0,0,0.2);
     box-shadow: 0 24px 38px 3px rgba(0,0,0,0.14),0 9px 46px 8px rgba(0,0,0,0.12),0 11px 15px -7px rgba(0,0,0,0.2)
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 2px;
+    vertical-align: middle;
+    border-top: 4px dashed;
+    border-top: 4px solid\9;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent
 }
