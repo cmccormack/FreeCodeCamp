@@ -37,6 +37,11 @@ header {
     flex: 1;
     display: flex;
     flex-direction: row;
+
+    @media only screen and (max-width: 640px) {
+      flex-direction: column;
+      align-items: center;
+    }
     
     #header-badge {
       flex: 1 0 auto;
@@ -71,6 +76,7 @@ header {
 
       .dropdown {
         position: relative;
+        cursor: pointer;
         
         .navlist {
           position: absolute;

@@ -6,6 +6,8 @@ import cx from "classnames"
 import "./assets/styles/styles.scss"
 
 
+// const Bars = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="bars" className="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
+
 class NavList extends React.PureComponent {
 
   static propTypes = {
@@ -40,7 +42,9 @@ class NavItem extends React.PureComponent {
   static propTypes = {
     children: PropTypes.any,
     className: PropTypes.string,
-    link: PropTypes.string.isRequired,
+    component: PropTypes.string,
+    id: PropTypes.string,
+    link: PropTypes.string,
     name: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.object,
@@ -50,16 +54,34 @@ class NavItem extends React.PureComponent {
 
   static defaultProps = {
     className: "",
-    onClick: undefined,
+    component: "a",
+    id: "",
+    link: null,
+    onClick: null,
   }
 
   render() {
-    const { children, className, link, name, onClick } = this.props
+    const {
+      children,
+      className,
+      component: Component,
+      id,
+      link,
+      name,
+      onClick,
+    } = this.props
+
     return (
       <li className={cx(className, "navitem")}>
-        <a className="navlink" href={link} onClick={onClick}>
+        <Component
+          className="navlink"
+          href={link}
+          id={id}
+          onClick={onClick}
+          
+        >
           {name}
-        </a>
+        </Component>
         {children}
       </li>
     )
@@ -82,13 +104,16 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
-    document.body.addEventListener("click", () => {
+    document.addEventListener("click", (e) => {
+      !this.dropdownButton.contains(e.target) &&
       this.setState({isVisible: false})
     })
   }
 
-  handleDropdownClick = () => {
-    this.setState(prevState => ({isVisible: !prevState.isVisible}))
+  handleDropdownClick = (e) => {
+    this.setState(prevState => ({
+      isVisible: !prevState.isVisible
+    }))
   }
 
   render() {
@@ -105,7 +130,10 @@ class Header extends React.Component {
           <span className="caret" />
         </span>
       ),
-      link: "#", onClick: this.handleDropdownClick }
+      id: "dropdown-button",
+      link: "#",
+      onClick: this.handleDropdownClick
+    }
 
     const dropdownitems = [
       {
@@ -131,23 +159,29 @@ class Header extends React.Component {
     ]
 
     return (
-      <header className="z-depth-2">
+      <header className="z-depth-2" ref={node => this.node = node}>
         <nav id="header-nav">
           <div id="header-badge">
             {"D3 Choropleth Map"}
           </div>
-          <div id="header-links">
+          <div id="header-links" >
             <NavList links={links}>
-              <NavItem {...dropdownbutton} className="dropdown">
-                {
-                  isVisible && (
-                    <NavList
-                      className="z-depth-4"
-                      links={ dropdownitems }
-                    />
-                  )
-                }
-              </NavItem>
+              <span ref={node => this.dropdownButton = node}>
+                <NavItem
+                  {...dropdownbutton}
+                  className="dropdown"
+                  component="span"
+                >
+                  {
+                    isVisible && (
+                      <NavList
+                        className="z-depth-4"
+                        links={ dropdownitems }
+                      />
+                    )
+                  }
+                </NavItem>
+              </span>
             </NavList>
           </div>
         </nav>
