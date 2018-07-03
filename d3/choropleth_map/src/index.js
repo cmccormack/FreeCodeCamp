@@ -7,7 +7,7 @@ import "./assets/styles/styles.scss"
 
 
 // const Bars = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="bars" className="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
-
+const BarChart = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="chart-bar" class="svg-inline--fa fa-chart-bar fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/></svg>
 class NavList extends React.PureComponent {
 
   static propTypes = {
@@ -110,9 +110,9 @@ class Header extends React.Component {
     })
   }
 
-  handleDropdownClick = (e) => {
+  handleDropdownClick = () => {
     this.setState(prevState => ({
-      isVisible: !prevState.isVisible
+      isVisible: !prevState.isVisible,
     }))
   }
 
@@ -132,7 +132,7 @@ class Header extends React.Component {
       ),
       id: "dropdown-button",
       link: "#",
-      onClick: this.handleDropdownClick
+      onClick: this.handleDropdownClick,
     }
 
     const dropdownitems = [
@@ -162,6 +162,9 @@ class Header extends React.Component {
       <header className="z-depth-2" ref={node => this.node = node}>
         <nav id="header-nav">
           <div id="header-badge">
+            <span id="header-badge-icon">
+              <BarChart />
+            </span>
             {"D3 Choropleth Map"}
           </div>
           <div id="header-links" >
