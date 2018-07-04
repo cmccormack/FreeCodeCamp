@@ -5,9 +5,12 @@ import cx from "classnames"
 
 import "./assets/styles/styles.scss"
 
+const d3 = window.d3
+
 
 // const Bars = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="bars" className="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
 const BarChart = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="chart-bar" className="svg-inline--fa fa-chart-bar fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/></svg>
+
 class NavList extends React.PureComponent {
 
   static propTypes = {
@@ -210,45 +213,133 @@ const Footer = () => (
   </footer>
 )
 
+
+
+
 class Main extends React.Component {
+
+  static propTypes = {
+    canvas: PropTypes.object,
+    data: PropTypes.object,
+    height: PropTypes.number,
+    width: PropTypes.number,
+  }
+
+  static defaultProps = {
+    canvas: { width: 1024, height: 600 },
+    data: {
+      counties: {},
+      education: [],
+    },
+  }
+
   state = {
 
   }
 
+  componentDidUpdate() {
+    // this.renderD3()
+    return this.props.data && this.renderD3()
+  }
+
+  renderD3() {
+    console.log("rendering D3")
+    const { counties, education } = this.props.data
+    console.log(counties)
+
+    const svg = d3.select(this.svg)
+    const path = d3.geoPath
+    
+
+
+  }
+
   render() {
+
+    const { canvas, data: {education, counties} } = this.props
+    const { width, height } = canvas
     return (
       <main>
         <div id="title">
           {"Choropleth Map"}
         </div>
-        <div id="canvas">
-          
+        <div id="description">
+          {"Percentage of adults age 25 and older with a bachelor's degree or higher (2010-2014)"}
+        </div>
+        <div
+          id="canvas"
+          className="z-depth-3"
+          ref={ node => this.canvas = node }
+        >
+          <svg width={width} height={height} ref={ node => this.svg = node}>
+            
+          </svg>
         </div>
       </main>
     )
   }
 }
 
+
+
 class App extends React.Component {
 
-  state = {
+  static propTypes = {
+    data: PropTypes.object,
+    data_urls: PropTypes.object,
+    canvas: PropTypes.object,
+  }
 
+  state = {
+    data: {},
+  }
+
+  async componentDidMount() {
+
+    // Fetch data from urls and store in array of objects
+    const {data_urls} = this.props.data
+    const [education, counties] = await Promise.all(
+      data_urls
+        .map(({url})=>fetch(url)
+          .then(data=> (data.json()))
+        ))
+    this.setState({data: { education, counties }})
   }
 
   render() {
+  
+    const { canvas } = this.props.data
+    const { data } = this.state
+
     return (
       <React.Fragment>
         <Header />
-        <Main />
+        <Main data={data} canvas={canvas} />
         <Footer />
       </React.Fragment>
     )
   }
 }
 
+const globals = {
+  data_urls: [
+    {
+      name: "education",
+      url: "https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/for_user_education.json",
+    },
+    {
+      name: "counties",
+      url: "https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/counties.json",
+    },
+  ],
+  canvas: {
+    width: 1024,
+    height: 600,
+  },
+}
 
 const root = document.getElementById("root")
 ReactDOM.render(
-  <App />,
+  <App data={globals} />,
   root
 )

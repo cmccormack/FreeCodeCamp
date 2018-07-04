@@ -6,6 +6,7 @@ $body-bg-grad: linear-gradient($body-bg, $body-bg);
 $nav-bg-color: #333;
 $nav-color: #EEE;
 $breakpoint-tablet: 640px;
+$canvas-bg: hsla(0, 100%, 100%, 0.8);
 
 html, body {
   width: 100%;
@@ -128,11 +129,34 @@ main {
   align-items: center;
 
   #title {
-    margin: 60px auto;
+    margin-top: 48px;
     font-size: 4rem;
     font-weight: 200;
     text-shadow: -2px 2px 2px #444;
   }
+  #description {
+    margin: 16px 0;
+    font-size: 1.6rem;
+    font-weight: 400;
+  }
+
+  #canvas {
+    margin-top: 40px;
+    width: 1024px;
+    height: 600px;
+    background-color: $canvas-bg;
+
+    .counties {
+      fill: none;
+    }
+    
+    .states {
+      fill: none;
+      stroke: #fff;
+      stroke-linejoin: round;
+    }
+  }
+
 }
 
 footer {
