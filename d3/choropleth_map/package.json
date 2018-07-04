@@ -4,7 +4,8 @@
   "description": "Chropleth Map with D3 for FreeCodeCamp",
   "main": "index.js",
   "scripts": {
-    "parcel:dev": "parcel src/index.html --open",
+    "parcel:dev": "parcel src/index.html",
+    "parcel:dev:nocache": "parcel src/index.html --no-cache",
     "parcel:build": "parcel build src/index.html"
   },
   "keywords": [
