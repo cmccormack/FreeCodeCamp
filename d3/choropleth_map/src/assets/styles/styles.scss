@@ -127,6 +127,7 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 60px;
 
   #title {
     margin-top: 48px;
@@ -142,8 +143,6 @@ main {
 
   #canvas {
     margin-top: 40px;
-    width: 1024px;
-    height: 600px;
     background-color: $canvas-bg;
 
     .counties {

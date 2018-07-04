@@ -5,8 +5,7 @@ import cx from "classnames"
 
 import "./assets/styles/styles.scss"
 
-const d3 = window.d3
-
+const {d3, topojson} = window
 
 // const Bars = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="bars" className="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
 const BarChart = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="chart-bar" className="svg-inline--fa fa-chart-bar fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/></svg>
@@ -223,12 +222,13 @@ class Main extends React.Component {
     data: PropTypes.object,
     height: PropTypes.number,
     width: PropTypes.number,
+    padding: PropTypes.number,
   }
 
   static defaultProps = {
-    canvas: { width: 1024, height: 600 },
+    canvas: { width: 1024, height: 600, padding: 30 },
     data: {
-      counties: {},
+      us: {},
       education: [],
     },
   }
@@ -243,21 +243,35 @@ class Main extends React.Component {
   }
 
   renderD3() {
-    console.log("rendering D3")
-    const { counties, education } = this.props.data
-    console.log(counties)
 
+    const { canvas, data } = this.props
+    const { width, height, padding } = canvas
+    const { us, education } = data
+    console.log(us)
     const svg = d3.select(this.svg)
-    const path = d3.geoPath
-    
 
+    const path = d3.geoPath()
+    
+    svg.append("g")
+      .attr("height", 200)
+      .attr("class", "counties")
+      .selectAll("path")
+      .data(topojson.feature(us, us.objects.counties).features)
+      .enter().append("path")
+      .attr("fill", function(d) { /* fill function goes here */ return "lightblue"})
+      .attr("d", path )
+
+    svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b }))
+      .attr("class", "states")
+      .attr("d", path)
 
   }
 
   render() {
 
-    const { canvas, data: {education, counties} } = this.props
-    const { width, height } = canvas
+    const { canvas } = this.props
+    const { width, height, padding } = canvas
     return (
       <main>
         <div id="title">
@@ -271,7 +285,11 @@ class Main extends React.Component {
           className="z-depth-3"
           ref={ node => this.canvas = node }
         >
-          <svg width={width} height={height} ref={ node => this.svg = node}>
+          <svg
+            width={width}
+            height={height}
+            ref={ node => this.svg = node}
+          >
             
           </svg>
         </div>
@@ -298,12 +316,12 @@ class App extends React.Component {
 
     // Fetch data from urls and store in array of objects
     const {data_urls} = this.props.data
-    const [education, counties] = await Promise.all(
+    const [education, us] = await Promise.all(
       data_urls
         .map(({url})=>fetch(url)
           .then(data=> (data.json()))
         ))
-    this.setState({data: { education, counties }})
+    this.setState({data: { education, us }})
   }
 
   render() {
@@ -328,13 +346,14 @@ const globals = {
       url: "https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/for_user_education.json",
     },
     {
-      name: "counties",
+      name: "us",
       url: "https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/counties.json",
     },
   ],
   canvas: {
-    width: 1024,
+    width: 960,
     height: 600,
+    padding: 30,
   },
 }
 
