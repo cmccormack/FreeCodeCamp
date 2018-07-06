@@ -238,7 +238,6 @@ class Main extends React.Component {
   }
 
   componentDidUpdate() {
-    // this.renderD3()
     return this.props.data && this.renderD3()
   }
 
@@ -276,7 +275,6 @@ class Main extends React.Component {
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b }))
       .attr("class", "states")
       .attr("d", path)
-
   }
 
   render() {
