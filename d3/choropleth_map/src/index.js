@@ -244,22 +244,33 @@ class Main extends React.Component {
 
   renderD3() {
 
-    const { canvas, data } = this.props
-    const { width, height, padding } = canvas
+    const { data } = this.props
     const { us, education } = data
-    console.log(us)
+    const steps = 8
+
+    const [min, max] = d3.extent(education, d=>d.bachelorsOrHigher)
+    const edu_map = d3.map(education, d => d.fips)
+
+    const colorScale = d3.scaleThreshold()
+      .domain(d3.range(Math.floor(min), Math.ceil(max), (max-min)/steps))
+      .range(d3.schemeOranges[9])
+
     const svg = d3.select(this.svg)
 
     const path = d3.geoPath()
     
     svg.append("g")
-      .attr("height", 200)
       .attr("class", "counties")
       .selectAll("path")
       .data(topojson.feature(us, us.objects.counties).features)
       .enter().append("path")
-      .attr("fill", function(d) { /* fill function goes here */ return "lightblue"})
+      .attr("fill", d => colorScale( d.percent = edu_map.get(d.id).bachelorsOrHigher ))
       .attr("d", path )
+      .attr("class", "county")
+      .attr("data-fips", d => d.id)
+      .attr("data-education", d => edu_map.get(d.id).bachelorsOrHigher)
+      .append("title")
+      .text(d => `${d.percent}%`)
 
     svg.append("path")
       .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b }))
