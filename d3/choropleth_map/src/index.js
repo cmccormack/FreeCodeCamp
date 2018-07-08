@@ -7,7 +7,6 @@ import "./assets/styles/styles.scss"
 
 const {d3, topojson} = window
 
-// const Bars = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="bars" className="svg-inline--fa fa-bars fa-w-14" role="img" viewBox="0 0 448 512"><path fill="currentColor" d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"/></svg>
 const BarChart = () => <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" data-prefix="fas" data-icon="chart-bar" className="svg-inline--fa fa-chart-bar fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentColor" d="M500 384c6.6 0 12 5.4 12 12v40c0 6.6-5.4 12-12 12H12c-6.6 0-12-5.4-12-12V76c0-6.6 5.4-12 12-12h40c6.6 0 12 5.4 12 12v308h436zm-308-44v-72c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v72c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V204c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v136c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm-96 0V140c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v200c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12zm192 0V108c0-6.6-5.4-12-12-12h-40c-6.6 0-12 5.4-12 12v232c0 6.6 5.4 12 12 12h40c6.6 0 12-5.4 12-12z"/></svg>
 
 class NavList extends React.PureComponent {
@@ -212,7 +211,47 @@ const Footer = () => (
   </footer>
 )
 
+const ToolTip = props => {
 
+  const {children, x, y, offsetX, offsetY, visible} = props
+  // console.log(rest)
+  return (
+    <div
+      id="tooltip"
+      style={{
+        left: x + offsetX,
+        top: y + offsetY,
+        display: visible ? "inline-block" : "none",
+      }}
+      data-education={props["data-education"] || "0%"}
+    >
+      {children}
+    </div>
+  )
+}
+
+ToolTip.propTypes = {
+  children: PropTypes.any,
+  "data-education": PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+  ]),
+  x: PropTypes.number,
+  y: PropTypes.number,
+  offsetX: PropTypes.number,
+  offsetY: PropTypes.number,
+  visible: PropTypes.bool,
+}
+
+ToolTip.defaultProps = {
+  children: "tooltip",
+  "data-education": "0%",
+  x: 0,
+  y: 0,
+  offsetX: 0,
+  offsetY: 0,
+  visible: false,
+}
 
 
 class Main extends React.Component {
@@ -234,12 +273,13 @@ class Main extends React.Component {
   }
 
   state = {
-
   }
+
 
   componentDidUpdate() {
     return this.props.data && this.renderD3()
   }
+
 
   renderD3() {
 
@@ -247,12 +287,20 @@ class Main extends React.Component {
     const { us, education } = data
     const steps = 8
 
-    const [min, max] = d3.extent(education, d=>d.bachelorsOrHigher)
+    const [min, max] = d3.extent(education, d => d.bachelorsOrHigher)
     const edu_map = d3.map(education, d => d.fips)
 
     const colorScale = d3.scaleThreshold()
-      .domain(d3.range(Math.floor(min), Math.ceil(max), (max-min)/steps))
+      .domain(d3.range(Math.floor(min), Math.ceil(max), (max - min) / steps))
       .range(d3.schemeOranges[9])
+
+
+    this.renderD3Map(colorScale, us, edu_map)
+    this.renderD3Legend(colorScale, {min, max})
+  }
+
+
+  renderD3Map(color, geo, data) {
 
     const svg = d3.select(this.svg)
 
@@ -261,26 +309,91 @@ class Main extends React.Component {
     svg.append("g")
       .attr("class", "counties")
       .selectAll("path")
-      .data(topojson.feature(us, us.objects.counties).features)
+      .data(topojson.feature(geo, geo.objects.counties).features)
       .enter().append("path")
-      .attr("fill", d => colorScale( d.percent = edu_map.get(d.id).bachelorsOrHigher ))
+      .attr("fill", d => color( d.percent = data.get(d.id).bachelorsOrHigher ))
       .attr("d", path )
       .attr("class", "county")
       .attr("data-fips", d => d.id)
-      .attr("data-education", d => edu_map.get(d.id).bachelorsOrHigher)
+      .attr("data-education", d => data.get(d.id).bachelorsOrHigher)
+      .on("mouseover", d => {
+        const {state, area_name, bachelorsOrHigher: rate} = data.get(d.id)
+        const [x, y] = [d3.event.pageX, d3.event.pageY]
+        ReactDOM.render(
+          <ToolTip
+            data-education={rate}
+            x={x}
+            y={y}
+            offsetX={10}
+            offsetY={-30}
+            visible
+          >
+            {`${area_name}, ${state}: ${rate}%`}
+          </ToolTip>,
+          tooltipdiv
+        )
+      })
+      .on("mouseout", () => {
+        ReactDOM.render(<ToolTip />, tooltipdiv)
+      })
       .append("title")
       .text(d => `${d.percent}%`)
 
     svg.append("path")
-      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b }))
+      .datum(topojson.mesh(geo, geo.objects.states, (a,b) => a !== b ))
       .attr("class", "states")
       .attr("d", path)
   }
 
+
+  renderD3Legend(color, {min, max}) {
+
+    const svg = d3.select(this.svg)
+
+    const x = d3.scaleLinear()
+      .domain([Math.floor(min), Math.ceil(max)])
+      .rangeRound([600, 860])
+
+    const g = svg.append("g")
+      .attr("class", "key")
+      .attr("id", "legend")
+      .attr("transform", "translate(0, 42)")
+
+    g.selectAll("rect")
+      .data(color.range().map(d => {
+        d = color.invertExtent(d)
+        d[0] = d[0] || x.domain()[0]
+        d[1] = d[1] || x.domain()[1]
+        return d
+      }))
+      .enter().append("rect")
+      .attr("height", 8)
+      .attr("x", d => x(d[0]))
+      .attr("width", d => x(d[1]) - x(d[0]))
+      .attr("fill", d => color(d[0]))
+
+    g.append("text")
+      .attr("class", "caption")
+      .attr("x", x.range()[0])
+      .attr("y", -6)
+      .attr("fill", "#000")
+      .attr("text-anchor", "start")
+      .attr("font-weight", "bold")
+      .text("Rate of Bachelor's Degree or Higher")
+
+    g.call(d3.axisBottom(x)
+      .tickSize(13)
+      .tickFormat((x, i) => i ? Math.ceil(x) : Math.ceil(x) + "%")
+      .tickValues(color.domain()))
+      .select(".domain")
+      .remove()
+  }
+
+
   render() {
 
     const { canvas } = this.props
-    const { width, height, padding } = canvas
+    const { width, height } = canvas
     return (
       <main>
         <div id="title">
@@ -318,7 +431,6 @@ class App extends React.Component {
   }
 
   state = {
-    data: {},
   }
 
   async componentDidMount() {
@@ -370,4 +482,10 @@ const root = document.getElementById("root")
 ReactDOM.render(
   <App data={globals} />,
   root
+)
+
+const tooltipdiv = document.getElementById("tt")
+ReactDOM.render(
+  <ToolTip/>,
+  tooltipdiv
 )
