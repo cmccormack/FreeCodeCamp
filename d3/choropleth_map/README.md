@@ -21,3 +21,10 @@ You can use HTML, JavaScript, CSS, and the D3 svg-based visualization library. R
 * Here are the datasets you will need to complete this project:
   * US Education Data: https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/for_user_education.json
   * US County Data: https://raw.githubusercontent.com/no-stack-dub-sack/testable-projects-fcc/master/src/data/choropleth_map/counties.json
+
+
+
+
+## Completed!
+  * [Codepen](https://codepen.io/cmccormack/pen/MBwPjZ)
+  * [Mackville.net](https://mackville.net/d3/choropleth/)
