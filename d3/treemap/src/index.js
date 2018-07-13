@@ -272,72 +272,119 @@ class Main extends React.Component {
 
 
   componentDidUpdate() {
-    // return this.props.data && this.renderD3()
+    return this.props.data && this.renderD3()
   }
 
 
   renderD3() {
 
-    const { data } = this.props
-    const { us, education } = data
-    const steps = 8
+    const { games } = this.props.data
 
-    const [min, max] = d3.extent(education, d => d.bachelorsOrHigher)
-    const edu_map = d3.map(education, d => d.fips)
+    // const [min, max] = d3.extent(education, d => d.bachelorsOrHigher)
+    // const edu_map = d3.map(education, d => d.fips)
 
-    const colorScale = d3.scaleThreshold()
-      .domain(d3.range(Math.floor(min), Math.ceil(max), (max - min) / steps))
-      .range(d3.schemeOranges[9])
+    const colorScale = d3.scaleOrdinal(
+      d3.schemeCategory20.map(
+        color => d3.interpolateRgb(color, "#fff")(0.2)
+      )
+    )
+
+    const format = d3.format(",d")
 
 
-    this.renderD3Map(colorScale, us, edu_map)
-    this.renderD3Legend(colorScale, {min, max})
+    this.renderD3Map(colorScale, games)
+    // this.renderD3Legend(colorScale, {min, max})
   }
 
 
-  renderD3Map(color, geo, data) {
-
+  renderD3Map(color, data) {
+    
+    const { width, height, padding } = this.props.canvas
+    
     const svg = d3.select(this.svg)
 
-    const path = d3.geoPath()
-    
-    svg.append("g")
-      .attr("class", "counties")
-      .selectAll("path")
-      .data(topojson.feature(geo, geo.objects.counties).features)
-      .enter().append("path")
-      .attr("fill", d => color( d.percent = data.get(d.id).bachelorsOrHigher ))
-      .attr("d", path )
-      .attr("class", "county")
-      .attr("data-fips", d => d.id)
-      .attr("data-education", d => data.get(d.id).bachelorsOrHigher)
-      .on("mouseover", d => {
-        const {state, area_name, bachelorsOrHigher: rate} = data.get(d.id)
-        const [x, y] = [d3.event.pageX, d3.event.pageY]
-        ReactDOM.render(
-          <ToolTip
-            data-education={rate}
-            x={x}
-            y={y}
-            offsetX={10}
-            offsetY={-30}
-            visible
-          >
-            {`${area_name}, ${state}: ${rate}%`}
-          </ToolTip>,
-          tooltipdiv
-        )
-      })
-      .on("mouseout", () => {
-        ReactDOM.render(<ToolTip />, tooltipdiv)
-      })
-      .append("title")
-      .text(d => `${d.percent}%`)
+    const treemap = d3.treemap()
+      .tile(d3.treemapResquarify)
+      .size([width, height])
+      .round(true)
+      .paddingInner(2)
+      .paddingTop(2)
+      .paddingRight(2)
+      .paddingLeft(2)
 
-    svg.append("path")
-      .datum(topojson.mesh(geo, geo.objects.states, (a,b) => a !== b ))
-      .attr("class", "states")
-      .attr("d", path)
+    const root = d3.hierarchy(data)
+      .eachBefore(d => d.data.id = (
+        d.parent ? d.parent.data.id + "." : ""
+      ) + d.data.name)
+      .sum(d => d.value)
+      .sort((a,b) => b.height - a.height || b.value - a.value)
+
+    treemap(root)
+
+    const cell = svg.selectAll("g")
+      .data(root.leaves())
+      .enter()
+      .append("g")
+      .attr("transform", d => `translate(${d.x0}, ${d.y0})`)
+
+    cell.append("rect")
+      .attr("class", "tile")
+      .attr("id", d => d.data.id)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", d => color(d.parent.data.id))
+      .attr("data-name", d => d.data.name)
+      .attr("data-category", d => d.data.category)
+      .attr("data-value", d => d.data.value)
+
+    cell.append("clipPath")
+      .attr("id", d => `clip-${d.data.id}`)
+      .append("use")
+      .attr("xlink:href", d => `#${d.data.id}`)
+
+
+
+
+    
+
+     
+    // svg.append("g")
+    //   .attr("class", "counties")
+    //   .selectAll("path")
+    //   .data(topojson.feature(geo, geo.objects.counties).features)
+    //   .enter().append("path")
+    //   .attr("fill", d => color( d.percent = data.get(d.id).bachelorsOrHigher ))
+    //   .attr("d", path )
+    //   .attr("class", "county")
+    //   .attr("data-fips", d => d.id)
+    //   .attr("data-education", d => data.get(d.id).bachelorsOrHigher)
+    //   .on("mouseover", d => {
+    //     const {state, area_name, bachelorsOrHigher: rate} = data.get(d.id)
+    //     const [x, y] = [d3.event.pageX, d3.event.pageY]
+    //     ReactDOM.render(
+    //       <ToolTip
+    //         data-education={rate}
+    //         x={x}
+    //         y={y}
+    //         offsetX={10}
+    //         offsetY={-30}
+    //         visible
+    //       >
+    //         {`${area_name}, ${state}: ${rate}%`}
+    //       </ToolTip>,
+    //       tooltipdiv
+    //     )
+    //   })
+    //   .on("mouseout", () => {
+    //     ReactDOM.render(<ToolTip />, tooltipdiv)
+    //   })
+    //   .append("title")
+    //   .text(d => `${d.percent}%`)
+
+    // svg.append("path")
+    //   .datum(topojson.mesh(geo, geo.objects.states, (a,b) => a !== b ))
+    //   .attr("class", "states")
+    //   .attr("d", path)
   }
 
 
