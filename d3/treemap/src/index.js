@@ -278,28 +278,29 @@ class Main extends React.Component {
 
   renderD3() {
 
-    const { games } = this.props.data
-
-    // const [min, max] = d3.extent(education, d => d.bachelorsOrHigher)
-    // const edu_map = d3.map(education, d => d.fips)
+    const { games: data } = this.props.data
 
     const colorScale = d3.scaleOrdinal(
       d3.schemeCategory20.map(
-        color => d3.interpolateRgb(color, "#fff")(0.2)
+        color => d3.interpolateRgb(color, "#fff")(0.5)
       )
     )
 
-    const format = d3.format(",d")
+    const root = d3.hierarchy(data)
+      .eachBefore(d => d.data.id = (
+        d.parent ? d.parent.data.id + "." : ""
+      ) + d.data.name)
+      .sum(d => d.value)
+      .sort((a, b) => b.height - a.height || b.value - a.value)
 
-
-    this.renderD3Map(colorScale, games)
-    // this.renderD3Legend(colorScale, {min, max})
+    this.renderD3Map(colorScale, root)
+    this.renderD3Legend(colorScale, root)
   }
 
 
-  renderD3Map(color, data) {
+  renderD3Map(color, root) {
     
-    const { width, height, padding } = this.props.canvas
+    const { width, height } = this.props.canvas
     
     const svg = d3.select(this.svg)
 
@@ -308,16 +309,6 @@ class Main extends React.Component {
       .size([width, height])
       .round(true)
       .paddingInner(2)
-      .paddingTop(2)
-      .paddingRight(2)
-      .paddingLeft(2)
-
-    const root = d3.hierarchy(data)
-      .eachBefore(d => d.data.id = (
-        d.parent ? d.parent.data.id + "." : ""
-      ) + d.data.name)
-      .sum(d => d.value)
-      .sort((a,b) => b.height - a.height || b.value - a.value)
 
     treemap(root)
 
@@ -332,7 +323,8 @@ class Main extends React.Component {
       .attr("id", d => d.data.id)
       .attr("width", d => d.x1 - d.x0)
       .attr("height", d => d.y1 - d.y0)
-      .attr("fill", d => color(d.parent.data.id))
+      .attr("fill", d => color(d.parent.data.name))
+      .attr("blah", d => console.log(d.parent.data))
       .attr("data-name", d => d.data.name)
       .attr("data-category", d => d.data.category)
       .attr("data-value", d => d.data.value)
@@ -343,7 +335,7 @@ class Main extends React.Component {
       .attr("xlink:href", d => `#${d.data.id}`)
 
     cell.append("text")
-      .attr("clip-path", d => `url(#clip-${d.data.id})`)
+      .attr("clip-path", d => `url('#clip-${d.data.id}')`)
       .selectAll("tspan")
       .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g))
       .enter().append("tspan")
@@ -351,9 +343,7 @@ class Main extends React.Component {
       .attr("y", (d, i) => 13 + i * 10)
       .text(d => d)
 
-    
 
-     
     // svg.append("g")
     //   .attr("class", "counties")
     //   .selectAll("path")
@@ -394,47 +384,64 @@ class Main extends React.Component {
   }
 
 
-  renderD3Legend(color, {min, max}) {
+  renderD3Legend(color, root) {
 
     const svg = d3.select(this.svg)
-
-    const x = d3.scaleLinear()
-      .domain([Math.floor(min), Math.ceil(max)])
-      .rangeRound([600, 860])
 
     const g = svg.append("g")
       .attr("class", "key")
       .attr("id", "legend")
       .attr("transform", "translate(0, 42)")
 
+    const categories = [...new Set(root.leaves().map(d => d.data.category))]
+
+    // console.log(root.leaves().map(d => d.data.category))
     g.selectAll("rect")
-      .data(color.range().map(d => {
-        d = color.invertExtent(d)
-        d[0] = d[0] || x.domain()[0]
-        d[1] = d[1] || x.domain()[1]
-        return d
-      }))
-      .enter().append("rect")
-      .attr("height", 8)
-      .attr("x", d => x(d[0]))
-      .attr("width", d => x(d[1]) - x(d[0]))
-      .attr("fill", d => color(d[0]))
+      .data(categories)
+      .enter()
+      .append("rect")
+      .attr("width", 10)
+      .attr("height", 10)
+      // .attr("fill", d => console.log(d))
+      // .attr("test", d => console.log(d))
 
-    g.append("text")
-      .attr("class", "caption")
-      .attr("x", x.range()[0])
-      .attr("y", -6)
-      .attr("fill", "#000")
-      .attr("text-anchor", "start")
-      .attr("font-weight", "bold")
-      .text("Rate of Bachelor's Degree or Higher")
+    // const x = d3.scaleLinear()
+    //   .domain([Math.floor(min), Math.ceil(max)])
+    //   .rangeRound([600, 860])
 
-    g.call(d3.axisBottom(x)
-      .tickSize(13)
-      .tickFormat((x, i) => i ? Math.ceil(x) : Math.ceil(x) + "%")
-      .tickValues(color.domain()))
-      .select(".domain")
-      .remove()
+    // const g = svg.append("g")
+    //   .attr("class", "key")
+    //   .attr("id", "legend")
+    //   .attr("transform", "translate(0, 42)")
+
+    // g.selectAll("rect")
+    //   .data(color.range().map(d => {
+    //     d = color.invertExtent(d)
+    //     d[0] = d[0] || x.domain()[0]
+    //     d[1] = d[1] || x.domain()[1]
+    //     return d
+    //   }))
+    //   .enter().append("rect")
+    //   .attr("height", 8)
+    //   .attr("x", d => x(d[0]))
+    //   .attr("width", d => x(d[1]) - x(d[0]))
+    //   .attr("fill", d => color(d[0]))
+
+    // g.append("text")
+    //   .attr("class", "caption")
+    //   .attr("x", x.range()[0])
+    //   .attr("y", -6)
+    //   .attr("fill", "#000")
+    //   .attr("text-anchor", "start")
+    //   .attr("font-weight", "bold")
+    //   .text("Rate of Bachelor's Degree or Higher")
+
+    // g.call(d3.axisBottom(x)
+    //   .tickSize(13)
+    //   .tickFormat((x, i) => i ? Math.ceil(x) : Math.ceil(x) + "%")
+    //   .tickValues(color.domain()))
+    //   .select(".domain")
+    //   .remove()
   }
 
 
