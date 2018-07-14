@@ -350,7 +350,7 @@ class Main extends React.Component {
           >
             <div>Game: {name}</div>
             <div>Platform: {category}</div>
-            <div>Rating: {value}</div>
+            <div>Value: {value}</div>
           </ToolTip>,
           tooltipdiv
         )
