@@ -157,6 +157,10 @@ class Header extends React.Component {
         name: "Scatterplot",
         link: "https://mackville.net/d3/scatterplot/",
       },
+      {
+        name: "Tree Map",
+        link: "https://mackville.net/d3/treemap/",
+      },
     ]
 
     return (
