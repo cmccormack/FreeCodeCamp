@@ -148,14 +148,8 @@ main {
     margin-top: 40px;
     background-color: $canvas-bg;
 
-    .counties {
-      fill: none;
-    }
-    
-    .states {
-      fill: none;
-      stroke: #fff;
-      stroke-linejoin: round;
+    svg {
+      font-size: 10px;
     }
   }
 }

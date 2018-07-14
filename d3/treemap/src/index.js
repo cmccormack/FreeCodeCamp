@@ -342,8 +342,14 @@ class Main extends React.Component {
       .append("use")
       .attr("xlink:href", d => `#${d.data.id}`)
 
-
-
+    cell.append("text")
+      .attr("clip-path", d => `url(#clip-${d.data.id})`)
+      .selectAll("tspan")
+      .data(d => d.data.name.split(/(?=[A-Z][^A-Z])/g))
+      .enter().append("tspan")
+      .attr("x", 4)
+      .attr("y", (d, i) => 13 + i * 10)
+      .text(d => d)
 
     
 
