@@ -25,6 +25,6 @@ For this project you can use any of the following datasets:
   * Video Game Sales: https://cdn.rawgit.com/freeCodeCamp/testable-projects-fcc/a80ce8f9/src/data/tree_map/video-game-sales-data.json
 
 
-## ~~Completed!~~
+## Completed!
   * [Codepen](https://codepen.io/cmccormack/pen/RBrbMo)
   * [Mackville.net](https://mackville.net/d3/treemap)
