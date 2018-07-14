@@ -26,5 +26,5 @@ For this project you can use any of the following datasets:
 
 
 ## ~~Completed!~~
-  * [Codepen](#)
-  * [Mackville.net](#)
+  * [Codepen](https://codepen.io/cmccormack/pen/RBrbMo)
+  * [Mackville.net](https://mackville.net/d3/treemap)
