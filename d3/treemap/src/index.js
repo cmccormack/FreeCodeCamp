@@ -268,6 +268,7 @@ class Main extends React.Component {
   }
 
   state = {
+
   }
 
 
@@ -324,7 +325,6 @@ class Main extends React.Component {
       .attr("width", d => d.x1 - d.x0)
       .attr("height", d => d.y1 - d.y0)
       .attr("fill", d => color(d.parent.data.name))
-      .attr("blah", d => console.log(d.parent.data))
       .attr("data-name", d => d.data.name)
       .attr("data-category", d => d.data.category)
       .attr("data-value", d => d.data.value)
@@ -386,24 +386,41 @@ class Main extends React.Component {
 
   renderD3Legend(color, root) {
 
-    const svg = d3.select(this.svg)
-
-    const g = svg.append("g")
-      .attr("class", "key")
-      .attr("id", "legend")
-      .attr("transform", "translate(0, 42)")
+    const box = {
+      width: 20,
+      height: 20,
+      padding: 12,
+      yOffset: 20,
+    }
 
     const categories = [...new Set(root.leaves().map(d => d.data.category))]
 
-    // console.log(root.leaves().map(d => d.data.category))
-    g.selectAll("rect")
+
+    const legend = d3.select(this.legend)
+      .attr("class", "legend")
+      .attr("id", "legend")
+
+    const boxes = legend.selectAll("g")
       .data(categories)
       .enter()
-      .append("rect")
-      .attr("width", 10)
-      .attr("height", 10)
-      // .attr("fill", d => console.log(d))
-      // .attr("test", d => console.log(d))
+      .append("g")
+
+    boxes.append("rect")
+      .attr("class", "legend-item")
+      .attr("width", box.width)
+      .attr("height", box.height)
+      .attr("x", box.padding)
+      .attr("y", (d,i) => i * (box.height + box.padding) + box.yOffset)
+      .attr("dy", box.yOffset)
+      .attr("fill", d => color(d))
+
+    
+    boxes.append("text")
+      .attr("x", box.padding * 2 + box.width)
+      .attr("y", (d,i) => i * (box.height + box.padding) + box.yOffset)
+      .attr("dy", "1rem")
+      .text(d => d)
+    
 
     // const x = d3.scaleLinear()
     //   .domain([Math.floor(min), Math.ceil(max)])
@@ -466,9 +483,13 @@ class Main extends React.Component {
             width={width}
             height={height}
             ref={ node => this.svg = node}
-          >
-            
-          </svg>
+          />
+          <svg
+            id="legend"
+            width="140"
+            height={height}
+            ref={ node => this.legend = node}
+          />
         </div>
       </main>
     )
