@@ -1,7 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom"
 import PropTypes from "prop-types"
-import cx from "classnames"
 
 import "./assets/styles/styles.scss"
 
@@ -24,7 +23,7 @@ class NavList extends React.PureComponent {
 
   render() {
     const { children, className, links } = this.props
-    return <ul className={cx(className, "navlist")}>
+    return <ul className={className + " navlist"}>
       {links.map(item => (
         <NavItem
           key={item.name}
@@ -73,7 +72,7 @@ class NavItem extends React.PureComponent {
     } = this.props
 
     return (
-      <li className={cx(className, "navitem")}>
+      <li className={className + " navitem"}>
         <Component
           className="navlink"
           href={link}
@@ -217,12 +216,23 @@ const Footer = () => (
 
 const ToolTip = props => {
 
-  const {children, x, y, offsetX, offsetY, visible} = props
+  const {
+    bgColor,
+    children,
+    dataValue,
+    x,
+    y,
+    offsetX,
+    offsetY,
+    visible,
+  } = props
 
   return (
     <div
+      data-value={dataValue}
       id="tooltip"
       style={{
+        backgroundColor: bgColor,
         left: x + offsetX,
         top: y + offsetY,
         display: visible ? "inline-block" : "none",
@@ -234,7 +244,12 @@ const ToolTip = props => {
 }
 
 ToolTip.propTypes = {
+  bgColor: PropTypes.string,
   children: PropTypes.any,
+  dataValue: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ]),
   x: PropTypes.number,
   y: PropTypes.number,
   offsetX: PropTypes.number,
@@ -243,7 +258,9 @@ ToolTip.propTypes = {
 }
 
 ToolTip.defaultProps = {
+  bgColor: "rgb(120, 167, 190)",
   children: "tooltip",
+  dataValue: "",
   x: 0,
   y: 0,
   offsetX: 0,
@@ -318,6 +335,29 @@ class Main extends React.Component {
       .enter()
       .append("g")
       .attr("transform", d => `translate(${d.x0}, ${d.y0})`)
+      .on("mousemove", d => {
+        const { name, category, value } = d.data
+        const [x, y] = [d3.event.pageX, d3.event.pageY]
+        ReactDOM.render(
+          <ToolTip
+            x={x}
+            y={y}
+            bgColor={d3.rgb(color(d.parent.data.name)).brighter(.5).toString()}
+            dataValue={value}
+            offsetX={10}
+            offsetY={-30}
+            visible
+          >
+            <div>Game: {name}</div>
+            <div>Platform: {category}</div>
+            <div>Rating: {value}</div>
+          </ToolTip>,
+          tooltipdiv
+        )
+      })
+      .on("mouseout", () => {
+        ReactDOM.render(<ToolTip />, tooltipdiv)
+      })
 
     cell.append("rect")
       .attr("class", "tile")
@@ -328,6 +368,7 @@ class Main extends React.Component {
       .attr("data-name", d => d.data.name)
       .attr("data-category", d => d.data.category)
       .attr("data-value", d => d.data.value)
+      
 
     cell.append("clipPath")
       .attr("id", d => `clip-${d.data.id}`)
@@ -343,44 +384,6 @@ class Main extends React.Component {
       .attr("y", (d, i) => 13 + i * 10)
       .text(d => d)
 
-
-    // svg.append("g")
-    //   .attr("class", "counties")
-    //   .selectAll("path")
-    //   .data(topojson.feature(geo, geo.objects.counties).features)
-    //   .enter().append("path")
-    //   .attr("fill", d => color( d.percent = data.get(d.id).bachelorsOrHigher ))
-    //   .attr("d", path )
-    //   .attr("class", "county")
-    //   .attr("data-fips", d => d.id)
-    //   .attr("data-education", d => data.get(d.id).bachelorsOrHigher)
-    //   .on("mouseover", d => {
-    //     const {state, area_name, bachelorsOrHigher: rate} = data.get(d.id)
-    //     const [x, y] = [d3.event.pageX, d3.event.pageY]
-    //     ReactDOM.render(
-    //       <ToolTip
-    //         data-education={rate}
-    //         x={x}
-    //         y={y}
-    //         offsetX={10}
-    //         offsetY={-30}
-    //         visible
-    //       >
-    //         {`${area_name}, ${state}: ${rate}%`}
-    //       </ToolTip>,
-    //       tooltipdiv
-    //     )
-    //   })
-    //   .on("mouseout", () => {
-    //     ReactDOM.render(<ToolTip />, tooltipdiv)
-    //   })
-    //   .append("title")
-    //   .text(d => `${d.percent}%`)
-
-    // svg.append("path")
-    //   .datum(topojson.mesh(geo, geo.objects.states, (a,b) => a !== b ))
-    //   .attr("class", "states")
-    //   .attr("d", path)
   }
 
 
@@ -420,45 +423,7 @@ class Main extends React.Component {
       .attr("y", (d,i) => i * (box.height + box.padding) + box.yOffset)
       .attr("dy", "1rem")
       .text(d => d)
-    
 
-    // const x = d3.scaleLinear()
-    //   .domain([Math.floor(min), Math.ceil(max)])
-    //   .rangeRound([600, 860])
-
-    // const g = svg.append("g")
-    //   .attr("class", "key")
-    //   .attr("id", "legend")
-    //   .attr("transform", "translate(0, 42)")
-
-    // g.selectAll("rect")
-    //   .data(color.range().map(d => {
-    //     d = color.invertExtent(d)
-    //     d[0] = d[0] || x.domain()[0]
-    //     d[1] = d[1] || x.domain()[1]
-    //     return d
-    //   }))
-    //   .enter().append("rect")
-    //   .attr("height", 8)
-    //   .attr("x", d => x(d[0]))
-    //   .attr("width", d => x(d[1]) - x(d[0]))
-    //   .attr("fill", d => color(d[0]))
-
-    // g.append("text")
-    //   .attr("class", "caption")
-    //   .attr("x", x.range()[0])
-    //   .attr("y", -6)
-    //   .attr("fill", "#000")
-    //   .attr("text-anchor", "start")
-    //   .attr("font-weight", "bold")
-    //   .text("Rate of Bachelor's Degree or Higher")
-
-    // g.call(d3.axisBottom(x)
-    //   .tickSize(13)
-    //   .tickFormat((x, i) => i ? Math.ceil(x) : Math.ceil(x) + "%")
-    //   .tickValues(color.domain()))
-    //   .select(".domain")
-    //   .remove()
   }
 
 
