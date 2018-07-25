@@ -10,25 +10,33 @@ const getClockTime = (seconds) => {
   return `${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`
 }
 
-(function () {
-  window.accurateInterval = function (fn, time) {
-    var cancel, nextAt, timeout, wrapper
-    nextAt = new Date().getTime() + time
-    timeout = null
-    wrapper = function () {
-      nextAt += time
-      timeout = setTimeout(wrapper, nextAt - new Date().getTime())
-      return fn()
-    }
-    cancel = function () {
-      return clearTimeout(timeout)
-    }
-    timeout = setTimeout(wrapper, nextAt - new Date().getTime())
-    return {
-      cancel: cancel,
-    }
+class accurateInterval {
+
+  intervalId = null
+
+  constructor(fn, timer) {
+    this.fn = fn
+    this.timer = timer
   }
-}).call(this)
+
+  start = () => {
+    this.next = new Date().getTime() + this.timer
+    this.intervalId = setTimeout(this.step, this.next - new Date().getTime())
+    return this
+  }
+
+  step = () => {
+    this.next += this.timer
+    this.intervalId = setTimeout(this.step, this.next - new Date().getTime())
+    this.fn()
+  }
+
+  stop = () => {
+    clearTimeout(this.intervalId)
+  }
+
+}
+
 
 const Header = ({ title }) => (
   <header>
@@ -41,7 +49,6 @@ const Main = ({ children }) => <main>{children}</main>
 const Display = (props) => {
 
   const { timeRemaining, sessionTimer, breakTimer, timerPhase } = props
-  const [min, sec] = getTimeArray(timeRemaining)
 
   return (
     <div id="display">
@@ -66,6 +73,7 @@ const Display = (props) => {
 const Buttons = (props) => {
   const { adjustTimer, startStop, reset, disableButtons, running } = props
   return <div id="buttons">
+
     {/* Timer Adjustment Buttons */}
     <div id="timer-adjustments" className="button_section">
       <div className="adjustment">
@@ -152,7 +160,6 @@ class App extends React.Component {
     const { adjust, target } = e.target.dataset
     const newTimer = this.state[target] + Number(adjust) * 60
     if (newTimer < MINTIME || newTimer > MAXTIME) return
-    console.log(target)
     if (target === "breakTimer") return this.setState({
       breakTimer: newTimer,
     })
@@ -170,6 +177,7 @@ class App extends React.Component {
   timerInterval = () => {
     const { timerPhase, sessionTimer, breakTimer, timeRemaining} = this.state
     if (timeRemaining <= 0) {
+      this.promise = this.alarm.play()
       this.setState({
         timeRemaining: timerPhase === "Session" ? breakTimer : sessionTimer,
         timerPhase: timerPhase === "Session" ? "Break" : "Session",
@@ -186,12 +194,12 @@ class App extends React.Component {
   startStop = async () => {
     const { intervalLength, intervalId, running } = this.state
 
-    intervalId && running && intervalId.cancel()
+    intervalId && running && intervalId.stop()
 
     this.setState(prevState => ({
       intervalId: prevState.running 
         ? prevState.intervalId 
-        : accurateInterval(this.timerInterval, intervalLength),
+        : new accurateInterval(this.timerInterval, intervalLength).start(),
       running: !prevState.running,
       disableButtons: true,
     }))
@@ -199,11 +207,15 @@ class App extends React.Component {
 
 
   reset = () => {
-    console.log("reset")
     const { defaultBreak, defaultSession, defaultPhase } = this.props
     const { intervalId } = this.state
 
-    intervalId && intervalId.cancel()
+    intervalId && intervalId.stop()
+
+
+    this.alarm.pause()
+    this.alarm.currentTime = 0
+
     this.setState({
       running: false,
       disableButtons: false,
@@ -241,6 +253,9 @@ class App extends React.Component {
             running={running}
             startStop={this.startStop}
             reset={this.reset} />
+          <audio id="beep" ref={node => this.alarm = node}>
+            <source src="https://mackville.net/pomodoro/sounds/session-start.mp3" type="audio/mp3" />
+          </audio>
         </Main>
       </React.Fragment>
     )
