@@ -5,12 +5,12 @@ const MINTIME = 1
 const MAXTIME = 60 * 60
 
 const getTimeArray = (seconds) => [Math.floor(seconds / 60), seconds % 60]
-const getClockTime = (seconds) => {
-  const [min, sec] = getTimeArray(seconds)
-  return `${min < 10 ? "0" + min : min}:${sec < 10 ? "0" + sec : sec}`
-}
 
-class accurateInterval {
+const getClockTime = (seconds) => 
+  getTimeArray(seconds).map(v => String(v).padStart(2,"0")).join(":")
+
+
+class AccurateInterval {
 
   intervalId = null
 
@@ -21,14 +21,17 @@ class accurateInterval {
 
   start = () => {
     this.next = new Date().getTime() + this.timer
-    this.intervalId = setTimeout(this.step, this.next - new Date().getTime())
+    this.step()
     return this
   }
 
   step = () => {
     this.next += this.timer
-    this.intervalId = setTimeout(this.step, this.next - new Date().getTime())
-    this.fn()
+    this.intervalId = setTimeout(() => {
+      this.step()
+      this.fn()
+    },
+    this.next - new Date().getTime())
   }
 
   stop = () => {
@@ -199,7 +202,7 @@ class App extends React.Component {
     this.setState(prevState => ({
       intervalId: prevState.running 
         ? prevState.intervalId 
-        : new accurateInterval(this.timerInterval, intervalLength).start(),
+        : new AccurateInterval(this.timerInterval, intervalLength).start(),
       running: !prevState.running,
       disableButtons: true,
     }))
