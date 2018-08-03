@@ -6,7 +6,7 @@
 /coverage
 
 # production
-dist/
+dist/bundle.*
 
 # misc
 .DS_Store

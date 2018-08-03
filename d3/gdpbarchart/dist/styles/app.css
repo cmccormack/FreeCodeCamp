@@ -1,0 +1,102 @@
+body {
+  background-color: rgba(240, 240, 240, 0.95);
+  background: linear-gradient(rgba(240, 240, 240, 0.95), rgba(240, 240, 240, 0.95)), url("../images/bg.png") no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  margin-bottom: 60px; }
+
+header {
+  max-width: 1024px;
+  margin: auto; }
+  header .navbar-brand i {
+    margin-right: 8px; }
+
+footer {
+  max-width: 1024px;
+  height: 56px;
+  margin: auto;
+  display: inline-block;
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: .5rem 1.5rem;
+  z-index: 50; }
+
+.title {
+  margin: 80px 0 40px;
+  width: 100%; }
+
+main {
+  min-width: 320px;
+  width: 1024px;
+  margin: auto;
+  margin-bottom: 300px;
+  position: relative; }
+
+.canvas-body {
+  background-color: #EEE;
+  box-shadow: -8px 8px 32px #444;
+  margin: auto; }
+  .canvas-body .chart-title {
+    padding: 20px 0 0 0;
+    margin-bottom: -40px; }
+  .canvas-body .canvas {
+    display: block; }
+    .canvas-body .canvas rect .mousein {
+      fill: black; }
+  .canvas-body .chart-desc {
+    margin: auto;
+    margin-top: 20px;
+    width: 80%;
+    font-size: 12px;
+    padding-bottom: 20px; }
+
+#tooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 5px 10px 5px 10px;
+  min-width: 200px;
+  background-color: rgba(220, 220, 220, 0.8);
+  border: 2px solid gray;
+  border-radius: 8px; }
+
+.text-shadow {
+  text-shadow: -3px 3px 8px #444; }
+
+.white-shadow:hover {
+  text-shadow: 0 0 8px #EEE; }
+
+.display-4 {
+  font-size: 3.5rem;
+  font-weight: 300;
+  line-height: 1.1; }
+
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1; }
+
+.display-6 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  line-height: 1.1; }
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; }
+
+.unselectable {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default; }
+
+/*# sourceMappingURL=app.css.map */
