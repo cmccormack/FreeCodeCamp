@@ -33,6 +33,7 @@ main {
   min-width: 320px;
   width: 1024px;
   margin: auto;
+  margin-bottom: 300px;
   position: relative; }
 
 .canvas-body {
@@ -53,7 +54,7 @@ main {
     font-size: 12px;
     padding-bottom: 20px; }
 
-.tt {
+#tooltip {
   display: none;
   position: absolute;
   left: 0;

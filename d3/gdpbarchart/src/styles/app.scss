@@ -50,6 +50,7 @@ main {
   min-width: 320px;
   width: 1024px;
   margin: auto;
+  margin-bottom: 300px;
   position: relative;
 }
  
@@ -83,7 +84,7 @@ main {
   }
 }
 
-.tt {
+#tooltip {
   display: none;
   position: absolute;
   left: 0;
@@ -95,12 +96,6 @@ main {
   border-radius: 8px;
 }
 
-
-// a {
-//   &:hover {
-//     text-decoration: none;
-//   }
-// }
 
 .text-shadow {
   text-shadow: -3px 3px 8px $text-shadow;

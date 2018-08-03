@@ -1,16 +1,10 @@
-/*eslint no-console: "off"*/
-
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { scaleTime, scaleLinear } from 'd3-scale'
-import { axisBottom, axisLeft, axisRight } from 'd3-axis'
-import { timeYear } from 'd3-time'
-import { select } from 'd3-selection'
-import { format } from 'd3-format'
+
+const d3 = window.d3
 
 
-
-var globals = {
+const globals = {
   url: 'https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/GDP-data.json'
 }
 
@@ -28,14 +22,13 @@ class App extends React.Component {
   }
 
   componentDidMount(){
+    // Seed #tooltip with data for testing
+    this.handleTooltip(false, {x:0,y:0}, [Date.now(), 0])
+
     // Grab data from API and store in state once App mounts
     fetch(globals.url)
-      .then((response)=>{
-        console.log('Fetch ' + (response.ok? 'success!' : 'failure...'))
-        return response
-      })
-      .then((response)=>response.json())
-      .then((json)=>{
+      .then(response => response.json())
+      .then(json => {
         this.setState({
           data: json.data,
           description: json.description,
@@ -50,8 +43,8 @@ class App extends React.Component {
 
   handleTooltip(showTooltip, pos, datum) {
     datum.baseTemp = this.baseTemp
-    var props = {showTooltip, pos, datum}
-    ReactDOM.render(<Tooltip {...props} />, document.getElementById('tooltip'))
+    const props = {showTooltip, pos, datum}
+    ReactDOM.render(<Tooltip {...props} />, document.getElementById('tt'))
   }
 
   render() {
@@ -70,12 +63,19 @@ class App extends React.Component {
 }
 
 function TitleBar(props){
-  return <div className='title display-2 text-center text-shadow unselectable'>{props.title}</div>
+  return (
+    <div
+        className='title display-2 text-center text-shadow unselectable'
+        id="title"
+    >
+      {props.title}
+    </div>
+  )
 }
 
 function CanvasBody(props){
 
-  var canvas = {
+  const canvas = {
       width: 900,
       height: 600,
     }
@@ -108,47 +108,60 @@ function CanvasBody(props){
 }
 
 function Chart(props) {
-  var chart = {
+  const chart = {
     marginTop: 40,
     marginRight: 50,
     marginBottom: 50,
     marginLeft: 70,
-  },
-  data = props.data,
-  barWidth = 0
-
-  chart.xScale = scaleTime().domain([new Date(data[0][0]), new Date(data[data.length-1][0])]).nice()
-  chart.yScale = scaleLinear().domain([0, data[data.length-1][1]])
-  chart.color = scaleLinear().domain([0, data[data.length-1][1]]).range([190, 230])
-
+  }
   chart.width = props.canvas.width - chart.marginLeft - chart.marginRight
   chart.height = props.canvas.height - chart.marginTop - chart.marginBottom
-  chart.x = chart.marginLeft
-  chart.y = props.canvas.height - chart.marginBottom
 
-  chart.xScale.range([chart.x, chart.width + chart.x])
-  chart.yScale.range([chart.height, 0])
+  chart.x0 = chart.marginLeft
+  chart.y0 = chart.marginTop
+  chart.x1 = chart.marginLeft + chart.width
+  chart.y1 = chart.marginTop + chart.height
   
-  barWidth = chart.width / data.length
+  const { data } = props
 
-  var xAxis = axisBottom(chart.xScale).ticks(timeYear.every(5)),
-    yAxis = axisLeft(chart.yScale),
-    yAxisRight = axisRight(chart.yScale)
+  const [dates, gdp] = [data.map(v => new Date(v[0])), data.map(v => v[1])]
 
-  select('.canvas').append('g')
+  chart.xScale = d3.scaleTime()
+    .domain(d3.extent(dates))
+    .range([0, chart.width])
+
+  chart.yScale = d3.scaleLinear()
+    .domain([0, d3.max(gdp)])
+    .range([0, chart.height])
+
+  chart.yAxisScale = d3.scaleLinear()
+    .domain([0, d3.max(gdp)])
+    .range([chart.height, 0])
+
+  chart.color = d3.scaleLinear()
+    .domain([0, d3.max(gdp)])
+    .range([230, 180])
+
+  const xAxis = d3.axisBottom(chart.xScale).ticks(d3.timeYear.every(5))
+  const yAxis = d3.axisLeft(chart.yAxisScale)
+  const yaxisRight = d3.axisRight(chart.yAxisScale)
+
+  d3.select('.canvas').append('g')
     .attr('class', 'x axis')
-    .attr('transform', `translate(0, ${chart.y})`)
+    .attr('id', 'x-axis')
+    .attr('transform', `translate(${chart.x0}, ${chart.y1})`)
     .call(xAxis)
   
-  select('.canvas').append('g')
+  d3.select('.canvas').append('g')
     .attr('class', 'y axis')
-    .attr('transform', `translate(${chart.x}, ${chart.marginTop})`)
+    .attr('id', 'y-axis')
+    .attr('transform', `translate(${chart.x0}, ${chart.y0})`)
     .call(yAxis)
 
-  select('.canvas').append('g')
+  d3.select('.canvas').append('g')
     .attr('class', 'y axis')
-    .attr('transform', `translate(${chart.x + chart.width}, ${chart.marginTop})`)
-    .call(yAxisRight)
+    .attr('transform', `translate(${chart.x1}, ${chart.y0})`)
+    .call(yaxisRight)
   
   return (
     <g>
@@ -158,25 +171,27 @@ function Chart(props) {
               datum={v}
               fill={Math.floor(chart.color(v[1]))}
               handleMouse={props.handleMouse}
-              height={`${chart.height - chart.yScale(v[1])}px`}
+              height={chart.yScale(v[1])}
               key={v[0]+v[1]}
-              width={`${barWidth+1}px`}
-              x={chart.x + (i*barWidth)}
-              y={chart.y - chart.height + chart.yScale(v[1])}
+              translateX={chart.x0}
+              translateY={chart.y0}
+              width={chart.width / data.length + 1}
+              x={(i * (chart.width / data.length))}
+              y={chart.height - chart.yScale(v[1])}
           />
         )
       })}
       <text 
           transform={'translate(-530, 500), rotate(-90)'}
           x={chart.marginLeft}
-          y={chart.y}
+          y={chart.y0}
       >
         {'US Gross Domestic Product (in billions)'}
       </text>
       <text 
           transform={'translate(350, 45)'}
           x={chart.marginLeft}
-          y={chart.y}
+          y={chart.y1}
       >
         {'Year'}
       </text>
@@ -219,13 +234,19 @@ class Rect extends React.Component {
   }
 
   render (){
+    const [date, gdp] = this.props.datum
+    const {translateX, translateY} = this.props
     return (
       <g>
-        <rect 
+        <rect
+            className="bar"
+            data-date={date}
+            data-gdp={gdp}
             {...this.attr}
             fill={this.state.fill}
             onMouseOut={this.handleMouseOut}
             onMouseOver={this.handleMouseOver}
+            transform={`translate(${translateX}, ${translateY})`}
         />
       </g>
       
@@ -235,29 +256,35 @@ class Rect extends React.Component {
 
 function Tooltip(props){
 
-  var months = ['January', 'February', 'March', 'April', 'May', 'June',
+  const months = ['January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'
   ]
   let date = new Date(props.datum[0]),
     year = date.getFullYear(),
     month = months[date.getMonth()]
 
+  
+
   return (
     <div 
-        className='tt'
+        data-date={props.datum[0]}
+        id="tooltip"
         style={{
           left: props.pos.x-210,
           top: props.pos.y-70,
           display: props.showTooltip ? 'block' : 'none'
         }}
     >
-      <div style={{fontWeight: 600}}>{`${format('$,.2f')(props.datum[1])} Billion`}</div>
-      <div>{`${month} ${year}`}</div>
+      <div style={{fontWeight: 600}}>
+        {`${d3.format('$,.2f')(props.datum[1])} Billion`}
+      </div>
+      <div>
+        {`${month} ${year}`}
+      </div>
     </div>
   )
 }
 
 
-window.onload = function(){
-  ReactDOM.render(<App />, document.getElementById('root'))
-}
+
+ReactDOM.render(<App />, document.getElementById('root'))
