@@ -184,7 +184,7 @@ function Chart(props) {
       <text 
           transform={'translate(-530, 500), rotate(-90)'}
           x={chart.marginLeft}
-          y={chart.y0}
+          y={chart.y1}
       >
         {'US Gross Domestic Product (in billions)'}
       </text>
