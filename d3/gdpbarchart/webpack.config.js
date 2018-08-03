@@ -1,6 +1,5 @@
 const path = require('path')
-
-console.log(__dirname)
+const CompressionPlugin = require('compression-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -19,5 +18,8 @@ module.exports = {
   },
   devServer: {
     contentBase: "./dist"
-  }
+  },
+  plugins: [
+    new CompressionPlugin()
+  ]
 }
