@@ -1,0 +1,59 @@
+{
+  "name": "drummachine",
+  "version": "1.0.0",
+  "description": "Drum Machine - FCC",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --env.prod",
+    "build:local": "webpack --env.prod --env.local",
+    "dev": "webpack --env.dev",
+    "dev:local": "webpack --env.dev --env.local",
+    "setup": "node ./src/setup.js",
+    "start:dev": "webpack-dev-server --env.dev",
+    "start:visualize": "webpack-dev-server --env.dev --env.visualize"
+  },
+  "keywords": [
+    "FCC",
+    "Drum",
+    "Machine",
+    "DrumMachine",
+    "FreeCodeCamp"
+  ],
+  "author": "Christopher McCormack - https://mackville.net",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^8.2.5",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "clean-webpack-plugin": "^0.1.19",
+    "compression-webpack-plugin": "^1.1.11",
+    "css-loader": "^0.28.11",
+    "eslint": "^5.0.0",
+    "eslint-plugin-react": "^7.9.1",
+    "file-loader": "^1.1.11",
+    "html-webpack-plugin": "^3.2.0",
+    "image-webpack-loader": "^4.3.1",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.3",
+    "shelljs": "^0.8.2",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.12.1",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^3.0.8",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.26.0",
+    "chalk": "^2.4.1",
+    "classnames": "^2.2.6",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  }
+}

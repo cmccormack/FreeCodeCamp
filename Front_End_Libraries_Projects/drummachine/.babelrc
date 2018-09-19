@@ -1,0 +1,16 @@
+{
+    "presets": [
+      "react",
+      "env",
+      "stage-2"
+    ],
+    "plugins": [
+      [
+        "transform-object-rest-spread",
+        {
+          "useBuiltIns": true
+        }
+      ],
+      "transform-runtime"
+    ]
+  }
