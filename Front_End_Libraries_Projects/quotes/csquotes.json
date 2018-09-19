@@ -1,0 +1,58 @@
+[ 
+  { 
+    "author": "Pablo Picasso", 
+    "quote": "Computers are useless.  They can only give you answers." 
+  },
+  {
+    "author": "Unknown",
+    "quote": "If carpenters made buildings the way programmers make programs, the first woodpecker to come along would destroy all of civilization."
+  },
+  {
+    "author": "Edsger W. Dijkstra",
+    "quote": "Computing science is no more about computers than astronomy is about telescopes."
+  },
+  {
+    "author": "Edsger W. Dijkstra",
+    "quote": "I don’t need to waste my time with a computer just because I am a computer scientist."
+  },
+  {
+    "author": "Edsger W. Dijkstra",
+    "quote": "It is practically impossible to teach good programming style to students that have had prior exposure to BASIC: as potential programmers they are mentally mutilated beyond hope of regeneration."
+  },
+  {
+    "author": "Richard Hamming",
+    "quote": "The purpose of computing is insight, not numbers."
+  },
+  {
+    "author": "Donald Knuth",
+    "quote": "An algorithm must be seen to be believed."
+  },
+  {
+    "author": "Donald Knuth",
+    "quote": "People think that computer science is the art of geniuses but the actual reality is the opposite, just many people doing things that build on each other, like a wall of mini stones."
+  },
+  {
+    "author": "Alan J. Perlis",
+    "quote": "It is easier to change the specification to fit the program than vice versa."
+  },
+  {
+    "author": "Alan Turing",
+    "quote": "We can only see a short distance ahead, but we can see plenty there that needs to be done."
+  },
+  {
+    "author": "Fred Brooks",
+    "quote": "Einstein argued that there must be simplified explanations of nature, because God is not capricious or arbitrary. No such faith comforts the software engineer."
+  },
+  {
+    "author": "Alan Kay",
+    "quote": "Simple things should be simple; complex things should be possible."
+  },
+  {
+    "author": "Alan J. Perlis",
+    "quote": "It is easier to write an incorrect program than understand a correct one."
+  },
+  {
+    "author": "Brian W. Kernighan",
+    "quote": "Controlling complexity is the essence of computer programming."
+  }
+]
