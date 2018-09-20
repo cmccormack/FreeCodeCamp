@@ -16,11 +16,11 @@ undefined
 ```
 
 
-// jshint esversion:6, asi:true
+`// jshint esversion:6, asi:true`
 
-Please format your code:
-\```
-Code goes here, backticks go on their own line.  Previous posts can be edited.  `control + shift + m` for detailed Markdown Help.
+Please format your code:  
+\```  
+Code goes here, backticks go on their own line.  Previous posts can be edited.  `control + shift + m` for detailed Markdown Help.  
 \```
 
 https://mdn.io/working_with_objects
@@ -46,4 +46,10 @@ function interpolate(param1, param2){
    return param1 + ' ' + param2 + ' ' + arguments[2]
 }
 interpolate('tic', 'tac', 'toe') // 'tic tac toe'
+```
+
+Even better using ES6/Template Literals:
+```
+const interpolate = (param1, param2, ...rest) => `${param1}, ${param2}, ${rest}`
+interpolate('run', 'run', 'as fast as you can!') // 'run, run, as fast as you can!'
 ```
