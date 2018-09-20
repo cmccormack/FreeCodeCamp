@@ -1,0 +1,33 @@
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  height: 100%;
+}
+
+h1 {
+  font-weight: bold;
+}
+
+.jumbotron {
+  margin-top: 30px;
+  background-color: #DEE;
+  box-shadow: 0 0 30px black;
+}
+
+.caption {
+  font-size: 12px;
+}
+
+p.summary {
+  font-size: 14px;
+}
+
+.thumbnail {
+  box-shadow: 0 0 30px black;
+  margin: 50px 0 50px;
+}
+
+#title {
+  color: white;
+  text-shadow: 2px 2px 4px #000000;
+}

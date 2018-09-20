@@ -1,0 +1,369 @@
+$body-bg: #777;
+$text-shadow: #444;
+$white-shadow: #EEE;
+$body-bg-img: "../images/bg.jpg";
+$body-bg-grad: linear-gradient(rgba(120,120,120,.6), rgba(120,120,120,.6));
+$fog-bg: #333;
+$fog-border: #333;
+@import '../../node_modules/rpg-awesome/scss/rpg-awesome.scss';
+
+body {
+  background-color: $body-bg;
+  background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+
+// Remove below for Codepen
+header {
+  max-width: 1024px;
+  margin: auto;
+  .navbar-brand i {
+    margin-right: 8px;
+  }
+}
+
+footer {
+  max-width: 1024px;
+  height: 56px;
+  margin: auto;
+  display: inline-block;
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: .5rem 1.5rem;
+  z-index: 50;
+}
+// Remove Above for Codepen
+
+
+.title {
+  margin: 70px 0 30px;
+  width: 100%;
+}
+
+main {
+  min-width: 320px;
+  width: 1024px;
+  margin: auto;
+  position: relative;
+}
+ 
+.mapContainer{
+
+  margin: auto;
+  background-color: rgba(2,2,2,0.4);
+  border-radius: 4px;
+  box-shadow: -8px 8px 8px#333;
+
+  .statusicons {
+    width: 100%;
+    background-color: rgba(2,2,2,0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    color: #CCC;
+    position: relative;
+
+    #dungeonLevelWrapper {
+      position: absolute;
+      top: 36px;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      font-size: 0.8rem;
+      padding: 4px 0 4px 10px;
+      background-color: rgb(20,20,20);
+      background-color: rgba(20,20,20,0.2);
+      line-height: 1.2;
+    }
+
+    #fogToggleWrapper {
+      position: absolute;
+      top: 36px;
+      right: 0;
+      width: 70px;
+      z-index: 20;
+      font-size: 0.8rem;
+      padding: 4px 10px 4px;
+      line-height: 1.2;
+
+      i {
+        font-style: .8rem;
+      }
+    }
+
+    #statusiconstable {
+      width: 100%;
+    }
+
+    .status{
+      padding-left: 0;
+      padding-right: 0;
+      width: 25%;
+
+      .ra {
+
+        margin-right: 8px;
+
+        &.ra-health{
+          color: rgb(220,0,0);
+        }
+        &.ra-broken-shield{
+          color: #BA7333;
+        }
+        &.ra-battered-axe{
+          color: silver;
+        }
+        &.ra-player{
+          margin-right: 4px;
+          color: limegreen;
+        }
+      }
+
+      .chevron {
+        font-size: .7rem;
+        
+      }
+    }
+  }
+
+  
+  .tilewrapper {
+    position: relative;
+    margin-left: -1px;
+    margin-top: -1px;
+    float: left;
+  }
+    .tile {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+
+      &.wall{
+        background-color: hsl(20,60,40);
+        border: 1px solid #444;
+        z-index: 3;
+
+        &.visible, &.all-seeing{
+          box-shadow: 2px 2px 2px dimgray;
+        }
+        
+      }
+
+      &.floor, &.boss{
+        background-color: #AAA;
+        border-color: 1px solid #AAA;
+      }
+
+      &.stone {
+        background-color: #222;
+        border: 1px solid #333;
+        z-index: 4;
+
+      }
+
+      &.fog {
+        background-color: $fog-bg;
+        border: 1px solid $fog-border;
+        z-index: 15;
+      }
+
+      &.enemy {
+        background-color: #C41;
+        border: 1px solid darkred;
+        border-radius: 4px;
+        position: absolute;
+        z-index: 10;
+      }
+      &.floor.visited.fog{
+        background-color: #666;
+        border: none;
+      }
+      &.wall.visited.fog{
+        background-color: hsl(20,40,15);
+      }
+      &.stone.visited.fog{
+        background-color: #111;
+        border: 1px solid #222;
+      }
+      &.boss {
+        color: purple;
+      }
+      &.player {
+        background-color: limegreen;
+        border: 1px solid darkgreen;
+        border-radius: 4px;
+        z-index: 3;
+      }
+      .ra {
+        z-index: 2;
+        position: relative;
+        left: -1px;
+        top: -8px;
+        font-size: 12px;
+
+        &.ra-health {
+          color: green;
+        }
+        &.ra-triforce {
+          color: goldenrod;
+        }
+      }
+
+    }
+  .buttons {
+    display: inline-block;
+    margin-top: 12px;
+    background-color: rgba(2,2,2,0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%;
+    float: none;
+
+    .btn {
+      transition: none;
+      background-color: rgba(68,68,68,0.2);
+      height: 40px;
+      vertical-align: middle;
+      margin: 6px 0 0 6px;
+
+      &:hover {
+        background-color: rgba(68,68,68,0.6);
+        color: #EEE;
+      }
+    }
+  }
+
+  .statusText{
+    margin-top: 12px;
+    background-color: rgba(2,2,2,0.2);
+    box-shadow: 3px 3px 6px #222;
+    border-radius: 4px;
+    height: 100px;
+    width: 100%;
+    overflow-y: scroll;
+
+    ul {
+      font-size: 0.8rem;
+      padding-left: 16px;
+
+      li {
+        color: #888;
+        list-style: none;
+
+        &:nth-child(-n+1){
+          color: #CCC;
+        }
+
+        .li-ra {
+          margin-right: 10px;
+        }
+      }
+
+    }
+  }
+}
+
+// Keyboard Keys CSS - https://jsfiddle.net/BinaryMoon/8UqLv/
+.keys {
+  position: relative;
+  line-height: 3;
+  display: inline-block;
+  float: right;
+}
+.key {
+  // position: absolute;
+  border-style: solid;
+  border-color: #DDD #BBB #BCBCBC #EEE;
+  border-width: 2px 3px 6px 3px;
+  background-color: rgba(68,68,68,0.2);
+  display: inline-block;
+  border-radius: 5px;
+  margin: 0 10px 0 10px;
+  
+}
+
+.key span {
+  background-color: rgba(68,68,68,0.2);
+  color:#CCC;
+  display:block;
+  font-size:22px;
+  padding:0 2px;
+  border-radius:3px;
+  width:24px;
+  height:26px;
+  line-height:23px;
+  text-align:center;
+  font-weight:bold;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+.keyleft {
+  left: 0;
+  bottom: 0;
+}
+.keyup {
+  left: 40px;
+  bottom: 40px;
+}
+.keydown {
+  left: 40px;
+  bottom: 0px;
+}
+.keyright {
+  left: 80px;
+  bottom: 0px;
+}
+
+
+.key.wide span {
+  width:auto;
+  padding:0 12px;
+}
+
+
+
+
+a {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.text-shadow {
+  text-shadow: -3px 3px 8px $text-shadow;
+}
+.white-shadow {
+  &:hover {
+    text-shadow: 0 0 8px $white-shadow;
+  }
+}
+
+.display-6 {
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}

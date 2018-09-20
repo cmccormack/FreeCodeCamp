@@ -1,0 +1,262 @@
+html, body {
+  height: 100%;
+  min-width: 320px;
+}
+
+body {
+  width: 100%;
+  margin-bottom: 60px;
+  background-color: #DB9;
+}
+
+header,
+main,
+footer, nav{
+  max-width: 1024px;
+  margin: auto;
+  width: 100%;
+}
+
+main {
+  margin-top: 56px;
+  min-height: 100%;
+  margin-bottom: 56px;
+}
+
+i.fa {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+footer {
+  display: inline-block;
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: .5rem 1.5rem;
+  z-index: 50;
+  height: 56px;
+}
+
+input {
+  background-color: #222;
+  background-color: transparent;
+}
+
+.bg-red {
+  background-color: #300 !important;
+}
+
+#main-header {
+  padding: 15px 0 15px 0;
+  color: #400;
+  font-family: 'Permanent Marker', cursive;
+}
+
+#gameboard {
+  width: 320px;
+  border-radius: 20px;
+  padding: 10px;
+  /*background: #222;*/
+  background: #600;
+  background: #600 -webkit-radial-gradient(20% 80%, 60% 60%, rgba(255,255,255,.12), rgba(0,0,0,.2));
+  box-shadow: 0px 2px .7px 1px #976, inset 0 -7px rgba(0,0,0,.4);
+}
+
+#display {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  margin-top: 20px;
+  border-radius: 10px;
+  margin: auto;
+  padding: 15px;
+  padding-top: 21px;
+  color: #DDD;
+  background: #111;
+  background: linear-gradient(to top left,  #100 5%, #600 100%);
+  box-shadow: inset 3px 3px 4px #111;
+}
+
+#volume {
+  position: absolute;
+  top: -2px;
+  left: -15px;
+}
+
+.btn {
+  color: #DDD;
+}
+
+.board-cell {
+  clear:both;
+  width: 50%;
+  height: 50%;
+  margin-top: -6px;
+  display: inline-block;
+  padding: 2px;
+}
+
+.board-cell:focus {
+  outline: none;
+}
+
+.cell-btn {
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  box-shadow: inset 1px 2px 6px rgba(0,0,0,0.5);
+}
+
+.cell-btn:hover,
+.cell-btn.lit {
+  opacity: 1;
+  box-shadow: inset 1px 2px 6px rgba(0,0,0,0.4);
+}
+
+.cell-btn:active {
+  opacity: 0.9;
+  box-shadow: inset 5px 5px 12px rgba(0,0,0,0.4);
+}
+
+#red-btn {
+  background-color: red;
+  background-image: linear-gradient(to top left, red, darkorange);
+  border-top-left-radius: 40%;
+}
+#green-btn {
+  background-color: lime;
+  background-image: linear-gradient(to top right, green, lime);
+  border-top-right-radius: 40%;
+}
+#yellow-btn {
+  background-color: yellow;
+  background-image: linear-gradient(to bottom left, orange, yellow);
+  border-bottom-left-radius: 40%;
+}
+#blue-btn {
+  background-color: #05B;
+  background-image: linear-gradient(to bottom right, #05B, #6BF);
+  border-bottom-right-radius: 40%;
+}
+
+
+#buttons {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
+  display:flex;
+  justify-content:center;
+}
+
+#buttons .btn {
+  padding: 0.4rem 0.4rem;
+  border: 0;
+  text-transform: uppercase;
+  cursor:pointer;
+}
+
+#buttons .btn:hover {
+  background: none;/*
+  box-shadow: 1px 1px 4px black;*/
+}
+
+#buttons .btn:focus,
+#buttons .btn:active {
+  border: 0;
+/*  box-shadow: inset 1px 1px 4px black;
+  transform: translateY(2px);*/
+}
+
+#buttons label i {
+  font-size: 1.5em;
+}
+#buttons label span {
+  font-size: 1.2em;
+}
+
+#buttons .btn-row {
+  padding-top: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
+}
+
+#counter {
+  border-color: black;
+  background-color: black;
+  background-color: rgba(0,0,0,0.4);
+  color: #A00;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: 400;
+  font-size: 1.3em;
+}
+
+#statusdisplay {
+  font-family: 'Permanent Marker', cursive;
+  color: #400;
+  background-image: none;
+}
+
+
+
+/* Utility Styles */
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.display-5 {
+  font-size: 2.5rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.ip {
+  font-size: 1.5rem;
+  vertical-align: super;
+}
+
+.white-shadow {
+  color: #DDD;
+}
+.white-shadow:hover,
+.white-shadow:focus {
+  color: #FFF;
+  text-shadow: 0 0 8px #FFF;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.btl {
+  border-top-left-radius: 10%;
+}
+.btr {
+  border-top-right-radius: 10%;
+}
+.bbl {
+  border-bottom-left-radius: 10%;
+}
+.bbr {
+  border-bottom-right-radius: 10%;
+}
+
+
+/* Display size adjustments */
+@media only screen and (max-width: 768px){
+  footer {
+    text-align: center;
+  }
+}

@@ -1,0 +1,111 @@
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  margin: 20px auto;
+  #title {
+    font-size: 4rem;
+    font-weight: 300;
+  }
+}
+
+main {
+  flex: 1 0 auto;
+
+  #display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid black;
+    padding: 1rem;
+    background-color: hsl(216, 100%, 90%);
+    
+    #timer-label {
+      font-size: 3rem;
+      font-weight: 600;
+    }
+    
+    #time-left {
+      font-size: 3rem;
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
+    
+    #lengths {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+  }
+  
+  #buttons {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-top-width: 0;
+    background-color: hsl(216, 100%, 85%);
+
+    
+    .button_section {
+      padding: 1rem;
+    }
+
+
+    .btn {
+      border: none;
+      border: 1px solid black;
+      border-radius: 0;
+      background: none;
+      background-color: hsl(216, 100%, 90%);
+      
+      &:disabled {
+        border-color: #666;
+      }
+    }
+    
+    
+    #timer-adjustments {
+      display: flex;
+      flex-direction: row;
+      
+      justify-content: space-evenly;
+      .adjustment {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        .btn-adjust {
+          width: 100px;
+          margin: 4px;
+          font-size: 1.4rem;
+          padding: 0 0 2px 0;
+        }
+      }
+    }
+    
+    #playback_buttons {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      
+      
+      .btn-playback {
+        width: 180px;
+        height: 30px;
+      }
+    }
+    
+  }
+}

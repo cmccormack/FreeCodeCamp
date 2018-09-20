@@ -1,0 +1,170 @@
+$body-bg: #777;
+$text-shadow: #444;
+$white-shadow: #EEE;
+$body-bg-img: "../images/bg.png";  // http://jjguy.com/life/
+$body-bg-grad: linear-gradient(rgba(120,120,120,.8), rgba(120,120,120,.8));
+
+
+body {
+  background-color: $body-bg;
+  background: $body-bg-grad, url($body-bg-img) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  width: 100%;
+  margin-bottom: 60px;
+}
+
+
+// Remove below for Codepen
+header {
+  max-width: 1024px;
+  margin: auto;
+  .navbar-brand i {
+    margin-right: 8px;
+  }
+}
+
+footer {
+  max-width: 1024px;
+  height: 56px;
+  margin: auto;
+  display: inline-block;
+  position: fixed !important;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding: .5rem 1.5rem;
+  z-index: 50;
+}
+// Remove Above for Codepen
+
+main {
+  max-width: 1024px;
+  width: 1024px;
+  margin: auto;
+  position: relative;
+
+}
+
+.title {
+  margin: 50px 0 50px;
+  width: 100%;
+}
+
+main {
+  min-width: 320px;
+  margin-top: 30px;
+  margin-bottom: 56px;
+}
+
+.board {
+
+  margin: auto;
+  background-color: rgba(2,2,2,0.4);
+  border-radius: 4px;
+  box-shadow: -8px 8px 8px#333;
+
+  .cells{
+    .cell {
+      // border-radius: 30%;
+      margin: 0 0 -1px -1px;
+      border: 1px solid #444;
+      float: left;
+      // width: 12px;
+      // height: 12px;
+
+      &.dead{
+        background-color: #333;
+      }
+      &.alive {
+        background-color: #0F0;
+        background-color: rgba(0,255,0,0.8);
+      }
+      &.new {
+        background-color: rgba(180,255,180,0.8);
+      }
+    }
+  }
+  .buttons{
+    & > .btn-group{
+      margin-top: 10px;
+      width: 70%;
+
+      .btn {
+        transition: none;
+        background-color: rgba(2,2,2,0.3);
+
+        &:hover {
+          background-color: rgba(2,2,2,0.4);
+        }
+      }
+
+      .dropdown-menu {
+        padding: 0;
+        border: 2px solid #AAA;
+        min-width: 0;
+        
+        .dropdown-item {
+          background-color: #333;
+          color: #CCC;
+
+          &:hover {
+            background-color: #222;
+            color: #EEE;
+          }
+        }
+      }
+    }
+    .generations {
+      display: inline-block;
+      width: 30%;
+      border: 2px solid #333;
+      background-color: #333;
+      border-bottom-right-radius: 10px;
+      border-bottom-left-radius: 10px;
+      color: lightgray;
+      text-align: center;
+      box-shadow: -2px 2px 4px #111;
+    }
+  }
+}
+
+
+a {
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.text-shadow {
+  text-shadow: -3px 3px 8px $text-shadow;
+}
+.white-shadow {
+  &:hover {
+    text-shadow: 0 0 8px $white-shadow;
+  }
+}
+
+.display-6 {
+  font-size: 1.6rem;
+  font-weight: 300;
+  line-height: 1.1;
+}
+
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.unselectable {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: default;
+}

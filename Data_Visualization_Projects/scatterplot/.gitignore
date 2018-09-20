@@ -1,0 +1,22 @@
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env
+.vscode/
+
+.sass-cache/
+*.map
+*.log
+
+*.tiff
+
+/dist/bundle.js
