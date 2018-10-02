@@ -34,6 +34,15 @@ const lcm = (a, b) => (a*b) / gcd(a, b)
 const smallestCommons3 = ([a,b]) => (
     Array(Math.abs(a-b)+1).fill(Math.min(a,b)).map((v,i) => v+i).reduce(lcm)
 )
+const smallestCommons4 = ([a,b]) => {
+    const min = a > b ? b : a
+    const max = a > b ? a : b
+    let total = min
+    for (let i = min+1; i <= max; i+=1) {
+        total = lcm(total, i)
+    }
+    return total
+}
 
 
 const test = [23,18]
@@ -52,3 +61,8 @@ console.time('Test 3 - Using LCM')
 let result3 = smallestCommons3(test)
 console.timeEnd('Test 3 - Using LCM')
 console.log(result3)
+
+console.time('Test 4 - Using LCM and for loop')
+let result4 = smallestCommons4(test)
+console.timeEnd('Test 4 - Using LCM and for loop')
+console.log(result4)
