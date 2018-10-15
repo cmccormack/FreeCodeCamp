@@ -61,31 +61,31 @@ const drums = [
   }
 ]
 
+const Title = ({children}) => <div id="title">{children}</div>
+
 class Drum extends React.Component {
   
   state = {
-    sound: new Audio(this.props.url),
     active: false,
   }
 
+  audioRef = React.createRef()
+
   componentDidMount() {
-    const { keyTrigger } = this.props
     
-    document.addEventListener('keypress', e => {
-      if (e.key.toUpperCase() === keyTrigger) {
+    document.addEventListener('keydown', e => {
+      if (e.key.toUpperCase() == this.props.keyTrigger) {
         this.playAudio()
       }
     })
   }
 
-  audioRef = React.createRef()
-
   playAudio = () => {
-    this.props.handlePlayed(this.props.id)
+    this.audioRef.current.currentTime = 0
     this.audioRef.current.play()
+    this.props.handlePlayed(this.props.id)
+    setTimeout(() => this.setState({active: false}), 100)
     this.setState({active: true})
-    setTimeout(() => this.setState({active: false}), 200)
-    
   }
 
   render() {
@@ -110,12 +110,6 @@ class Drum extends React.Component {
   }
 }
 
-const Title = ({children}) => (
-  <h1 className="title">
-    { children }
-  </h1>
-)
-
 class App extends React.Component {
   
   state = {
@@ -133,10 +127,10 @@ class App extends React.Component {
     
     return (
       <React.Fragment>
-        <Title>
-          Drum Machine
-        </Title>
-        <main className="z-depth-3">
+        <header>
+          <Title>Drum Machine</Title>
+        </header>
+        <main>
           <div id="display">
             <div id="display-screen">{played}</div>
           </div>
@@ -153,6 +147,13 @@ class App extends React.Component {
       </React.Fragment>
     )
   }
+}
+
+let urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('test')) {
+  const fccTestingScript = document.createElement('script')
+  fccTestingScript.src = 'https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js'
+  document.head.appendChild(fccTestingScript);
 }
 
 ReactDOM.render(<App drums={drums} />, document.getElementById("drum-machine"))
