@@ -41,6 +41,23 @@ const findLongestWordLength6 = s => {
 }
 
 
+// @enestatli for loop with sort
+function findLongestWordLength7(str) {
+  let arr = str.split(' ');
+  let newArr = []
+  for(let i = 0; i < arr.length; i++) {
+    newArr.push(arr[i].length);
+  }
+  newArr.sort(function(x,y) {
+    return x-y;
+  })
+
+
+
+  return newArr.pop();
+}
+
+
 const str = "The quick brown fox jumped over the lazy dog"
 let result
 console.time('map and sort')
@@ -67,3 +84,7 @@ console.timeEnd('the what now?')
 console.time('ezioda004')
 result = findLongestWordLength6(str)
 console.timeEnd('ezioda004')
+
+console.time('enestatli for loop with sort')
+result = findLongestWordLength7(str)
+console.timeEnd('enestatli for loop with sort')
