@@ -53,3 +53,11 @@ Even better using ES6/Template Literals:
 const interpolate = (param1, param2, ...rest) => `${param1}, ${param2}, ${rest}`
 interpolate('run', 'run', 'as fast as you can!') // 'run, run, as fast as you can!'
 ```
+
+
+Thank you for your contribution.  At this time we have decided not to merge your pull request.  We welcome future pull requests from you.
+
+Happy Coding!
+
+Looks good to me, and congratulations on your first Pull Request!  🎉🎉🎉
+We look forward to future contributions!
