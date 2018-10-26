@@ -1,124 +1,105 @@
+const fccapi = {
+  url: "https://fcc-weather-api.glitch.me/api/current",
+}
 
-var unit = "us", // Celsius:si, Farhenheit:us
-    dsapi = {
-      url: "https://api.darksky.net/forecast/",
-      k: "ffb654af71fb3be46e3fd5e502b54751/",
-      params: { 
-        "exclude": "minutely,hourly,alerts",
-        "units": "us"  // si for celsius
+const temps = {
+  "us": {temp: "", icon: "wi wi-fahrenheit"},
+  "si": {temp: "", icon: "wi wi-celsius"},
+  "current_unit": "si",
+  "location": "Location Unknown",
+}
+
+const conditions = {
+  "clear-day": ['day-sunny'],
+  "clear-night": ['night-clear'],
+  "rain": ['rain'],
+  "snow": ['snow'],
+  "sleet": ['sleet'],
+  "wind": ['wind'],
+  "fog": ['fog'],
+  "cloudy": ['cloudy'],
+  "partly-cloudy-day": ['day-cloudy'],
+  "partly-cloudy-night": ['night-alt-cloudy']
+}
+
+const unitSelector = document.getElementById('unit-selector')
+const unitsIcon = document.getElementById('units')
+const tempDisplay = document.getElementById('temp-display')
+const locationDisplay = document.getElementById('location')
+const weatherIcon = document.getElementById('weather-icon')
+const conditionDisplay = document.getElementById('condition')
+
+const fetchJSON = (endpoint, method="GET", body=undefined) => (
+  fetch(endpoint, {
+    method,
+    headers: { "Content-Type": "application/json; charset=utf-8" },
+    body: JSON.stringify(body),
+  })
+    .then(res => res.text())
+    .then(text => {
+      try {
+        return JSON.parse(text)
+      } catch (e) {
+        return text
       }
-    },
-    locapi = {
-      url: "https://freegeoip.net/json/?callback=?",
-      lat: "",
-      lon: "",
-      city: "", 
-      state: "",
-      country: "",
-      countrycode: "",
-    },
-    temps = {
-      "us": "",
-      "si": ""
-    },
-    conditions = {
-      "clear-day": ['day-sunny'],
-      "clear-night": ['night-clear'],
-      "rain": ['rain'],
-      "snow": ['snow'],
-      "sleet": ['sleet'],
-      "wind": ['wind'],
-      "fog": ['fog'],
-      "cloudy": ['cloudy'],
-      "partly-cloudy-day": ['day-cloudy'],
-      "partly-cloudy-night": ['night-alt-cloudy']
-    };
+    })
+)
 
+const ctof = temp => (temp * 9 / 5) + 32;
+const ftoc = temp => (temp - 32) * 5 / 9;
 
-$('document').ready( () => {
-
-  // Display spinning icon until API loads
-  $('#temp').html("<i class='fa fa-spinner fa-spin'></i>");
-  
-  // Call geo API first then weather API once completed
-  getLatLong().done(getWeather);
-
-  // Bind functions to events
-  $('.btn-toggle').click(toggleUnits);
-});
-
-
-var getWeather = () => {
-
-  var latlon = [locapi.lat,locapi.lon].join(','),
-      url = dsapi.url + dsapi.k + latlon + "?callback=?";
-
-  $.getJSON(url, dsapi.params, function(response) {
-    console.log(response);
-
-    weather_icon = response.currently.icon;
-    weather_desc = response.currently.summary;
-    dsapi.params.units = response.flags.units;
-    $('#condition').text(weather_desc);
-
-    displayTemp(unit, response.currently.temperature, conditions[weather_icon]);
-    convertTemp(response.currently.temperature);
-  });
+const getLatLong = () => {
+  return new Promise((resolve, reject) => {
+    if (!'geolocation' in navigator) {
+      reject('Geolocation not available')
+    }
+    navigator.geolocation.getCurrentPosition(pos => resolve(pos.coords), err => reject(err))
+  })
 };
 
 
-var getLatLong = () => {
-  
-  var geoApiCall = $.getJSON(locapi.url, function(response) {
-
-    locapi.lat = response.latitude;
-    locapi.lon = response.longitude;
-    locapi.city = response.city;
-    locapi.state = response.region_name;
-    locapi.country = response.country_name;
-    locapi.countrycode = response.country_code;
-
-    $('#location').text(locapi.city + ", " + locapi.state);
-  });
-
-  return geoApiCall;
-};
+const getWeather = (lat, lon) => {
+  const url = `${fccapi.url}?lat=${lat}&lon=${lon}`
+  return fetchJSON(url)
+}
 
 
-var toggleUnits = () => {
-  $('.btn', '#unit-selector').toggleClass('btn-primary btn-secondary');
-  unit = $(".btn-primary", "#unit-selector").attr('id');
-  displayTemp(unit, temps[unit]);
-};
+const toggleUnits = () => {
+  unitSelector.querySelectorAll('.btn').forEach(btn => {
+    btn.classList.toggle('btn-primary')
+    btn.classList.toggle('btn-secondary')
+  })
+  temps.current_unit = temps.current_unit === 'us' ? 'si' : 'us'
+  displayTemp();
+}
 
 
-var displayTemp = (unit, temp, icon) => {
-
-  $('#temp').text(temp);
-  $('#weather-icon').addClass("wi wi-" + icon);
-
-  $("#units").removeClass();
-  if (unit === "us") {
-    $("#units").addClass("wi wi-fahrenheit");
-  } else if (unit === "si") {
-    $('#units').addClass("wi wi-celsius");
-  } 
-};
+var displayTemp = () => {
+  tempDisplay.textContent = temps[temps.current_unit].temp
+  locationDisplay.textContent = temps.location
+  unitsIcon.className = `${temps[temps.current_unit].icon}`
+  unitSelector.classList.remove('hidden')
+}
 
 
-var convertTemp = temp => {
+const initialize = async () => {
 
-  var ftoc = () => (temp - 32) * 5 / 9;
-  var ctof = () => (temp * 9 / 5) + 32;
-
-  if (unit == "us") {
-    temps.us = temp;
-    temps.si = ftoc().toFixed(1);
+  try {
+    const {latitude: lat, longitude: lon} = await getLatLong()
+    unitSelector.addEventListener('click', toggleUnits)
+    const weatherResults = await getWeather(lat, lon)
+    const { name, weather, main: { temp } } = weatherResults
+    const { description, icon } = weather[0]
+    temps.si.temp = temp.toFixed(1)
+    temps.us.temp = ctof(temp).toFixed(1)
+    temps.location = name
+    weatherIcon.src = icon
+    conditionDisplay.textContent = description
+    displayTemp()
+  } catch(err) {
+    console.log(err)
+    tempDisplay.textContent = err.message
   }
+}
 
-  if (unit == "si") {
-    temps.si = temp;
-    temps.us = ctof().toFixed(1);
-  }
-
-};
+initialize()
