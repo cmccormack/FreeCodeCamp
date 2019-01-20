@@ -4,7 +4,8 @@
   "description": "Pomodoro Clock 2.0 - Now with React!",
   "main": "index.js",
   "scripts": {
-    "parcel:dev": "parcel index.html"
+    "parcel:dev": "parcel index.html",
+    "build": "parcel build index.html --public-url \".\""
   },
   "keywords": [
     "Pomodoro",
