@@ -1,0 +1,72 @@
+$primary_color: hsla(200, 50%, 50%, 1);
+
+#drum-machine {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 50px 0;
+  font-size: 4rem;
+  font-weight: 600;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  background-color: #CCD;
+  width: 340px;
+  margin: auto;
+}
+
+#display {
+  padding: 8px;
+}
+
+#display-screen {
+  background-color: #334;
+  text-align: center;
+  padding: 4px;
+  border-radius: 3px;
+  color: limegreen;
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+
+#drums {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: .7rem;
+}
+
+.drum-pad {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  margin: 10px;
+  border: 6px solid $primary_color;
+  border-radius: 50%;
+  background-color: lighten($primary_color, 40%);
+  color: $primary_color;
+  user-select: none;
+  
+  &.active {
+    transform: scale(1.2);
+    border-color: darken($primary_color, 10%);
+    background-color: lighten($primary_color, 40%);
+    color: darken($primary_color, 20%);
+  }
+  
+  &:hover {
+    background-color: lighten($primary_color, 30%);
+  }
+}
