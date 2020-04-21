@@ -7,7 +7,17 @@ array should be in alphabetical order by item.
 */
 function updateInventory(arr1, arr2) {
   // All inventory must be accounted for or you're fired!
-  return arr1;
+  const inventory = new Map(arr1.map((v) => [v[1], v[0]]));
+  for (const [qty, item_name] of arr2) {
+    if (inventory.has(item_name)) {
+      inventory.set(item_name, inventory.get(item_name) + qty);
+    } else {
+      inventory.set(item_name, qty);
+    }
+  }
+  return [...inventory.entries()]
+    .sort((a, b) => a[0].localeCompare(b))
+    .map((v) => [v[1], v[0]]);
 }
 
 // Example inventory lists
@@ -25,20 +35,19 @@ var newInv = [
   [7, "Toothpaste"],
 ];
 
-updateInventory(curInv, newInv);
-
-var timeit = function (label, f, ...args) {
+var timeit = function (label, f, arg1, arg2) {
   console.time(label);
   console.log();
 
-  result = f(...args);
+  result = f(arg1, arg2);
 
   console.log(`RESULT RETURNED: ${JSON.stringify([...result])}`);
   console.timeEnd(label);
 };
 
 timeit(
-  'RESULT EXPECTED: [[88, "Bowling Ball"], [2, "Dirty Sock"], [3, "Hair Pin"], [3, "Half-Eaten Apple"], [5, "Microphone"], [7, "Toothpaste"]]\t\tTime',
+  'RESULT EXPECTED: [[88,"Bowling Ball"],[2,"Dirty Sock"],[3,"Hair Pin"],[3,"Half-Eaten Apple"],[5,"Microphone"],[7,"Toothpaste"]]\t\tTime',
   updateInventory,
-  curInv
+  curInv,
+  newInv
 );
