@@ -13,7 +13,6 @@ all of the numbers from 1 to n?
 
 function smallestMult(n) {
   let current = n;
-  // let maxLoops = 10000;
   let isDivisable = false;
   while (!isDivisable) {
     for (let i = n - 1; i > 1; i -= 1) {
@@ -22,12 +21,9 @@ function smallestMult(n) {
       } else {
         isDivisable = false;
         current += n;
-        // console.log(current);
         break;
       }
     }
-    // maxLoops -= 1;
-    // if (maxLoops === 0) break;
   }
   return current;
 }
