@@ -39,7 +39,6 @@ function checkPalindrome(n) {
 function largestPalindromeProduct(n) {
   // Good luck!
   const maxOperand = Math.pow(10, n) - 1;
-  const maxProduct = maxOperand * maxOperand;
   let max = -Infinity;
   for (let i = maxOperand; i > 0; i -= 1) {
     for (let j = i; j > 0; j -= 1) {
