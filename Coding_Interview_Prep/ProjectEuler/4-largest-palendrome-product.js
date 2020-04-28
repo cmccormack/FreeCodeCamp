@@ -20,39 +20,36 @@ Find the largest palindrome made from the product of two n-digit numbers.
 */
 
 function checkPalindrome(n) {
-  const strN = String(n)
-  const lenN = strN.length
+  const strN = String(n);
+  const lenN = strN.length;
   const isEven = lenN % 2 === 0;
-  const mid = Math.trunc(lenN/2)
+  const mid = Math.trunc(lenN / 2);
   let left;
   let right;
   if (isEven) {
-    left = strN.slice(0, mid)
-    right = strN.slice(mid, lenN)
+    left = strN.slice(0, mid);
+    right = strN.slice(mid, lenN);
   } else {
-    left = strN.slice(0, mid)
-    right = strN.slice(mid+1, lenN)
+    left = strN.slice(0, mid);
+    right = strN.slice(mid + 1, lenN);
   }
-  return left === right.split().reverse().join('')
+  return left === right.split('').reverse().join("");
 }
 
 function largestPalindromeProduct(n) {
   // Good luck!
-  const maxOperand = Math.pow(10,n) -1
-  const maxProduct = maxOperand * maxOperand
-  console.log(maxProduct)
-  let max = -Infinity
-  for (let i = maxOperand; i > 0; i-=1) {
-    for (let j = maxOperand; j > 0; j -=1) {
-      if (checkPalindrome(i*j)){
-        console.log(i*j)
-        max = Math.max(max, i*j)
+  const maxOperand = Math.pow(10, n) - 1;
+  const maxProduct = maxOperand * maxOperand;
+  let max = -Infinity;
+  for (let i = maxOperand; i > 0; i -= 1) {
+    for (let j = i; j > 0; j -= 1) {
+      if (checkPalindrome(i * j)) {
+        if (i * j > max) console.log(i, j, i * j, max);
+        max = Math.max(max, i * j);
       }
-      // console.log(i*j)
     }
   }
   return max;
-
 }
 
 const br = `\n---------------------------------------------\n`;
@@ -63,17 +60,5 @@ var timeit = function (label, f, ...args) {
   console.timeEnd(label);
 };
 
-const in1 = [
-  ["1", "0", "1", "0", "0"],
-  ["1", "0", "1", "1", "1"],
-  ["1", "1", "1", "1", "1"],
-  ["1", "0", "0", "1", "0"],
-];
-const in2 = [
-  ["1", "0", "1", "0", "0"],
-  ["1", "0", "1", "1", "1"],
-  ["1", "1", "1", "1", "1"],
-  ["1", "0", "1", "1", "1"],
-];
 timeit(`RESULT EXPECTED: 9009\t\tTime`, largestPalindromeProduct, 2);
-// timeit(`RESULT EXPECTED: 906609\t\tTime`, largestPalindromeProduct, 3);
+timeit(`RESULT EXPECTED: 906609\t\tTime`, largestPalindromeProduct, 3);
