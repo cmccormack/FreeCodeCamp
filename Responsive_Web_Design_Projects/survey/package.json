@@ -20,6 +20,6 @@
     "live-server": "^1.2.0"
   },
   "dependencies": {
-    "node-sass": "^4.9.0"
+    "node-sass": "^4.13.1"
   }
 }
