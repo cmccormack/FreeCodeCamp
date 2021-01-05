@@ -25,7 +25,7 @@
     "dev": "webpack-dev-server"
   },
   "dependencies": {
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "d3": "^4.10.0",
     "d3-axis": "^1.0.8",
     "d3-format": "^1.2.0",
