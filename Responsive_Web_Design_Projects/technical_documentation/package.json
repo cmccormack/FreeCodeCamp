@@ -17,7 +17,7 @@
   "author": "Christopher McCormack https://mackville.net",
   "license": "ISC",
   "devDependencies": {
-    "live-server": "^1.2.0",
+    "live-server": "^1.2.2",
     "node-sass": "^4.9.0"
   }
 }
